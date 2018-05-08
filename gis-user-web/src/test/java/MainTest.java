@@ -1,7 +1,3 @@
-import com.yugoo.gis.dao.ITestDAO;
-import com.yugoo.gis.pojo.po.TestPO;
-import com.yugoo.gis.user.service.ITestService;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -15,15 +11,5 @@ import java.math.BigDecimal;
 @RunWith(value = SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring.xml"})
 public class MainTest {
-    @Resource
-    private ITestService testService;
-    @Resource
-    private ITestDAO testDAO;
 
-    @Test
-    public void dasdasd(){
-        int a = testDAO.uu(new BigDecimal("0.999998"));
-        TestPO s = testDAO.select();
-        testService.testTx("888");
-    }
 }

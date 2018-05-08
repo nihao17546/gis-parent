@@ -1,22 +1,21 @@
 package com.yugoo.gis.pojo.po;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Created by nihao on 18/2/27.
+ * Created by nihao on 18/5/8.
  */
-public class UserPO {
+public class UserPO implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private Integer id;
+    private Integer roleId;
+    private String phone;
+    private transient String password;
     private String name;
-    private String loginname;
-    private String password;
-    private Integer sex;
-    private String birthday;
-    private String photo;
-    private String description;
-    private Integer state;
-    private Date cDate;
-    private Date uDate;
+    private String headPic;
+    private Date date;
 
     public Integer getId() {
         return id;
@@ -26,20 +25,20 @@ public class UserPO {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public Integer getRoleId() {
+        return roleId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
     }
 
-    public String getLoginname() {
-        return loginname;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setLoginname(String loginname) {
-        this.loginname = loginname;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getPassword() {
@@ -50,59 +49,27 @@ public class UserPO {
         this.password = password;
     }
 
-    public Integer getSex() {
-        return sex;
+    public String getName() {
+        return name;
     }
 
-    public void setSex(Integer sex) {
-        this.sex = sex;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getBirthday() {
-        return birthday;
+    public String getHeadPic() {
+        return headPic;
     }
 
-    public void setBirthday(String birthday) {
-        this.birthday = birthday;
+    public void setHeadPic(String headPic) {
+        this.headPic = headPic;
     }
 
-    public String getPhoto() {
-        return photo;
+    public Date getDate() {
+        return date;
     }
 
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Integer getState() {
-        return state;
-    }
-
-    public void setState(Integer state) {
-        this.state = state;
-    }
-
-    public Date getcDate() {
-        return cDate;
-    }
-
-    public void setcDate(Date cDate) {
-        this.cDate = cDate;
-    }
-
-    public Date getuDate() {
-        return uDate;
-    }
-
-    public void setuDate(Date uDate) {
-        this.uDate = uDate;
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

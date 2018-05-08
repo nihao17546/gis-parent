@@ -68,7 +68,7 @@
         </profile>
     </profiles>
     <build>
-        <finalName>${project.artifactId}</finalName>
+        <finalName>gis</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources/</directory>
@@ -83,7 +83,7 @@
                 <version>2.2</version>
                 <configuration>
                     <port>8000</port>
-                    <path>/</path>
+                    <path>/gis</path>
                     <uriEncoding>UTF-8</uriEncoding>
                 </configuration>
             </plugin>

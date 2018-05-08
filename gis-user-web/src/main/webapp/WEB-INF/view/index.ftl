@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>后台管理</title>
-    <link href="/static/hplus/css/bootstrap.min14ed.css" rel="stylesheet">
-    <link href="/static/hplus/css/font-awesome.min93e3.css" rel="stylesheet">
-    <link href="/static/hplus/css/animate.min.css" rel="stylesheet">
-    <link href="/static/hplus/css/style.min862f.css" rel="stylesheet">
-    <link href="/static/lightbox-dialog/dist/css/Lobibox.min.css" rel="stylesheet">
+    <link href="/gis/static/hplus/css/bootstrap.min14ed.css" rel="stylesheet">
+    <link href="/gis/static/hplus/css/font-awesome.min93e3.css" rel="stylesheet">
+    <link href="/gis/static/hplus/css/animate.min.css" rel="stylesheet">
+    <link href="/gis/static/hplus/css/style.min862f.css" rel="stylesheet">
+    <link href="/gis/static/lightbox-dialog/dist/css/Lobibox.min.css" rel="stylesheet">
 </head>
 <body class="fixed-sidebar full-height-layout gray-bg" style="overflow: hidden">
 <div id="wrapper">
@@ -228,7 +228,7 @@
                         <div class="sidebar-message">
                             <a href="#">
                                 <div class="pull-left text-center">
-                                    <img alt="image" class="img-circle message-avatar" src="/stu/static/image/a1.jpg">
+                                    <img alt="image" class="img-circle message-avatar" src="/stu/gis/static/image/a1.jpg">
                                     <div class="m-t-xs">
                                         <i class="fa fa-star text-warning"></i>
                                         <i class="fa fa-star text-warning"></i>
@@ -251,14 +251,14 @@
 
 </div>
 
-<script src="/static/hplus/js/jquery.min.js" type="text/javascript"></script>
-<script src="/static/hplus/js/bootstrap.min.js" type="text/javascript"></script>
-<script src="/static/hplus/js/plugins/metisMenu/jquery.metisMenu.js" type="text/javascript"></script>
-<script src="/static/hplus/js/plugins/slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
-<script src="/static/hplus/js/plugins/layer/layer.min.js" type="text/javascript"></script>
-<script src="/static/hplus/js/hplus.min.js" type="text/javascript"></script>
-<script src="/static/hplus/js/contabs.min.js" type="text/javascript"></script>
-<script src="/static/hplus/js/plugins/pace/pace.min.js" type="text/javascript"></script>
-<script src="/static/lightbox-dialog/dist/js/lobibox.min.js"></script>
+<script src="/gis/static/hplus/js/jquery.min.js" type="text/javascript"></script>
+<script src="/gis/static/hplus/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="/gis/static/hplus/js/plugins/metisMenu/jquery.metisMenu.js" type="text/javascript"></script>
+<script src="/gis/static/hplus/js/plugins/slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
+<script src="/gis/static/hplus/js/plugins/layer/layer.min.js" type="text/javascript"></script>
+<script src="/gis/static/hplus/js/hplus.min.js" type="text/javascript"></script>
+<script src="/gis/static/hplus/js/contabs.min.js" type="text/javascript"></script>
+<script src="/gis/static/hplus/js/plugins/pace/pace.min.js" type="text/javascript"></script>
+<script src="/gis/static/lightbox-dialog/dist/js/lobibox.min.js"></script>
 </body>
 </html>

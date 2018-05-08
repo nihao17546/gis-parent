@@ -43,6 +43,7 @@
         <guava.version>19.0</guava.version>
         <spring.redis.version>1.6.2.RELEASE</spring.redis.version>
         <jedis.version>2.4.2</jedis.version>
+        <JAVA8_HOME>/Library/Java/JavaVirtualMachines/jdk1.8.0_101.jdk/Contents/Home</JAVA8_HOME>
     </properties>
 
     <dependencyManagement>
@@ -284,15 +285,6 @@
 
     <build>
         <plugins>
-            <!-- 资源文件拷贝插件 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>2.7</version>
-                <configuration>
-                    <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
             <!-- java编译插件 -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -303,6 +295,34 @@
                     <target>1.7</target>
                     <encoding>UTF-8</encoding>
                     <useIncrementalCompilation>false</useIncrementalCompilation>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.7</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <compilerVersion>1.8</compilerVersion>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <verbose>true</verbose>
+                    <fork>true</fork>
+                    <executable>${JAVA8_HOME}/bin/javac</executable>
                 </configuration>
             </plugin>
         </plugins>

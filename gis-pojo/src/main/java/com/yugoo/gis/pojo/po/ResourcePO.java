@@ -5,9 +5,10 @@ import java.util.Date;
 /**
  * Created by nihao on 18/5/8.
  */
-public class RolePO {
+public class ResourcePO {
     private Integer id;
     private String name;
+    private String path;
     private Date date;
 
     public Integer getId() {
@@ -24,6 +25,14 @@ public class RolePO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public Date getDate() {

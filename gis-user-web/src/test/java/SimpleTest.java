@@ -1,3 +1,5 @@
+import com.yugoo.gis.pojo.po.UserPO;
+import com.yugoo.gis.user.web.result.JsonResult;
 import org.junit.Test;
 
 import java.io.*;
@@ -6,6 +8,15 @@ import java.io.*;
  * Created by nihao on 18/3/17.
  */
 public class SimpleTest {
+    @Test
+    public void dasdas(){
+        UserPO userPO = new UserPO();
+        userPO.setName("dasda");
+        userPO.setPassword("123");
+        String s = JsonResult.success().pull("a",userPO).json();
+        System.out.println("---");
+    }
+
     @Test
     public void sdas() throws Exception {
         File file = new File("/Users/nihao/das");

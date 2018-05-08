@@ -1,6 +1,7 @@
 package com.yugoo.gis.user.web.result;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 
 import java.util.HashMap;
 
@@ -10,7 +11,10 @@ import java.util.HashMap;
 public class JsonResult<K,V> extends HashMap<K,V> {
 
     public String json(){
-        return JSON.toJSONString(this);
+        return JSON.toJSONString(this, SerializerFeature.WriteMapNullValue,
+                SerializerFeature.WriteNullListAsEmpty,
+                SerializerFeature.WriteDateUseDateFormat,
+                SerializerFeature.SkipTransientField);
     }
 
     public JsonResult<K,V> pull(K key, V value){
@@ -27,11 +31,11 @@ public class JsonResult<K,V> extends HashMap<K,V> {
     }
 
     public static JsonResult success(String message){
-        return new JsonResult().pull("code", 200).pull("message", message);
+        return new JsonResult().pull("code", 0).pull("message", message);
     }
 
     public static JsonResult fail(String message){
-        return new JsonResult().pull("code", 500).pull("message", message);
+        return new JsonResult().pull("code", 1).pull("message", message);
     }
 
     public JsonResult() {

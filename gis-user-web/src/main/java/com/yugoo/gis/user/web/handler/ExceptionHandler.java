@@ -26,21 +26,14 @@ public class ExceptionHandler implements HandlerExceptionResolver {
                 ((HandlerMethod)o).getMethod().getName(),
                 e.getMessage(),
                 e);
-        if("XMLHttpRequest".equals(httpServletRequest.getHeader("X-Requested-With"))){
-            JsonResult jsonResult = JsonResult.fail(e.getClass().getName()+" "+e.getMessage());
-            httpServletResponse.setCharacterEncoding("UTF-8");
-            httpServletResponse.setContentType("application/json; charset=utf-8");
-            try(PrintWriter out=httpServletResponse.getWriter()){
-                out.append(jsonResult.json());
-            }catch (Exception e1){
-                logger.error(e1.getMessage(),e1);
-            }
-            return null;
+        JsonResult jsonResult = JsonResult.fail(e.getClass().getName()+" "+e.getMessage());
+        httpServletResponse.setCharacterEncoding("UTF-8");
+        httpServletResponse.setContentType("application/json; charset=utf-8");
+        try(PrintWriter out=httpServletResponse.getWriter()){
+            out.append(jsonResult.json());
+        }catch (Exception e1){
+            logger.error(e1.getMessage(),e1);
         }
-        else{
-            Map<String,Object> map= Maps.newHashMap();
-            map.put("mess",e.getClass().getName()+" "+e.getMessage());
-            return new ModelAndView("error/error",map);
-        }
+        return null;
     }
 }
