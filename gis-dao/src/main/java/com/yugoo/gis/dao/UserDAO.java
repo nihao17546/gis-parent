@@ -10,4 +10,5 @@ public interface UserDAO {
     int insert(UserPO userPO);
     UserPO selectByPhone(@Param("phone") String phone);
     UserPO selectById(@Param("id") Integer id);
+    int updateRole(@Param("id") Integer id, @Param("roleId") Integer roleId);
 }

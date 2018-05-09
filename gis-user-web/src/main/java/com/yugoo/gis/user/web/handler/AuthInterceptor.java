@@ -37,12 +37,12 @@ public class AuthInterceptor extends HandlerInterceptorAdapter implements Applic
         UserPO userPO = userService.getUserById(userId);
         // 超级用户
         if(userPO.getId() == 0 && "root".equals("root")){
-            request.setAttribute("userId", userId);
+            request.setAttribute("uid", userId);
             return true;
         }
         List<String> paths = resourceService.getPathsByRoleId(userPO.getRoleId());
         if(paths.contains(servletPath)){
-            request.setAttribute("userId", userId);
+            request.setAttribute("uid", userId);
             return true;
         }
         responseFail("没有权限[" + servletPath + "]", response);

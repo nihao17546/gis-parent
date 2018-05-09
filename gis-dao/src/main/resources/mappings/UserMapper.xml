@@ -12,4 +12,7 @@
     <select id="selectById" resultType="com.yugoo.gis.pojo.po.UserPO">
         select * from tb_user where id=#{id}
     </select>
+    <update id="updateRole">
+        update tb_user set roleId=#{roleId} where id=#{id}
+    </update>
 </mapper>

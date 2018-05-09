@@ -81,4 +81,8 @@ public class CacheManager<K,V> {
         return null;
     }
 
+    public void invalidateAll(){
+        cachePool.invalidateAll();
+    }
+
 }

@@ -3,6 +3,7 @@ package com.yugoo.gis.user.service.impl;
 import com.yugoo.gis.dao.ResourceDAO;
 import com.yugoo.gis.user.service.IResourceService;
 import com.yugoo.gis.user.service.cache.CacheManager;
+import com.yugoo.gis.user.service.cache.CacheManagerUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ public class ResourceServiceImpl implements IResourceService {
     private ResourceDAO resourceDAO;
 
     private CacheManager<Integer,List<String>> resourcePathCache = CacheManager.build(1L, TimeUnit.HOURS);
+    {
+        CacheManagerUtils.add("resource" ,resourcePathCache);
+    }
 
     @Override
     public List<String> getPathsByRoleId(Integer roleId) {

@@ -3,12 +3,12 @@ package com.yugoo.gis.pojo.po;
 import java.util.Date;
 
 /**
- * Created by nihao on 18/5/8.
+ * Created by nihao on 18/5/9.
  */
-public class RolePO {
+public class ReginPO {
     private Integer id;
     private String name;
-    private String description;
+    private String scope;
     private Date date;
 
     public Integer getId() {
@@ -27,12 +27,12 @@ public class RolePO {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getScope() {
+        return scope;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setScope(String scope) {
+        this.scope = scope;
     }
 
     public Date getDate() {

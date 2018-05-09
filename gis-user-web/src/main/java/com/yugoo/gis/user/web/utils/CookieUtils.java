@@ -16,15 +16,17 @@ public class CookieUtils {
 
     public static final Integer getUserId(HttpServletRequest request){
         Cookie[] cookies = request.getCookies();
-        for(Cookie cookie : cookies){
-            if(StaticConstant.cookieName.equals(cookie.getName())){
-                String value = cookie.getValue();
-                try {
-                    Integer userId = Integer.parseInt(DesUtils.decrypt(value));
-                    return userId;
-                } catch (Exception e) {
-                    logger.warn("cookie 解析错误, value is {}", value);
-                    return null;
+        if(cookies != null){
+            for(Cookie cookie : cookies){
+                if(StaticConstant.cookieName.equals(cookie.getName())){
+                    String value = cookie.getValue();
+                    try {
+                        Integer userId = Integer.parseInt(DesUtils.decrypt(value.split("_")[1]));
+                        return userId;
+                    } catch (Exception e) {
+                        logger.warn("cookie 解析错误, value is {}", value);
+                        return null;
+                    }
                 }
             }
         }
