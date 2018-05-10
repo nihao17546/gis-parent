@@ -15,22 +15,30 @@ public class CookieUtils {
     private static final Logger logger = LoggerFactory.getLogger(CookieUtils.class);
 
     public static final Integer getUserId(HttpServletRequest request){
+        String token = request.getHeader("X-Token");
+        if(token != null){
+            return parse(token);
+        }
         Cookie[] cookies = request.getCookies();
         if(cookies != null){
             for(Cookie cookie : cookies){
                 if(StaticConstant.cookieName.equals(cookie.getName())){
                     String value = cookie.getValue();
-                    try {
-                        Integer userId = Integer.parseInt(DesUtils.decrypt(value.split("_")[1]));
-                        return userId;
-                    } catch (Exception e) {
-                        logger.warn("cookie 解析错误, value is {}", value);
-                        return null;
-                    }
+                    return parse(value);
                 }
             }
         }
         return null;
+    }
+
+    private static Integer parse(String token){
+        try {
+            Integer userId = Integer.parseInt(DesUtils.decrypt(token.split("_")[1]));
+            return userId;
+        } catch (Exception e) {
+            logger.warn("cookie 解析错误, token is {}", token);
+            return null;
+        }
     }
 
 }

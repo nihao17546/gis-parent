@@ -43,11 +43,12 @@ public class UserController extends BaseController {
         if(!result.isPresent()){
             return fail("账号或密码错误").json();
         }
+        // 写入cookie
         Cookie cookie = new Cookie(StaticConstant.cookieName, result.get());
         cookie.setPath("/");
         cookie.setMaxAge(Integer.MAX_VALUE);
         response.addCookie(cookie);
-        return ok("登录成功").json();
+        return ok("登录成功").pull("token", result.get()).json();
     }
 
     /**
