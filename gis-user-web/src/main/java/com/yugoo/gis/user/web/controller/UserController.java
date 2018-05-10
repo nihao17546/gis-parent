@@ -3,6 +3,8 @@ package com.yugoo.gis.user.web.controller;
 import com.google.common.base.Optional;
 import com.yugoo.gis.common.constant.StaticConstant;
 import com.yugoo.gis.common.exception.GisRuntimeException;
+import com.yugoo.gis.pojo.po.UserPO;
+import com.yugoo.gis.pojo.vo.ListVO;
 import com.yugoo.gis.user.service.IUserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,26 +53,26 @@ public class UserController extends BaseController {
     /**
      * 注册
      * @param phone
-     * @param password
      * @param name
-     * @param headPic
+     * @param department
+     * @param password
      * @param response
      * @param request
      * @return
      */
     @RequestMapping("/regist")
     public String regist(@RequestParam(value = "phone") String phone,
+                         @RequestParam(value = "name") String name,
+                         @RequestParam(value = "department") String department,
                          @RequestParam(value = "password") String password,
-                         @RequestParam(value = "name", required = false) String name,
-                         @RequestParam(value = "headPic", required = false) String headPic,
                          HttpServletResponse response,
                          HttpServletRequest request){
         try{
-            userService.regist(phone, password, name, headPic);
+            userService.regist(phone, password, name, department);
         }catch (GisRuntimeException e){
             return fail(e.getMessage()).json();
         }
-        return login(phone, password, response, request);
+        return ok("注册成功").json();
     }
 
     /**
@@ -88,5 +90,47 @@ public class UserController extends BaseController {
             return fail("不能对自己操作").json();
         userService.updateRole(userId, roleId);
         return ok("操作成功").json();
+    }
+
+    @RequestMapping("/list")
+    public String list(@Value("#{request.getAttribute('uid')}") Integer uid,
+                       @RequestParam(value = "curPage", required = false, defaultValue = "1") Integer curPage,
+                       @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
+                       @RequestParam(value = "name", required = false) String name,
+                       @RequestParam(value = "department", required = false) String department,
+                       @RequestParam(value = "phone", required = false) String phone){
+        ListVO<UserPO> listVO = userService.getPagination(curPage, pageSize, name, department, phone);
+        return ok().pull("result", listVO).json();
+    }
+
+    @RequestMapping("/updateInfo")
+    public String updateInfo(@Value("#{request.getAttribute('uid')}") Integer uid,
+                             @RequestParam(value = "phone", required = false) String phone,
+                             @RequestParam(value = "name", required = false) String name,
+                             @RequestParam(value = "department", required = false) String department){
+        if(phone != null && phone.trim().equals(""))
+            phone = null;
+        if(name != null && name.trim().equals(""))
+            name = null;
+        if(department != null && department.trim().equals(""))
+            department = null;
+        try{
+            userService.updateInfo(uid, phone, name, department);
+        }catch (GisRuntimeException e){
+            return fail(e.getMessage()).json();
+        }
+        return ok("更新成功").json();
+    }
+
+    @RequestMapping("/updatePassword")
+    public String updatePassword(@Value("#{request.getAttribute('uid')}") Integer uid,
+                                 @RequestParam(value = "newPassword", required = true) String newPassword,
+                                 @RequestParam(value = "oldPassword", required = true) String oldPassword){
+        try{
+            userService.updatePassword(uid, newPassword, oldPassword);
+        }catch (GisRuntimeException e){
+            return fail(e.getMessage()).json();
+        }
+        return ok("更新成功").json();
     }
 }

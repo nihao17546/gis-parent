@@ -16,6 +16,7 @@ public class UserPO implements Serializable {
     private String name;
     private String headPic;
     private Date date;
+    private String department;
 
     public Integer getId() {
         return id;
@@ -71,5 +72,13 @@ public class UserPO implements Serializable {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
     }
 }

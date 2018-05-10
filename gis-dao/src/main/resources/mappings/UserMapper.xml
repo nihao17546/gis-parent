@@ -3,8 +3,8 @@
 <mapper namespace="com.yugoo.gis.dao.UserDAO">
     <insert id="insert" useGeneratedKeys="true" keyProperty="id"
             parameterType="com.yugoo.gis.pojo.po.UserPO">
-        insert ignore into tb_user(roleId,phone,password,name,headPic,date)
-        values(#{roleId},#{phone},#{password},#{name},#{headPic},#{date})
+        insert ignore into tb_user(roleId,phone,password,name,headPic,date,department)
+        values(#{roleId},#{phone},#{password},#{name},#{headPic},#{date},#{department})
     </insert>
     <select id="selectByPhone" resultType="com.yugoo.gis.pojo.po.UserPO">
         select * from tb_user where phone=#{phone}
@@ -14,5 +14,54 @@
     </select>
     <update id="updateRole">
         update tb_user set roleId=#{roleId} where id=#{id}
+    </update>
+    <select id="selectCount" resultType="java.lang.Long">
+        select count(*) from tb_user where 1=1
+        <if test="name != null">
+            and name like concat('%',#{name},'%')
+        </if>
+        <if test="department != null">
+            and department=#{department}
+        </if>
+        <if test="phone != null">
+            and phone=#{phone}
+        </if>
+    </select>
+    <select id="selectList" resultType="com.yugoo.gis.pojo.po.UserPO">
+        select * from tb_user where 1=1
+        <if test="name != null">
+            and name like concat('%',#{name},'%')
+        </if>
+        <if test="department != null">
+            and department=#{department}
+        </if>
+        <if test="phone != null">
+            and phone=#{phone}
+        </if>
+        <if test="order != null">
+            order by ${order}
+            <if test="asc != null">
+                ${asc}
+            </if>
+        </if>
+    </select>
+    <update id="update" parameterType="com.yugoo.gis.pojo.po.UserPO">
+        update tb_user
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="phone != null">
+                phone=#{phone},
+            </if>
+            <if test="name != null">
+                name=#{name},
+            </if>
+            <if test="department != null">
+                department=#{department},
+            </if>
+            date = now()
+        </trim>
+        where id=#{id}
+    </update>
+    <update id="updatePassword">
+        update tb_user set password=#{newPassword} where id=#{id} and password=#{oldPassword}
     </update>
 </mapper>

@@ -1,5 +1,6 @@
 package com.yugoo.gis.user.web.handler;
 
+import com.yugoo.gis.common.constant.StaticConstant;
 import com.yugoo.gis.pojo.po.UserPO;
 import com.yugoo.gis.user.service.IResourceService;
 import com.yugoo.gis.user.service.IUserService;
@@ -34,15 +35,21 @@ public class AuthInterceptor extends HandlerInterceptorAdapter implements Applic
             responseFail("未登录", response);
             return false;
         }
-        UserPO userPO = userService.getUserById(userId);
-        // 超级用户
-        if(userPO.getId() == 0 && "root".equals("root")){
-            request.setAttribute("uid", userId);
+        request.setAttribute("uid", userId);
+        // 如果只是校验是否登录
+        if(StaticConstant.JUST_NEED_LOGIN.contains(servletPath)){
             return true;
         }
+
+        UserPO userPO = userService.getUserById(userId);
+        // 超级用户
+        if(userPO.getId() == 0){
+            return true;
+        }
+
+        // 校验权限
         List<String> paths = resourceService.getPathsByRoleId(userPO.getRoleId());
         if(paths.contains(servletPath)){
-            request.setAttribute("uid", userId);
             return true;
         }
         responseFail("没有权限[" + servletPath + "]", response);
