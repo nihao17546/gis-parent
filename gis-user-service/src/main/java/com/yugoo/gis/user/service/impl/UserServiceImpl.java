@@ -96,6 +96,7 @@ public class UserServiceImpl implements IUserService {
         return listVO;
     }
 
+    @Transactional
     @Override
     public void updateInfo(Integer uid, String phone, String name, String department) throws GisRuntimeException {
         if(phone != null){
@@ -110,6 +111,7 @@ public class UserServiceImpl implements IUserService {
         userPO.setName(name);
         userPO.setDepartment(department);
         userDAO.update(userPO);
+        userCache.invalidate(uid);
     }
 
     @Transactional
