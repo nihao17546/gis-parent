@@ -8,15 +8,13 @@ import java.util.Date;
  * @author nihao 2018/9/20
  */
 @Data
-public class UserPO {
+public class CenterPO {
     private Integer id;
     private String name;
-    private String phone;
-    private String password;
-    private Integer role;
-    private String department;
     private Integer groupId;
-    private Integer centerId;
-    private String key;
+    private String manager;
+    private String phone;
+    private String position;
+    private String region;
     private Date ctime;
 }

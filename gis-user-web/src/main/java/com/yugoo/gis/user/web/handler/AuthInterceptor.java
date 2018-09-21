@@ -2,6 +2,7 @@ package com.yugoo.gis.user.web.handler;
 
 import com.yugoo.gis.common.constant.StaticConstant;
 import com.yugoo.gis.pojo.po.UserPO;
+import com.yugoo.gis.pojo.po1.UserPO;
 import com.yugoo.gis.user.service.IResourceService;
 import com.yugoo.gis.user.service.IUserService;
 import com.yugoo.gis.user.web.result.JsonResult;
@@ -23,19 +24,18 @@ import java.util.List;
  */
 public class AuthInterceptor extends HandlerInterceptorAdapter implements ApplicationContextAware {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private IResourceService resourceService;
-    private IUserService userService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String servletPath = request.getServletPath();
         logger.debug("request[{}]", servletPath);
-        Integer userId = CookieUtils.getUserId(request);
-        if(userId == null){
+        UserPO userPO = CookieUtils.getUser(request);
+        if(userPO == null){
             responseFail("未登录", response);
             return false;
         }
-        request.setAttribute("uid", userId);
+        request.setAttribute("uid", userPO.getId());
+        request.setAttribute("role", userPO.getRole());
         // 如果只是校验是否登录
         if(StaticConstant.JUST_NEED_LOGIN.contains(servletPath)){
             return true;
@@ -60,7 +60,7 @@ public class AuthInterceptor extends HandlerInterceptorAdapter implements Applic
         JsonResult jsonResult = JsonResult.fail(message);
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=utf-8");
-        try(PrintWriter out=response.getWriter()){
+        try(PrintWriter out = response.getWriter()){
             out.append(jsonResult.json());
         }catch (Exception e){
             e.printStackTrace();
@@ -69,7 +69,5 @@ public class AuthInterceptor extends HandlerInterceptorAdapter implements Applic
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        resourceService = applicationContext.getBean(IResourceService.class);
-        userService = applicationContext.getBean(IUserService.class);
     }
 }

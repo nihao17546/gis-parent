@@ -2,6 +2,7 @@ package com.yugoo.gis.user.web.utils;
 
 import com.yugoo.gis.common.constant.StaticConstant;
 import com.yugoo.gis.common.utils.DesUtils;
+import com.yugoo.gis.pojo.po.UserPO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 public class CookieUtils {
     private static final Logger logger = LoggerFactory.getLogger(CookieUtils.class);
 
-    public static final Integer getUserId(HttpServletRequest request){
+    public static final UserPO getUser(HttpServletRequest request){
         String token = request.getHeader("X-Token");
         if(token != null){
             return parse(token);
@@ -31,10 +32,15 @@ public class CookieUtils {
         return null;
     }
 
-    private static Integer parse(String token){
+    private static UserPO parse(String token){
         try {
-            Integer userId = Integer.parseInt(DesUtils.decrypt(token.split("_")[1]));
-            return userId;
+            String[] strings = token.split("&_");
+            Integer userId = Integer.parseInt(strings[1]);
+            Integer role = Integer.parseInt(strings[1]);
+            UserPO userPO = new UserPO();
+            userPO.setId(userId);
+            userPO.setRole(role);
+            return userPO;
         } catch (Exception e) {
             logger.warn("cookie 解析错误, token is {}", token);
             return null;

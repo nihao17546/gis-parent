@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yugoo.gis.dao.GroupDAO">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.yugoo.gis.pojo.po.GroupPO">
+        insert ignore into tb_group(name,position,ctime)
+        values(#{name},#{position},now())
+    </insert>
+    <select id="select" resultType="com.yugoo.gis.pojo.po.GroupPO">
+        select * from tb_group where 1=1
+         <if test="name != null">
+             and name like concat('%',#{name},'%')
+         </if>
+         order by id desc
+    </select>
+    <update id="update" parameterType="com.yugoo.gis.pojo.po.GroupPO">
+        update tb_group set name=#{name},position=#{position} where id=#{id}
+    </update>
+</mapper>
