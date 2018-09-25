@@ -8,8 +8,10 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
 
@@ -26,13 +28,26 @@ public class ExceptionHandler implements HandlerExceptionResolver {
                 ((HandlerMethod)o).getMethod().getName(),
                 e.getMessage(),
                 e);
-        JsonResult jsonResult = JsonResult.fail(e.getClass().getName()+" "+e.getMessage());
-        httpServletResponse.setCharacterEncoding("UTF-8");
-        httpServletResponse.setContentType("application/json; charset=utf-8");
-        try(PrintWriter out=httpServletResponse.getWriter()){
-            out.append(jsonResult.json());
-        }catch (Exception e1){
-            logger.error(e1.getMessage(),e1);
+        String message = e.getClass().getName()+" "+e.getMessage();
+        if (httpServletRequest.getServletPath().endsWith(".html")) {
+            httpServletRequest.setAttribute("errorMsg", message);
+            try {
+                httpServletRequest.getRequestDispatcher("/500.html").forward(httpServletRequest, httpServletResponse);
+            } catch (ServletException e1) {
+                logger.error(e1.getMessage(),e1);
+            } catch (IOException e1) {
+                logger.error(e1.getMessage(),e1);
+            }
+        }
+        else {
+            JsonResult jsonResult = JsonResult.fail(message);
+            httpServletResponse.setCharacterEncoding("UTF-8");
+            httpServletResponse.setContentType("application/json; charset=utf-8");
+            try(PrintWriter out=httpServletResponse.getWriter()){
+                out.append(jsonResult.json());
+            }catch (Exception e1){
+                logger.error(e1.getMessage(),e1);
+            }
         }
         return null;
     }

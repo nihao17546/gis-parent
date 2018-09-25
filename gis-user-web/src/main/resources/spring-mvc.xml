@@ -86,9 +86,10 @@
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/user/login/pc"/>
             <mvc:exclude-mapping path="/user/login/mobile"/>
-            <!--<mvc:exclude-mapping path="/cache/**"/>-->
-            <!--<mvc:exclude-mapping path="/html/**"/>-->
-            <!--<mvc:exclude-mapping path="/static/**"/>-->
+            <mvc:exclude-mapping path="/login.html"/>
+            <mvc:exclude-mapping path="/403.html"/>
+            <mvc:exclude-mapping path="/500.html"/>
+            <mvc:exclude-mapping path="/static/**"/>
             <bean class="com.yugoo.gis.user.web.handler.AuthInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
