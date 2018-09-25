@@ -262,7 +262,7 @@
     $(function () {
         $.ajax({
             type: 'get',
-            url: '${contextPath}/user/ownInfo',
+            url: '${contextPath}/user/ownInfoa',
             dataType: 'json',
             data: {
             },
@@ -278,10 +278,11 @@
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.error(jqXHR);
-                layer.alert(errorThrown, {
-                    title: '操作失败',
-                    icon: 5
-                })
+                layer.msg(errorThrown)
+                // layer.alert(errorThrown, {
+                //     title: '操作失败',
+                //     icon: 5
+                // })
             },
             complete: function () {
 
