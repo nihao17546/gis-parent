@@ -2,9 +2,6 @@ package com.yugoo.gis.user.web.handler;
 
 import com.yugoo.gis.common.constant.StaticConstant;
 import com.yugoo.gis.pojo.po.UserPO;
-import com.yugoo.gis.pojo.po1.UserPO;
-import com.yugoo.gis.user.service.IResourceService;
-import com.yugoo.gis.user.service.IUserService;
 import com.yugoo.gis.user.web.result.JsonResult;
 import com.yugoo.gis.user.web.utils.CookieUtils;
 import org.slf4j.Logger;
@@ -34,26 +31,14 @@ public class AuthInterceptor extends HandlerInterceptorAdapter implements Applic
             responseFail("未登录", response);
             return false;
         }
+        List<String> paths = StaticConstant.getPathByRole(userPO.getRole());
+        if (!paths.contains(servletPath)) {
+            responseFail("没有权限[" + servletPath + "]", response);
+            return false;
+        }
         request.setAttribute("uid", userPO.getId());
         request.setAttribute("role", userPO.getRole());
-        // 如果只是校验是否登录
-        if(StaticConstant.JUST_NEED_LOGIN.contains(servletPath)){
-            return true;
-        }
-
-        UserPO userPO = userService.getUserById(userId);
-        // 超级用户
-        if(userPO.getId() == 0){
-            return true;
-        }
-
-        // 校验权限
-        List<String> paths = resourceService.getPathsByRoleId(userPO.getRoleId());
-        if(paths.contains(servletPath)){
-            return true;
-        }
-        responseFail("没有权限[" + servletPath + "]", response);
-        return false;
+        return true;
     }
 
     private void responseFail(String message, HttpServletResponse response){

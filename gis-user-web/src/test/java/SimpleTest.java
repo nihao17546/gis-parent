@@ -1,4 +1,4 @@
-import com.yugoo.gis.pojo.po1.UserPO;
+import com.yugoo.gis.pojo.po.UserPO;
 import com.yugoo.gis.user.web.result.JsonResult;
 import org.junit.Test;
 

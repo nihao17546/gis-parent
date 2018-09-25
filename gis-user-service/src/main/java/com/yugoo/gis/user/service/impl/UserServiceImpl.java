@@ -128,9 +128,12 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public Optional<String> login(String phone, String password) {
+    public Optional<String> login(String phone, String password, String key) {
         UserPO userPO = userDAO.selectByPhone(phone);
         if(userPO != null){
+            if (key != null && !key.equals(userPO.getKey())) {
+                throw new GisRuntimeException("手机序列号不一致");
+            }
             if(DesUtils.encrypt(password).equals(userPO.getPassword())){
                 return Optional.of(System.currentTimeMillis() + "&_" + userPO.getId() + "&_" + userPO.getRole());
             }

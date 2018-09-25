@@ -122,4 +122,8 @@ public class DesUtils {
     private static byte[] decrypt(byte[] arrB,Cipher cipher) throws Exception {
         return cipher.doFinal(arrB);
     }
+
+    public static void main(String[] args) {
+        System.out.println(encrypt("123456"));
+    }
 }
