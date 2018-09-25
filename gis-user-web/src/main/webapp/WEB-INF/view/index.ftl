@@ -8,7 +8,6 @@
     <link href="${contextPath}/static/hplus/css/font-awesome.min93e3.css" rel="stylesheet">
     <link href="${contextPath}/static/hplus/css/animate.min.css" rel="stylesheet">
     <link href="${contextPath}/static/hplus/css/style.min862f.css" rel="stylesheet">
-    <link href="${contextPath}/static/lightbox-dialog/dist/css/Lobibox.min.css" rel="stylesheet">
 </head>
 <body class="fixed-sidebar full-height-layout gray-bg" style="overflow: hidden">
 <div id="wrapper">
@@ -80,19 +79,19 @@
         <div class="row border-bottom">
             <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
                 <div class="navbar-header"><a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
-                    <form role="search" class="navbar-form-custom" method="post" action="#">
-                        <div class="form-group">
-                            <input type="text" placeholder="请输入您需要查找的内容 …" class="form-control" name="top-search" id="top-search">
-                        </div>
-                    </form>
+                    <#--<form role="search" class="navbar-form-custom" method="post" action="#">-->
+                        <#--<div class="form-group">-->
+                            <#--<input type="text" placeholder="请输入您需要查找的内容 …" class="form-control" name="top-search" id="top-search">-->
+                        <#--</div>-->
+                    <#--</form>-->
                 </div>
-                <ul class="nav navbar-top-links navbar-right">
-                    <li class="dropdown hidden-xs">
-                        <a class="right-sidebar-toggle" aria-expanded="false">
-                            <i class="fa fa-tasks"></i>
-                        </a>
-                    </li>
-                </ul>
+                <#--<ul class="nav navbar-top-links navbar-right">-->
+                    <#--<li class="dropdown hidden-xs">-->
+                        <#--<a class="right-sidebar-toggle" aria-expanded="false">-->
+                            <#--<i class="fa fa-tasks"></i>-->
+                        <#--</a>-->
+                    <#--</li>-->
+                <#--</ul>-->
             </nav>
         </div>
         <div class="row content-tabs">
@@ -259,6 +258,36 @@
 <script src="${contextPath}/static/hplus/js/hplus.min.js" type="text/javascript"></script>
 <script src="${contextPath}/static/hplus/js/contabs.min.js" type="text/javascript"></script>
 <script src="${contextPath}/static/hplus/js/plugins/pace/pace.min.js" type="text/javascript"></script>
-<script src="${contextPath}/static/lightbox-dialog/dist/js/lobibox.min.js"></script>
+<script>
+    $(function () {
+        $.ajax({
+            type: 'get',
+            url: '${contextPath}/user/ownInfo',
+            dataType: 'json',
+            data: {
+            },
+            success: function (res) {
+                if (res.code == 0) {
+
+                } else {
+                    layer.alert(res.message, {
+                        title: '系统错误',
+                        icon: 5
+                    })
+                }
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error(jqXHR);
+                layer.alert(errorThrown, {
+                    title: '操作失败',
+                    icon: 5
+                })
+            },
+            complete: function () {
+
+            }
+        })
+    })
+</script>
 </body>
 </html>
