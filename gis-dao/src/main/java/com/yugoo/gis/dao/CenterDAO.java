@@ -12,4 +12,5 @@ import java.util.List;
 public interface CenterDAO {
     List<CenterPO> select(@Param("id") Integer id, @Param("name") String name, RowBounds rowBounds);
     CenterPO selectById(@Param("id") Integer id);
+    List<CenterPO> selectAll(@Param("groupId") Integer groupId);
 }

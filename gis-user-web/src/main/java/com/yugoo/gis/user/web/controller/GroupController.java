@@ -19,12 +19,10 @@ public class GroupController extends BaseController {
     @Autowired
     private GroupDAO groupDAO;
 
-    @RequestMapping("/list")
-    public String list(@RequestParam(required = false) String name,
-                       @RequestParam(required = false, defaultValue = "1") Integer curPage,
-                       @RequestParam(required = false, defaultValue = (Integer.MAX_VALUE + "")) Integer pageSize) {
-        RowBounds rowBounds = new RowBounds((curPage - 1) * pageSize, pageSize);
-        List<GroupPO> list = groupDAO.select(name, rowBounds);
+    @RequestMapping("/all")
+    public String list() {
+        RowBounds rowBounds = new RowBounds(0, Integer.MAX_VALUE);
+        List<GroupPO> list = groupDAO.select(null, rowBounds);
         return ok().pull("list", list).json();
     }
 

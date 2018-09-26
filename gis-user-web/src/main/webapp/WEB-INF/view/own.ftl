@@ -66,7 +66,7 @@
         </div>
     </el-card>
 
-    <el-dialog title="编辑" :visible="editPasswordVisible">
+    <el-dialog title="修改密码" :visible.sync="editPasswordVisible" :before-close="cancelPass">
         <el-form :model="editPasswordForm" :rules="editPasswordRules" ref="editPasswordForm" size="small"
                  :disabled="editPasswordFormDisabled">
             <el-form-item label="密码:" prop="password" :label-width="formLabelWidth">
@@ -78,13 +78,13 @@
                           type="password"></el-input>
             </el-form-item>
             <el-form-item style="text-align: right">
-                <el-button @click="editPasswordVisible = false" size="small">取 消</el-button>
+                <el-button @click="cancelPass" size="small">取 消</el-button>
                 <el-button type="primary" @click="editPassword('editPasswordForm')" size="small">确 定</el-button>
             </el-form-item>
         </el-form>
     </el-dialog>
 
-    <el-dialog title="编辑" :visible="editVisible">
+    <el-dialog title="编辑" :visible.sync="editVisible" :before-close="cancelEdit">
         <el-form :model="editForm" :rules="editRules" ref="editForm" size="small" :disabled="editFormDisabled">
             <el-form-item label="姓名:" prop="name" :label-width="formLabelWidth">
                 <el-input v-model.trim="editForm.name" autocomplete="off" size="small" maxlength="15"></el-input>
@@ -108,7 +108,7 @@
                 <#--<el-input v-model="editForm.key" autocomplete="off" size="small" :disabled="true"></el-input>-->
             <#--</el-form-item>-->
             <el-form-item style="text-align: right">
-                <el-button @click="editVisible = false" size="small">取 消</el-button>
+                <el-button @click="cancelEdit" size="small">取 消</el-button>
                 <el-button type="primary" @click="edit('editForm')" size="small">确 定</el-button>
             </el-form-item>
         </el-form>
@@ -131,7 +131,7 @@
                     } else {
                         callback()
                     }
-                }, 1000)
+                }, 100)
             }
             var validatePassword = (rule, value, callback) => {
                 if (!value) {
@@ -143,7 +143,7 @@
                     } else {
                         callback()
                     }
-                }, 1000)
+                }, 100)
             }
             return {
                 info: {},
@@ -173,6 +173,14 @@
             }
         },
         methods: {
+            cancelPass() {
+                this.editPasswordVisible = false;
+                this.$refs.editPasswordForm.resetFields();
+            },
+            cancelEdit() {
+                this.editVisible = false;
+                this.$refs.editForm.resetFields();
+            }
             showEditPassword() {
                 this.editPasswordForm = {};
                 this.editPasswordVisible = true;
@@ -195,6 +203,7 @@
                                     message: '更新成功',
                                     type: 'success'
                                 });
+                                this.$refs.editPasswordForm.resetFields();
                             }
                             this.editPasswordVisible = false;
                             this.editPasswordFormDisabled = false;
@@ -241,6 +250,7 @@
                                     message: '更新成功',
                                     type: 'success'
                                 });
+                                this.$refs.editForm.resetFields();
                             }
                             this.editVisible = false;
                             this.editFormDisabled = false;

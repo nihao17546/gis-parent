@@ -25,9 +25,13 @@
                         <#--<span><img alt="未上传头像" style="border-radius:50px;" src="https://wx.qlogo.cn/mmopen/vi_32/GMX0tAX4wIzYdwYrdiaoVzfM8zahD4WFmsBm0yhz9tr1OEnczRNBp11BAaFUNcsmcgl0mN16NtGG8nChuys8K5w/0" width="64" height="64"/></span>-->
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                                 <span class="clear">
-                               <span class="block m-t-xs"><strong class="font-bold" id="username"></strong></span>
-                                    <span class="text-muted text-xs block"><span id="role"></span><b
-                                            class="caret"></b></span>
+                               <span class="block m-t-xs">
+                                   <strong class="font-bold" id="username">${own.name}</strong>
+                               </span>
+                                    <span class="text-muted text-xs block">
+                                        <span id="role">${own.roleName}</span>
+                                        <b class="caret"></b>
+                                    </span>
                                 </span>
                         </a>
                         <ul class="dropdown-menu animated fadeInRight m-t-xs">
@@ -42,32 +46,46 @@
                     </div>
                     <div class="logo-element">GIS</div>
                 </li>
-                <li>
-                    <a href="#">
-                        <i class="fa fa-home"></i> <span class="nav-label">主页</span> <span class="fa arrow"></span>
-                    </a>
-                    <ul class="nav nav-second-level">
-                        <li>
-                            <a class="J_menuItem" href="index_v1.html" data-index="0">主页示例一</a>
-                        </li>
-                        <li>
-                            <a class="J_menuItem" href="index_v2.html">主页示例二</a>
-                        </li>
-                        <li>
-                            <a class="J_menuItem" href="index_v3.html">主页示例三</a>
-                        </li>
-                        <li>
-                            <a class="J_menuItem" href="index_v4.html">主页示例四</a>
-                        </li>
-                        <li>
-                            <a href="index_v5.html" target="_blank">主页示例五</a>
-                        </li>
-                    </ul>
-                </li>
-                <li>
-                    <a class="J_menuItem" href="layouts.html"><i class="fa fa-columns"></i>
-                        <span class="nav-label">布局</span></a>
-                </li>
+                <#if own.menus ??>
+                    <#list own.menus as menu>
+                        <#if menu.path ??>
+                            <li>
+                                <a class="J_menuItem" href="${menu.path}" data-index="${menu.index}"
+                                   <#if menu.target ??>target="${menu.target}"</#if>
+                                >
+                                    <#if menu.icon ??>
+                                        <i class="fa ${menu.icon}"></i>
+                                    </#if>
+                                    <span class="nav-label">${menu.name}</span>
+                                </a>
+                            </li>
+                        <#else>
+                            <li>
+                                <a href="#">
+                                    <#if menu.icon ??>
+                                        <i class="fa ${menu.icon}"></i>
+                                    </#if>
+                                    <span class="nav-label">${menu.name}</span>
+                                    <span class="fa arrow"></span>
+                                </a>
+                                <#if menu.menus ??>
+                                    <ul class="nav nav-second-level">
+                                        <#list menu.menus as child>
+                                            <li>
+                                                <a class="J_menuItem" href="${child.path}" data-index="${child.index}" <#if menu.target ??>target="${menu.target}"</#if>>
+                                                    <#if child.icon ??>
+                                                        <i class="fa ${child.icon}"></i>
+                                                    </#if>
+                                                    <span class="nav-label">${child.name}</span>
+                                                </a>
+                                            </li>
+                                        </#list>
+                                    </ul>
+                                </#if>
+                            </li>
+                        </#if>
+                    </#list>
+                </#if>
             </ul>
         </div>
     </nav>
@@ -170,34 +188,81 @@
         });
     }
     $(function () {
-        $.ajax({
-            type: 'get',
-            url: '${contextPath}/user/ownInfo',
-            dataType: 'json',
-            data: {
-            },
-            success: function (res) {
-                if (res.code == 0) {
-                    $('#username').html(res.info.name)
-                    $('#role').html(res.info.roleName)
-                } else {
-                    Lobibox.alert('error', {
-                        title: '系统错误',
-                        msg: res.message
-                    })
-                }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.error(jqXHR);
-                Lobibox.alert('error', {
-                    title: '系统错误',
-                    msg: errorThrown
-                })
-            },
-            complete: function () {
+        <#--$.ajax({-->
+            <#--type: 'get',-->
+            <#--url: '${contextPath}/user/ownInfo',-->
+            <#--dataType: 'json',-->
+            <#--data: {-->
+            <#--},-->
+            <#--success: function (res) {-->
+                <#--if (res.code == 0) {-->
+                    <#--$('#username').html(res.info.name)-->
+                    <#--$('#role').html(res.info.roleName)-->
+                    <#--let menuHtml = ''-->
+                    <#--if (res.info.menus) {-->
+                        <#--res.info.menus.forEach(menu => {-->
+                            <#--if (!menu.path) {-->
+                                <#--menuHtml = menuHtml + '<li>' +-->
+                                        <#--'<a href="#">' +-->
+                                        <#--'<i class="fa fa-home"></i>' +-->
+                                        <#--'<span class="nav-label">' + menu.name + '</span>' +-->
+                                        <#--'<span class="fa arrow"></span>' +-->
+                                        <#--'</a>'-->
+                                <#--if (menu.children && menu.children.length > 0) {-->
+                                    <#--menuHtml = menuHtml + '<ul class="nav nav-second-level">'-->
+                                    <#--menu.children.forEach(child => {-->
+                                        <#--let tar = ''-->
+                                        <#--if (menu.target) {-->
+                                            <#--tar = 'target="' + menu.target + '"'-->
+                                        <#--}-->
+                                        <#--menuHtml = menuHtml + '<li>' +-->
+                                                <#--'<a class="J_menuItem" ' + tar + ' ' +-->
+                                                <#--'href="' + child.path + '" data-index="' + child.index + '">' + child-->
+                                                        <#--.name +-->
+                                                <#--'</a>' +-->
+                                                <#--'</li>'-->
+                                    <#--})-->
+                                    <#--menuHtml = menuHtml + '</ul>'-->
+                                <#--}-->
+                                <#--menuHtml = menuHtml + '</li>'-->
+                            <#--}-->
+                            <#--else {-->
+                                <#--let tar = ''-->
+                                <#--if (menu.target) {-->
+                                    <#--tar = 'target="' + menu.target + '"'-->
+                                <#--}-->
+                                <#--menuHtml = menuHtml + '<li>' +-->
+                                        <#--'<a class="J_menuItem" href="'+ menu.path + '" ' +-->
+                                        <#--'data-index="' + menu.index + '" ' + tar + '>' +-->
+                                        <#--'<i class="fa fa-columns"></i>' +-->
+                                        <#--'<span class="nav-label">' + menu.name + '</span></a>\n' +-->
+                                        <#--'</li>'-->
+                            <#--}-->
+                        <#--})-->
+                    <#--}-->
+                    <#--$('#side-menu').append(menuHtml)-->
+                    <#--$('#side-menu').append('<li>\n' +-->
+                            <#--'                    <a class="J_menuItem" href="layouts.html"><i class="fa fa-columns"></i>\n' +-->
+                            <#--'                        <span class="nav-label">布局123123</span></a>\n' +-->
+                            <#--'                </li>')-->
+                <#--} else {-->
+                    <#--Lobibox.alert('error', {-->
+                        <#--title: '系统错误',-->
+                        <#--msg: res.message-->
+                    <#--})-->
+                <#--}-->
+            <#--},-->
+            <#--error: function (jqXHR, textStatus, errorThrown) {-->
+                <#--console.error(jqXHR);-->
+                <#--Lobibox.alert('error', {-->
+                    <#--title: '系统错误',-->
+                    <#--msg: errorThrown-->
+                <#--})-->
+            <#--},-->
+            <#--complete: function () {-->
 
-            }
-        })
+            <#--}-->
+        <#--})-->
     })
 </script>
 </body>

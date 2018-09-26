@@ -14,6 +14,9 @@ public class StaticConstant {
             "/user/update",
             "/user/updatePassword",
             "/user/ownInfo",
+            "/role/all",
+            "/group/all",
+            "/center/all",
             "/index.html",
             "/own.html");
     public static final List<String> MEMBER_PATH = Arrays.asList();
@@ -21,7 +24,11 @@ public class StaticConstant {
     public static final List<String> ADMIN_PATH = Arrays.asList(
             "/user/update",
             "/user/edit",
-            "/user/info");
+            "/user/info",
+            "/user/list",
+            "/user/create",
+            "/user/delete",
+            "/user.html");
     public static List<String> getPathByRole(Integer roleId) {
         Role role = Role.getByValue(roleId);
         List<String> list = Lists.newArrayList(JUST_NEED_LOGIN_PATH);

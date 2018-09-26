@@ -3,6 +3,9 @@ package com.yugoo.gis.user.web.controller;
 import com.google.common.base.Optional;
 import com.yugoo.gis.common.constant.StaticConstant;
 import com.yugoo.gis.common.exception.GisRuntimeException;
+import com.yugoo.gis.dao.UserDAO;
+import com.yugoo.gis.pojo.vo.ListVO;
+import com.yugoo.gis.pojo.vo.UserListVO;
 import com.yugoo.gis.user.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,6 +26,8 @@ public class UserController extends BaseController {
 
     @Autowired
     private IUserService userService;
+    @Autowired
+    private UserDAO userDAO;
 
     /**
      * 管理员在后台添加新用户
@@ -198,5 +203,23 @@ public class UserController extends BaseController {
         return ok().json();
     }
 
+    @RequestMapping("/list")
+    public String list(@RequestParam(required = false) String name,
+                       @RequestParam(required = false) String phone,
+                       @RequestParam(required = false, defaultValue = "1") Integer curPage,
+                       @RequestParam(required = false, defaultValue = (Integer.MAX_VALUE + "")) Integer pageSize) {
+        ListVO<UserListVO> listVO = userService.list(curPage, pageSize, phone, name);
+        return ok().pull("data", listVO).json();
+    }
+
+    @RequestMapping("/delete")
+    public String delete(@RequestParam Integer id,
+                         @Value("#{request.getAttribute('uid')}") Integer uid) {
+        if (id.equals(uid)) {
+            return fail("不能删除自己").json();
+        }
+        userDAO.deleteById(id);
+        return ok().json();
+    }
 
 }

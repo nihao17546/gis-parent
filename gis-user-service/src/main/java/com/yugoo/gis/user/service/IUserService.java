@@ -1,7 +1,9 @@
 package com.yugoo.gis.user.service;
 
 import com.google.common.base.Optional;
+import com.yugoo.gis.pojo.vo.ListVO;
 import com.yugoo.gis.pojo.vo.UserInfoVO;
+import com.yugoo.gis.pojo.vo.UserListVO;
 
 
 /**
@@ -32,4 +34,6 @@ public interface IUserService {
 
     UserInfoVO getById(Integer id);
     Optional<String> login(String phone, String password, String key);
+
+    ListVO<UserListVO> list(Integer curPage, Integer pageSize, String phone, String name);
 }

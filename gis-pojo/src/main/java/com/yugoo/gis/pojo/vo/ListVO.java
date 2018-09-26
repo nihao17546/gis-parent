@@ -36,6 +36,9 @@ public class ListVO<T> {
 
     public void setTotalCount(long totalCount) {
         this.totalCount = totalCount;
+        if (this.curPage > 0 && this.pageSize > 0 && totalCount > 0) {
+            this.totalPage = (int)(totalCount / pageSize) + ((totalCount % pageSize) > 0 ? 1 : 0);
+        }
     }
 
     public int getPageSize() {

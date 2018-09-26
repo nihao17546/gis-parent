@@ -11,13 +11,22 @@ import com.yugoo.gis.dao.UserDAO;
 import com.yugoo.gis.pojo.po.CenterPO;
 import com.yugoo.gis.pojo.po.GroupPO;
 import com.yugoo.gis.pojo.po.UserPO;
+import com.yugoo.gis.pojo.vo.ListVO;
+import com.yugoo.gis.pojo.vo.MenuVO;
 import com.yugoo.gis.pojo.vo.UserInfoVO;
+import com.yugoo.gis.pojo.vo.UserListVO;
 import com.yugoo.gis.user.service.IUserService;
+import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -33,6 +42,20 @@ public class UserServiceImpl implements IUserService {
     private CenterDAO centerDAO;
     @Autowired
     private GroupDAO groupDAO;
+
+    private List<MenuVO> adminMenus = new ArrayList<>();
+    private List<MenuVO> headmanMenus = new ArrayList<>();
+    private List<MenuVO> memberMenus = new ArrayList<>();
+
+    @PostConstruct
+    public void init() {
+        MenuVO userManager = new MenuVO();
+        userManager.setName("用户管理");
+        userManager.setPath("user.html");
+        userManager.setIndex(0);
+        userManager.setIcon("fa-group");
+        adminMenus.add(userManager);
+    }
 
     @Override
     public void create(String name, String phone, String password, Integer role, String department,
@@ -60,7 +83,7 @@ public class UserServiceImpl implements IUserService {
         userPO.setRole(role);
         userPO.setDepartment(department);
         userPO.setGroupId(groupId);
-        userPO.setGroupId(centerId);
+        userPO.setCenterId(centerId);
         userPO.setKey(key);
         userDAO.insert(userPO);
     }
@@ -90,7 +113,7 @@ public class UserServiceImpl implements IUserService {
         userPO.setRole(role);
         userPO.setDepartment(department);
         userPO.setGroupId(groupId);
-        userPO.setGroupId(centerId);
+        userPO.setCenterId(centerId);
         userPO.setKey(key);
         userDAO.update(userPO);
     }
@@ -141,6 +164,15 @@ public class UserServiceImpl implements IUserService {
                 infoVO.setGroupName(groupPO.getName());
             }
         }
+        if (userPO.getRole() == Role.admin.getValue()) {
+            infoVO.setMenus(adminMenus);
+        }
+        else if (userPO.getRole() == Role.headman.getValue()) {
+            infoVO.setMenus(headmanMenus);
+        }
+        else if (userPO.getRole() == Role.member.getValue()) {
+            infoVO.setMenus(memberMenus);
+        }
         return infoVO;
     }
 
@@ -156,5 +188,34 @@ public class UserServiceImpl implements IUserService {
             }
         }
         return Optional.absent();
+    }
+
+    @Override
+    public ListVO<UserListVO> list(Integer curPage, Integer pageSize, String phone, String name) {
+        long count = userDAO.selectCount(name, null, phone);
+        ListVO<UserListVO> listVO = new ListVO<>(curPage, pageSize);
+        if (count > 0) {
+            List<UserPO> poList = userDAO.select(name, null, phone, new RowBounds((curPage - 1) * pageSize,
+                    pageSize));
+            List<UserListVO> userListVOS = poList.stream().map(po -> {
+                UserListVO userListVO = new UserListVO();
+                BeanUtils.copyProperties(po, userListVO);
+                userListVO.setRoleName(Role.getByValue(userListVO.getRole()).getName());
+                if (userListVO.getGroupId() != null && userListVO.getGroupId() != 0) {
+                    GroupPO groupPO = groupDAO.selectById(userListVO.getGroupId());
+                    if (groupPO != null)
+                        userListVO.setGroupName(groupPO.getName());
+                }
+                if (userListVO.getCenterId() != null && userListVO.getCenterId() != 0) {
+                    CenterPO centerPO = centerDAO.selectById(userListVO.getCenterId());
+                    if (centerPO != null)
+                        userListVO.setCenterName(centerPO.getName());
+                }
+                return userListVO;
+            }).collect(Collectors.toList());
+            listVO.setList(userListVOS);
+            listVO.setTotalCount(count);
+        }
+        return listVO;
     }
 }

@@ -2,6 +2,8 @@ package com.yugoo.gis.pojo.vo;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author nihao 2018/9/20
  */
@@ -18,4 +20,5 @@ public class UserInfoVO {
     private Integer centerId;
     private String centerName;
     private String key;
+    private List<MenuVO> menus;
 }

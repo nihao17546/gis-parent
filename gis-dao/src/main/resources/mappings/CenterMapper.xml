@@ -14,4 +14,7 @@
     <select id="selectById" resultType="com.yugoo.gis.pojo.po.CenterPO">
         select * from tb_center where id=#{id}
     </select>
+    <select id="selectAll" resultType="com.yugoo.gis.pojo.po.CenterPO">
+        select id,name,groupId from tb_center where groupId=#{groupId} order by id desc
+    </select>
 </mapper>
