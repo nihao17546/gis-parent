@@ -135,7 +135,7 @@
             }
             var validatePassword = (rule, value, callback) => {
                 if (!value) {
-                    return callback(new Error('密码不能!!'))
+                    return callback(new Error('请确认密码'))
                 }
                 setTimeout(() => {
                     if (this.editPasswordForm.password != value) {
@@ -180,7 +180,7 @@
             cancelEdit() {
                 this.editVisible = false;
                 this.$refs.editForm.resetFields();
-            }
+            },
             showEditPassword() {
                 this.editPasswordForm = {};
                 this.editPasswordVisible = true;
