@@ -16,4 +16,7 @@
     <update id="update" parameterType="com.yugoo.gis.pojo.po.GroupPO">
         update tb_group set name=#{name},position=#{position} where id=#{id}
     </update>
+    <select id="selectById" resultType="com.yugoo.gis.pojo.po.GroupPO">
+        select * from tb_group where id = #{id}
+    </select>
 </mapper>

@@ -6,8 +6,10 @@ import com.yugoo.gis.common.exception.GisRuntimeException;
 import com.yugoo.gis.common.utils.DesUtils;
 import com.yugoo.gis.common.utils.StringUtil;
 import com.yugoo.gis.dao.CenterDAO;
+import com.yugoo.gis.dao.GroupDAO;
 import com.yugoo.gis.dao.UserDAO;
 import com.yugoo.gis.pojo.po.CenterPO;
+import com.yugoo.gis.pojo.po.GroupPO;
 import com.yugoo.gis.pojo.po.UserPO;
 import com.yugoo.gis.pojo.vo.UserInfoVO;
 import com.yugoo.gis.user.service.IUserService;
@@ -29,6 +31,8 @@ public class UserServiceImpl implements IUserService {
     private UserDAO userDAO;
     @Autowired
     private CenterDAO centerDAO;
+    @Autowired
+    private GroupDAO groupDAO;
 
     @Override
     public void create(String name, String phone, String password, Integer role, String department,
@@ -124,6 +128,19 @@ public class UserServiceImpl implements IUserService {
         UserPO userPO = userDAO.selectById(id);
         UserInfoVO infoVO = new UserInfoVO();
         BeanUtils.copyProperties(userPO, infoVO);
+        infoVO.setRoleName(Role.getByValue(infoVO.getRole()).getName());
+        if (userPO.getCenterId() != null && userPO.getCenterId() != 0) {
+            CenterPO centerPO = centerDAO.selectById(userPO.getCenterId());
+            if (centerPO != null) {
+                infoVO.setCenterName(centerPO.getName());
+            }
+        }
+        if (userPO.getGroupId() != null && userPO.getGroupId() != 0) {
+            GroupPO groupPO = groupDAO.selectById(userPO.getGroupId());
+            if (groupPO != null) {
+                infoVO.setGroupName(groupPO.getName());
+            }
+        }
         return infoVO;
     }
 

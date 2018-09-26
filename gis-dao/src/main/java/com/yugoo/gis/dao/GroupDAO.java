@@ -13,4 +13,5 @@ public interface GroupDAO {
     int insert(GroupPO groupPO);
     List<GroupPO> select(@Param("name") String name, RowBounds rowBounds);
     int update(GroupPO groupPO);
+    GroupPO selectById(@Param("id") Integer id);
 }

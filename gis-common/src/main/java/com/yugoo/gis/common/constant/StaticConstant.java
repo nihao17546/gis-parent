@@ -14,7 +14,8 @@ public class StaticConstant {
             "/user/update",
             "/user/updatePassword",
             "/user/ownInfo",
-            "/index.html");
+            "/index.html",
+            "/own.html");
     public static final List<String> MEMBER_PATH = Arrays.asList();
     public static final List<String> HEADMAN_PATH = Arrays.asList();
     public static final List<String> ADMIN_PATH = Arrays.asList(

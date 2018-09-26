@@ -182,5 +182,21 @@ public class UserController extends BaseController {
         return ok("登录成功").pull("token", optional.get()).json();
     }
 
+    @RequestMapping("/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        Cookie[] cookies = request.getCookies();
+        if(cookies != null){
+            for(Cookie cookie : cookies){
+                if(StaticConstant.cookieName.equals(cookie.getName())){
+                    Cookie cookie1 = new Cookie(StaticConstant.cookieName,"");
+                    cookie1.setPath("/");
+                    cookie1.setMaxAge(0);
+                    response.addCookie(cookie1);
+                }
+            }
+        }
+        return ok().json();
+    }
+
 
 }

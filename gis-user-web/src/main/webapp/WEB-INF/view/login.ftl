@@ -73,7 +73,7 @@
                                 this.$message.error(res.data.message);
                             }
                             else {
-                                window.location.href = '${contextPath}/index.html';
+                                window.location.href = 'index.html';
                             }
                         }).catch(res => {
                             console.error(res)
