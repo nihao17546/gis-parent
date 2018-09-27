@@ -37,6 +37,14 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
+    <filter>
+        <filter-name>corsFilter</filter-name>
+        <filter-class>com.yugoo.gis.user.web.filter.CORSFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>corsFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
     <!-- 字符集 过滤器  -->
     <filter>
