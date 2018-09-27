@@ -66,7 +66,7 @@
         <el-pagination
                 small
                 layout="prev, pager, next"
-                :total="totalPage"
+                :total="totalCount"
                 :page-size="pageSize"
                 @current-change="currentChange">
         </el-pagination>
@@ -169,7 +169,7 @@
                     name: '无'
                 }],
                 list: [],
-                totalPage: 0,
+                totalCount: 0,
                 pageSize: 10,
                 curPage: 1,
                 loading: false,
@@ -220,6 +220,26 @@
                 else {
                     this.groupVisible = true
                     this.centerVisible = true
+                }
+                if (row.groupId && row.groupId != 0) {
+                    axios.get('${contextPath}/center/all',{
+                        params: {
+                            groupId: row.groupId
+                        }
+                    }).then(res => {
+                        if (res.data.code == 1) {
+                            this.$message.error(res.data.message);
+                        }
+                        else {
+                            this.centers = res.data.list
+                            this.centers.unshift({
+                                id: 0,
+                                name: '无'
+                            })
+                        }
+                    }).catch(res => {
+                        console.error(res)
+                    })
                 }
             },
             del(id) {
@@ -332,7 +352,7 @@
                     }
                     else {
                         this.list = res.data.data.list;
-                        this.totalPage = res.data.data.totalPage;
+                        this.totalCount = res.data.data.totalCount;
                     }
                     this.loading = false;
                 }).catch(res => {
@@ -349,6 +369,10 @@
                 this.groupVisible = true
                 this.centerVisible = true
                 this.tt = '新增'
+                this.centers = [{
+                    id: 0,
+                    name: '无'
+                }]
             },
             roleChange() {
                 this.addForm.groupId = 0

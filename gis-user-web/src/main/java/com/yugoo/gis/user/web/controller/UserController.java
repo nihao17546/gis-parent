@@ -76,7 +76,11 @@ public class UserController extends BaseController {
                        @RequestParam Integer role, @RequestParam(required = false) Integer groupId,
                        @RequestParam(required = false) Integer centerId,
                        @RequestParam(required = false) String password,
-                       @RequestParam Integer id) {
+                       @RequestParam Integer id,
+                       @Value("#{request.getAttribute('uid')}") Integer uid) {
+        if (id.equals(uid)) {
+            return fail("要修改自己的信息，请到个人中心修改").json();
+        }
         try {
             userService.edit(id, name, phone, password, role, department, groupId, centerId, key);
         } catch (GisRuntimeException e) {

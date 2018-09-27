@@ -35,6 +35,6 @@ public enum Role {
                 return role;
             }
         }
-        throw new RuntimeException("角色为找到: " + value);
+        throw new RuntimeException("角色未找到: " + value);
     }
 }

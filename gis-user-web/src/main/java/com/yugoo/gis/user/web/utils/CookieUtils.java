@@ -36,7 +36,7 @@ public class CookieUtils {
         try {
             String[] strings = token.split("&_");
             Integer userId = Integer.parseInt(strings[1]);
-            Integer role = Integer.parseInt(strings[1]);
+            Integer role = Integer.parseInt(strings[2]);
             UserPO userPO = new UserPO();
             userPO.setId(userId);
             userPO.setRole(role);
