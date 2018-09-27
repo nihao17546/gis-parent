@@ -111,17 +111,17 @@ public class UserController extends BaseController {
 
     /**
      * 用户更新个人资料
-     * @param id
+     * @param uid
      * @param name
      * @param phone
      * @param department
      * @return
      */
     @RequestMapping("/update")
-    public String update(@RequestParam Integer id, @RequestParam String name,
+    public String update(@Value("#{request.getAttribute('uid')}") Integer uid, @RequestParam String name,
                          @RequestParam String phone, @RequestParam(required = false) String department) {
         try {
-            userService.edit(id, name, phone, department);
+            userService.edit(uid, name, phone, department);
         } catch (GisRuntimeException e) {
             return fail(e.getMessage()).json();
         }
@@ -130,13 +130,13 @@ public class UserController extends BaseController {
 
     /**
      * 用户更新密码
-     * @param id
+     * @param uid
      * @param password
      * @return
      */
     @RequestMapping("/updatePassword")
-    public String update(@RequestParam Integer id, @RequestParam String password) {
-        userService.edit(id, password);
+    public String update(@Value("#{request.getAttribute('uid')}") Integer uid, @RequestParam String password) {
+        userService.edit(uid, password);
         return ok().json();
     }
 

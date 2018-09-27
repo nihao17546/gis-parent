@@ -1,20 +1,17 @@
 {
-  "result": {
-    "curPage": 1,
-    "list": [
-      {
-        "date": "2018-05-10 16:53:36",
-        "department": "部门1",
-        "id": 7,
-        "name": "nihao",
-        "phone": "15928745052",
-        "roleId": 4
-      }
-    ],
-    "pageSize": 10,
-    "totalCount": 2,
-    "totalPage": 1
-  },
   "code": 0,
-  "message": "success"
+  "message": "success",
+  "info": {
+    "centerId": 0,
+    "centerName": null,
+    "department": "部门大苏打",
+    "groupId": 0,
+    "groupName": null,
+    "id": 1,
+    "key": null,
+    "name": "root",
+    "phone": "15928745052",
+    "role": 1,
+    "roleName": "管理员"
+  }
 }
