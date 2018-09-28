@@ -1,8 +1,12 @@
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.TypeReference;
 import com.yugoo.gis.pojo.po.UserPO;
 import com.yugoo.gis.user.web.result.JsonResult;
 import org.junit.Test;
 
 import java.io.*;
+import java.util.List;
 
 /**
  * Created by nihao on 18/3/17.
@@ -54,5 +58,12 @@ public class SimpleTest {
             line++;
         }
         reader.close();
+    }
+
+    @Test
+    public void dasadsddas() {
+        String aa = "[[1231.234,2423.74],[1231.123,12321.343],[1.2,123.87]]";
+        List<List<Double>> lists = JSON.parseObject(aa, new TypeReference<List<List<Double>>>(){});
+        System.out.println("---");
     }
 }

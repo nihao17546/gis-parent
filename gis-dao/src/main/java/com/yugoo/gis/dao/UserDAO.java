@@ -19,4 +19,6 @@ public interface UserDAO {
     UserPO selectByPhone(@Param("phone") String phone);
     UserPO selectById(@Param("id") Integer id);
     int deleteById(@Param("id") Integer id);
+    UserPO selectManager(@Param("groupId") Integer groupId);
+    List<UserPO> selectByGroupId(@Param("groupId") Integer groupId);
 }

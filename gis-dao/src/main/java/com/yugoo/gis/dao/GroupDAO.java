@@ -12,6 +12,8 @@ import java.util.List;
 public interface GroupDAO {
     int insert(GroupPO groupPO);
     List<GroupPO> select(@Param("name") String name, RowBounds rowBounds);
+    Long selectCount(@Param("name") String name);
     int update(GroupPO groupPO);
     GroupPO selectById(@Param("id") Integer id);
+    int deleteById(@Param("id") Integer id);
 }

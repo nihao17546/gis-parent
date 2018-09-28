@@ -1,9 +1,14 @@
 package com.yugoo.gis.user.web.controller;
 
+import com.yugoo.gis.common.exception.GisRuntimeException;
 import com.yugoo.gis.dao.GroupDAO;
 import com.yugoo.gis.pojo.po.GroupPO;
+import com.yugoo.gis.pojo.vo.GroupListVO;
+import com.yugoo.gis.pojo.vo.ListVO;
+import com.yugoo.gis.user.service.IGroupService;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,12 +23,32 @@ import java.util.List;
 public class GroupController extends BaseController {
     @Autowired
     private GroupDAO groupDAO;
+    @Autowired
+    private IGroupService groupService;
 
     @RequestMapping("/all")
-    public String list() {
+    public String all() {
         RowBounds rowBounds = new RowBounds(0, Integer.MAX_VALUE);
         List<GroupPO> list = groupDAO.select(null, rowBounds);
         return ok().pull("list", list).json();
+    }
+
+    @RequestMapping("/list")
+    public String list(@RequestParam(required = false) String name,
+                       @RequestParam(required = false, defaultValue = "1") Integer curPage,
+                       @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
+        ListVO<GroupListVO> listVO = groupService.list(curPage, pageSize, name);
+        return ok().pull("data", listVO).json();
+    }
+
+    @RequestMapping("/delete")
+    public String delete(@RequestParam Integer id) {
+        try {
+            groupService.delete(id);
+        } catch (GisRuntimeException e) {
+            return fail(e.getMessage()).json();
+        }
+        return ok().json();
     }
 
     @RequestMapping("/create")

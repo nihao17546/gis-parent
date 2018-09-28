@@ -15,6 +15,8 @@ public class CenterPO {
     private String manager;
     private String phone;
     private String position;
+    private Double longitude;
+    private Double latitude;
     private String region;
     private Date ctime;
 }

@@ -211,7 +211,7 @@ public class UserController extends BaseController {
     public String list(@RequestParam(required = false) String name,
                        @RequestParam(required = false) String phone,
                        @RequestParam(required = false, defaultValue = "1") Integer curPage,
-                       @RequestParam(required = false, defaultValue = (Integer.MAX_VALUE + "")) Integer pageSize) {
+                       @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
         ListVO<UserListVO> listVO = userService.list(curPage, pageSize, phone, name);
         return ok().pull("data", listVO).json();
     }
