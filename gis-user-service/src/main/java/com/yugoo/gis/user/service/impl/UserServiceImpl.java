@@ -25,7 +25,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -203,22 +205,40 @@ public class UserServiceImpl implements IUserService {
         if (count > 0) {
             List<UserPO> poList = userDAO.select(name, null, phone, new RowBounds((curPage - 1) * pageSize,
                     pageSize));
+            List<Integer> groupIds = new ArrayList<>();
+            List<Integer> centerIds = new ArrayList<>();
             List<UserListVO> userListVOS = poList.stream().map(po -> {
                 UserListVO userListVO = new UserListVO();
                 BeanUtils.copyProperties(po, userListVO);
                 userListVO.setRoleName(Role.getByValue(userListVO.getRole()).getName());
-                if (userListVO.getGroupId() != null && userListVO.getGroupId() != 0) {
-                    GroupPO groupPO = groupDAO.selectById(userListVO.getGroupId());
-                    if (groupPO != null)
-                        userListVO.setGroupName(groupPO.getName());
+                if (userListVO.getGroupId() != null
+                        && userListVO.getGroupId() != 0
+                        && !groupIds.contains(userListVO.getGroupId())) {
+                    groupIds.add(userListVO.getGroupId());
                 }
-                if (userListVO.getCenterId() != null && userListVO.getCenterId() != 0) {
-                    CenterPO centerPO = centerDAO.selectById(userListVO.getCenterId());
-                    if (centerPO != null)
-                        userListVO.setCenterName(centerPO.getName());
+                if (userListVO.getCenterId() != null
+                        && userListVO.getCenterId() != 0
+                        && !centerIds.contains(userListVO.getCenterId())) {
+                    centerIds.add(userListVO.getCenterId());
                 }
                 return userListVO;
             }).collect(Collectors.toList());
+            Map<Integer,GroupPO> groupPOMap = new HashMap<>();
+            Map<Integer,CenterPO> centerPOMap = new HashMap<>();
+            if (!groupIds.isEmpty()) {
+                groupPOMap = groupDAO.selectByIds(groupIds);
+            }
+            if (!centerIds.isEmpty()) {
+                centerPOMap = centerDAO.selectByIds(centerIds);
+            }
+            for (UserListVO userListVO : userListVOS) {
+                if (groupPOMap.containsKey(userListVO.getGroupId())) {
+                    userListVO.setGroupName(groupPOMap.get(userListVO.getGroupId()).getName());
+                }
+                if (centerPOMap.containsKey(userListVO.getCenterId())) {
+                    userListVO.setCenterName(centerPOMap.get(userListVO.getCenterId()).getName());
+                }
+            }
             listVO.setList(userListVOS);
             listVO.setTotalCount(count);
         }

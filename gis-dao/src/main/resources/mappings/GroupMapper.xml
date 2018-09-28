@@ -28,4 +28,10 @@
     <delete id="deleteById">
         delete from tb_group where id=#{id}
     </delete>
+    <select id="selectByIds" resultType="com.yugoo.gis.pojo.po.GroupPO">
+        select * from tb_group where id in
+        <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
 </mapper>

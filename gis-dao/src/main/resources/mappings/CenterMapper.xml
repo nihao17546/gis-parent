@@ -20,4 +20,10 @@
     <select id="selectByGroupId" resultType="com.yugoo.gis.pojo.po.CenterPO">
         select * from tb_center where groupId=#{groupId}
     </select>
+    <select id="selectByIds" resultType="com.yugoo.gis.pojo.po.CenterPO">
+        select * from tb_center where id in
+        <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
 </mapper>
