@@ -16,9 +16,18 @@
             height: 270px;
             overflow: hidden;
         }
-        .center-dialog .dialog__body {
+        .center-dialog .el-dialog__body {
             padding-top: 5px;
-            padding-bottom: 20px;
+            padding-bottom: 8px;
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+        .center-dialog .el-dialog__header {
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+        .center-dialog .el-dialog__headerbtn {
+            top: 10px;
         }
     </style>
 </head>

@@ -16,13 +16,18 @@
             height: 270px;
             overflow: hidden;
         }
+        .group-dialog .el-dialog__body {
+            padding-top: 5px;
+            padding-bottom: 8px;
+            padding-left: 8px;
+            padding-right: 8px;
+        }
         .group-dialog .el-dialog__header {
             padding-top: 5px;
             padding-bottom: 5px;
         }
-        .group-dialog .dialog__body {
-            padding-top: 5px;
-            padding-bottom: 20px;
+        .group-dialog .el-dialog__headerbtn {
+            top: 10px;
         }
     </style>
 </head>
