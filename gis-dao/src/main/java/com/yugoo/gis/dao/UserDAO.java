@@ -21,4 +21,5 @@ public interface UserDAO {
     int deleteById(@Param("id") Integer id);
     UserPO selectManager(@Param("groupId") Integer groupId);
     List<UserPO> selectByGroupId(@Param("groupId") Integer groupId);
+    List<UserPO> selectByCenterId(@Param("centerId") Integer centerId);
 }

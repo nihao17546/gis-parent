@@ -1,14 +1,15 @@
-package com.yugoo.gis.pojo.po;
+package com.yugoo.gis.pojo.vo;
 
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
- * @author nihao 2018/9/20
+ * @author nihao 2018/9/28
  */
 @Data
-public class CenterPO {
+public class CenterVO {
     private Integer id;
     private String name;
     private Integer groupId;
@@ -18,4 +19,8 @@ public class CenterPO {
     private String district;
     private String region;
     private Date ctime;
+
+    private String groupName;
+    private List<PointVO> points;
+    private PointVO center;
 }

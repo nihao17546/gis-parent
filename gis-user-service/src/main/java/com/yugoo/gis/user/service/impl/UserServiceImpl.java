@@ -51,18 +51,26 @@ public class UserServiceImpl implements IUserService {
 
     @PostConstruct
     public void init() {
-        MenuVO userManager = new MenuVO();
-        userManager.setName("要客组 ");
-        userManager.setPath("group.html");
-        userManager.setIndex(1);
-        userManager.setIcon("fa-sitemap");
-        adminMenus.add(userManager);
+        MenuVO user = new MenuVO();
+        user.setName("用户管理");
+        user.setPath("user.html");
+        user.setIndex(0);
+        user.setIcon("fa-group");
+        adminMenus.add(user);
+
         MenuVO group = new MenuVO();
-        group.setName("用户管理");
-        group.setPath("user.html");
-        group.setIndex(0);
-        group.setIcon("fa-group");
+        group.setName("要客组");
+        group.setPath("group.html");
+        group.setIndex(1);
+        group.setIcon("fa-sitemap");
         adminMenus.add(group);
+
+        MenuVO center = new MenuVO();
+        center.setName("营销中心");
+        center.setPath("center.html");
+        center.setIndex(2);
+        center.setIcon("fa-home");
+        adminMenus.add(center);
     }
 
     @Override

@@ -10,7 +10,7 @@
     <script src="${contextPath}/static/axios.min.js"></script>
     <script src="${contextPath}/static/hplus/js/jquery.min.js" type="text/javascript"></script>
     <script src="${contextPath}/static/lightbox-dialog/dist/js/lobibox.min.js"></script>
-    <script src="http://api.map.baidu.com/api?v=2.0&ak=Ik6ohL8oVSi3CMGRWBmr3pGsUBCYedxt"></script>
+    <script src="http://api.map.baidu.com/api?v=2.0&ak=GTd8iA2429tSYGH5DC1kmEOO9ma61UvE"></script>
     <style>
         #position {
             height: 270px;

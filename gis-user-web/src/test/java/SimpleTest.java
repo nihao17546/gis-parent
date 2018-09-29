@@ -62,7 +62,7 @@ public class SimpleTest {
 
     @Test
     public void dasadsddas() {
-        String aa = "[[1231.234,2423.74],[1231.123,12321.343],[1.2,123.87]]";
+        String aa = "[[104.054543,30.593316],[104.068413,30.596176],[104.070713,30.588715],[104.063455,30.586166]]";
         List<List<Double>> lists = JSON.parseObject(aa, new TypeReference<List<List<Double>>>(){});
         System.out.println("---");
     }

@@ -1,5 +1,7 @@
 package com.yugoo.gis.user.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.yugoo.gis.common.exception.GisRuntimeException;
 import com.yugoo.gis.dao.CenterDAO;
 import com.yugoo.gis.dao.GroupDAO;
@@ -7,6 +9,7 @@ import com.yugoo.gis.dao.UserDAO;
 import com.yugoo.gis.pojo.po.CenterPO;
 import com.yugoo.gis.pojo.po.GroupPO;
 import com.yugoo.gis.pojo.po.UserPO;
+import com.yugoo.gis.pojo.util.MapUtil;
 import com.yugoo.gis.pojo.vo.GroupListVO;
 import com.yugoo.gis.pojo.vo.ListVO;
 import com.yugoo.gis.pojo.vo.PointVO;
@@ -50,14 +53,18 @@ public class GroupServiceImpl implements IGroupService {
                     vo.setCenterPoints(new ArrayList<>());
                 }
                 else {
-                    List<PointVO> pointVOList = centerPOList.stream().map(centerPO -> {
-                        PointVO pointVO = new PointVO();
-                        BeanUtils.copyProperties(centerPO, pointVO);
-                        return pointVO;
-                    }).collect(Collectors.toList());
+                    List<PointVO> pointVOList = new ArrayList<>();
+                    for (CenterPO centerPO : centerPOList) {
+                        if (centerPO.getRegion() != null && !centerPO.getRegion().equals("")) {
+                            List<List<Double>> lists = JSON.parseObject(centerPO.getRegion(), new TypeReference<List<List<Double>>>(){});
+                            PointVO pointVO = MapUtil.getCenterB(lists);
+                            pointVO.setName(centerPO.getName());
+                            pointVOList.add(pointVO);
+                        }
+                    }
                     vo.setCenterPoints(pointVOList);
                 }
-                vo.applyCenter();
+                vo.setCenter(MapUtil.getCenterA(vo.getCenterPoints()));
                 UserPO userPO = userDAO.selectManager(vo.getId());
                 if (userPO != null) {
                     vo.setManagerName(userPO.getName());

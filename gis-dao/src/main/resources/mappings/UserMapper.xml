@@ -60,4 +60,7 @@
     <select id="selectByGroupId" resultType="com.yugoo.gis.pojo.po.UserPO">
         select * from tb_user where groupId=#{groupId}
     </select>
+    <select id="selectByCenterId" resultType="com.yugoo.gis.pojo.po.UserPO">
+        select * from tb_user where centerId=#{centerId}
+    </select>
 </mapper>

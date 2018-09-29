@@ -3,13 +3,16 @@
 <mapper namespace="com.yugoo.gis.dao.CenterDAO">
     <select id="select" resultType="com.yugoo.gis.pojo.po.CenterPO">
         select * from tb_center where 1=1
-         <if test="id != null">
-             and id=#{id}
-         </if>
         <if test="name != null">
             and name like concat('%',#{name},'%')
         </if>
          order by id desc
+    </select>
+    <select id="selectCount" resultType="java.lang.Long">
+        select count(*) from tb_center where 1=1
+        <if test="name != null">
+            and name like concat('%',#{name},'%')
+        </if>
     </select>
     <select id="selectById" resultType="com.yugoo.gis.pojo.po.CenterPO">
         select * from tb_center where id=#{id}
@@ -26,4 +29,7 @@
             #{item}
         </foreach>
     </select>
+    <delete id="deleteById">
+        delete from tb_center where id=#{id}
+    </delete>
 </mapper>
