@@ -9,4 +9,8 @@ import com.yugoo.gis.pojo.vo.ListVO;
 public interface ICenterService {
     ListVO<CenterVO> list(Integer curPage, Integer pageSize, String name);
     void delete(Integer id);
+    void create(String name, Integer groupId, String manager, String phone, String position,
+                String district, String region);
+    void update(Integer id, String name, Integer groupId, String manager, String phone, String position,
+              String district, String region);
 }

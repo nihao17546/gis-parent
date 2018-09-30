@@ -4,21 +4,21 @@
     <select id="select" resultType="com.yugoo.gis.pojo.po.CenterPO">
         select * from tb_center where 1=1
         <if test="name != null">
-            and name like concat('%',#{name},'%')
+            and `name` like concat('%',#{name},'%')
         </if>
          order by id desc
     </select>
     <select id="selectCount" resultType="java.lang.Long">
         select count(*) from tb_center where 1=1
         <if test="name != null">
-            and name like concat('%',#{name},'%')
+            and `name` like concat('%',#{name},'%')
         </if>
     </select>
     <select id="selectById" resultType="com.yugoo.gis.pojo.po.CenterPO">
         select * from tb_center where id=#{id}
     </select>
     <select id="selectAll" resultType="com.yugoo.gis.pojo.po.CenterPO">
-        select id,name,groupId from tb_center where groupId=#{groupId} order by id desc
+        select id,`name`,groupId from tb_center where groupId=#{groupId} order by id desc
     </select>
     <select id="selectByGroupId" resultType="com.yugoo.gis.pojo.po.CenterPO">
         select * from tb_center where groupId=#{groupId}
@@ -32,4 +32,25 @@
     <delete id="deleteById">
         delete from tb_center where id=#{id}
     </delete>
+    <select id="selectByName" resultType="com.yugoo.gis.pojo.po.CenterPO">
+        select * from tb_center where `name`=#{name}
+    </select>
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.yugoo.gis.pojo.po.CenterPO">
+        insert into tb_center(`name`,groupId,manager,phone,`position`,district,region,ctime)
+        value(#{name},#{groupId},#{manager},#{phone},#{position},#{district},#{region},now())
+    </insert>
+    <update id="update" parameterType="com.yugoo.gis.pojo.po.CenterPO">
+        update tb_center
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name!=null">`name`=#{name},</if>
+            <if test="groupId!=null">groupId=#{groupId},</if>
+            <if test="manager!=null">manager=#{manager},</if>
+            <if test="phone!=null">phone=#{phone},</if>
+            <if test="position!=null">`position`=#{position},</if>
+            <if test="district!=null">district=#{district},</if>
+            <if test="region!=null">region=#{region},</if>
+        </trim>
+        where id=#{id}
+    </update>
 </mapper>

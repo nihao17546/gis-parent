@@ -34,6 +34,8 @@ public class StaticConstant {
             "/group/edit",
             "/center/list",
             "/center/delete",
+            "/center/create",
+            "/center/edit",
             "/user.html",
             "/group.html",
             "/center.html");

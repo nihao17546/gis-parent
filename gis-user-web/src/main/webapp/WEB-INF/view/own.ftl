@@ -10,6 +10,7 @@
     <script src="${contextPath}/static/axios.min.js"></script>
     <script src="${contextPath}/static/hplus/js/jquery.min.js" type="text/javascript"></script>
     <script src="${contextPath}/static/lightbox-dialog/dist/js/lobibox.min.js"></script>
+    <script src="${contextPath}/static/js/common.js"></script>
     <style>
         .text {
             font-size: 14px;
@@ -120,19 +121,6 @@
         name: 'own',
         el: '#app',
         data() {
-            var phoneReg = /^[1][3,4,5,7,8,9][0-9]{9}$/
-            var validatePhone = (rule, value, callback) => {
-                if (!value) {
-                    return callback(new Error('号码不能为空!!'))
-                }
-                setTimeout(() => {
-                    if (!phoneReg.test(value)) {
-                        callback(new Error('格式有误'))
-                    } else {
-                        callback()
-                    }
-                }, 100)
-            }
             var validatePassword = (rule, value, callback) => {
                 if (!value) {
                     return callback(new Error('请确认密码'))

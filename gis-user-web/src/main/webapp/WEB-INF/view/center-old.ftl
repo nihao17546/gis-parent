@@ -10,10 +10,14 @@
     <script src="${contextPath}/static/axios.min.js"></script>
     <script src="${contextPath}/static/hplus/js/jquery.min.js" type="text/javascript"></script>
     <script src="${contextPath}/static/lightbox-dialog/dist/js/lobibox.min.js"></script>
-    <script src="${contextPath}/static/js/common.js"></script>
     <script src="http://api.map.baidu.com/api?v=2.0&ak=GTd8iA2429tSYGH5DC1kmEOO9ma61UvE"></script>
+    <!--加载鼠标绘制工具-->
     <script type="text/javascript" src="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.js"></script>
-    <link rel="stylesheet" href="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.css" />
+    <link rel="stylesheet" href="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.css">
+    <!--加载计算工具-->
+    <script type="text/javascript" src="http://api.map.baidu.com/library/GeoUtils/1.2/src/GeoUtils_min.js"></script>
+    <!--加载检索信息窗口-->
+    <script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.4/src/SearchInfoWindow_min.js"></script>	<link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.4/src/SearchInfoWindow_min.css">
 
     <style>
         #addPosition {
@@ -104,7 +108,7 @@
         <div id="position" ref="position"></div>
     </el-dialog>
 
-    <el-dialog :title="tt" :visible.sync="addVisible" class="center-dialog" :before-close="cancelAdd">
+    <el-dialog :title="tt" :visible.sync="addVisible" class="center-dialog">
         <el-form :model="addForm" :rules="addRules" ref="addForm" size="small">
             <el-form-item label="名称:" prop="name" :label-width="formLabelWidth">
                 <el-input v-model.trim="addForm.name" autocomplete="off" size="small" maxlength="20"></el-input>
@@ -133,8 +137,7 @@
                 <el-input v-model.trim="addForm.district" autocomplete="off" size="small" maxlength="100"></el-input>
             </el-form-item>
             <el-form-item label="编辑地图区域:" :label-width="formLabelWidth">
-                <el-button type="primary" @click="clear" size="mini" :disabled="loading">清除地图区域</el-button>
-                <span style="font-size: 12px;color: grey;float: right;">提示：鼠标单击选择坐标点，双击保存</span>
+
             </el-form-item>
             <div id="addPosition" ref="addPosition"></div>
             <el-form-item style="text-align: right">
@@ -152,7 +155,7 @@
         data() {
             return {
                 tt: '',
-                formLabelWidth: '110px',
+                formLabelWidth: '100px',
                 list: [],
                 totalCount: 0,
                 pageSize: 10,
@@ -161,144 +164,24 @@
                 searchName: '',
                 positionVisible: false,
                 addVisible: false,
-                addForm: {
-                    groupId: 0
-                },
+                addForm: {},
                 addRules: {
-                    name: [{required : true, message: '请输入名称', trigger: 'blur' }],
-                    manager: [{required : true, message: '请输入中心主任', trigger: 'blur' }],
-                    phone: [{ required: true, validator: validatePhone, trigger: 'blur' }],
-                    position: [{required : true, message: '请输入办公地点', trigger: 'blur' }],
-                    district: [{required : true, message: '请输入区县', trigger: 'blur' }]
                 },
-                groups: [],
-                styleOptions: {
-                    strokeColor:"blue",    //边线颜色。
-                    // fillColor:"red",      //填充颜色。当参数为空时，圆形将没有填充效果。
-                    strokeWeight: 2,       //边线的宽度，以像素为单位。
-                    strokeOpacity: 0.5,	   //边线透明度，取值范围0 - 1。
-                    // fillOpacity: 0.6,      //填充的透明度，取值范围0 - 1。
-                    // strokeStyle: 'solid' //边线的样式，solid或dashed。
-                },
-                overlays: [],
-                currentPoint: null,
-                currentMap: null
+                groups: []
             }
         },
         methods: {
-            clear() {
-                this.overlays.forEach(overlay => {
-                    this.currentMap.removeOverlay(overlay)
-                })
-                this.overlays = []
-                this.openDrawing(this.currentMap)
-            },
             groupChange() {},
             add(formName) {
-                this.loading = true;
-                this.$refs[formName].validate((valid) => {
-                    if (valid) {
-                        if (!this.overlays || this.overlays.length == 0) {
-                            this.$message({
-                                message: '请编辑地图区域',
-                                type: 'warning'
-                            });
-                            this.loading = false;
-                            return false;
-                        }
-                        let fd = new FormData();
-                        if (this.addForm.id) {
-                            fd.append('id', this.addForm.id)
-                        }
-                        if (this.addForm.name) {
-                            fd.append('name', this.addForm.name)
-                        }
-                        if (this.addForm.groupId) {
-                            fd.append('groupId', this.addForm.groupId)
-                        }
-                        if (this.addForm.manager) {
-                            fd.append('manager', this.addForm.manager)
-                        }
-                        if (this.addForm.phone) {
-                            fd.append('phone', this.addForm.phone)
-                        }
-                        if (this.addForm.position) {
-                            fd.append('position', this.addForm.position)
-                        }
-                        if (this.addForm.district) {
-                            fd.append('district', this.addForm.district)
-                        }
-                        let overlay = this.overlays[0].getPath();
-                        let region = [];
-                        overlay.forEach(grid => {
-                            let po = [grid.lng, grid.lat]
-                            region.push(po)
-                        })
-                        fd.append("region", JSON.stringify(region))
-                        let url = '${contextPath}/center/edit';
-                        if ( this.tt == '新增') {
-                            url = '${contextPath}/center/create'
-                        }
-                        axios.post(url, fd,
-                                {headers:{'Content-Type': 'application/x-www-form-urlencoded'}}).then(res => {
-                            if (res.data.code == 1) {
-                                this.$message.error(res.data.message);
-                            }
-                            else {
-                                this.cancelAdd()
-                            }
-                            this.loading = false;
-                            this.getList()
-                        }).catch(res => {
-                            console.error(res)
-                            this.loading = false;
-                        })
-                    } else {
-                        this.loading = false;
-                        return false;
-                    }
-                });
+
             },
             cancelAdd() {
-                this.addForm = {
-                    groupId: 0
-                }
+                this.addForm = {}
                 this.$refs.addForm.resetFields();
-                this.currentMap = null;
-                this.overlays = []
                 this.addVisible = false
             },
             showEdit(row) {
-                this.addForm = {
-                    id: row.id,
-                    name: row.name,
-                    groupId: row.groupId,
-                    manager: row.manager,
-                    phone: row.phone,
-                    position: row.position,
-                    district: row.district
-                };
-                this.tt = '编辑'
-                setTimeout(() => {
-                    let map = new BMap.Map(this.$refs.addPosition);
-                    let region = [];
-                    let loMax = undefined, laMax = undefined, loMin = undefined, laMin = undefined;
-                    row.points.forEach(po => {
-                        region.push(new BMap.Point(po.longitude, po.latitude))
-                        loMax = !loMax ? po.longitude : (po.longitude > loMax ? po.longitude : loMax);
-                        laMax = !laMax ? po.latitude : (po.latitude > laMax ? po.latitude : laMax);
-                        loMin = !loMin ? po.longitude : (po.longitude < loMin ? po.longitude : loMin);
-                        laMin = !laMin ? po.latitude : (po.latitude < laMin ? po.latitude : laMin);
-                    })
-                    let polygon = new BMap.Polygon(region, {strokeColor:"blue", strokeWeight:2, strokeOpacity:0.5});
-                    map.addOverlay(polygon);
-                    this.overlays.push(polygon);
-                    map.centerAndZoom(new BMap.Point(row.center.longitude, row.center.latitude),
-                            getZoom(map, loMax, loMin, laMax, laMin));
-                    map.enableScrollWheelZoom(true);
-                    this.currentMap = map;
-                }, 0);
-                this.addVisible = true
+
             },
             del(id) {
                 this.$confirm('确定要删除?', '提示', {
@@ -340,42 +223,80 @@
                         loMin = !loMin ? po.longitude : (po.longitude < loMin ? po.longitude : loMin);
                         laMin = !laMin ? po.latitude : (po.latitude < laMin ? po.latitude : laMin);
                     })
-                    map.addOverlay(new BMap.Polygon(region, {strokeColor:"blue", strokeWeight:2, strokeOpacity:0.5}));
+                    let polygon = new BMap.Polygon(region, {strokeColor:"blue", strokeWeight:2, strokeOpacity:0.5});
+                    map.addOverlay(polygon);
                     map.centerAndZoom(new BMap.Point(row.center.longitude, row.center.latitude),
-                            getZoom(map, loMax, loMin, laMax, laMin));
+                            this.getZoom(map, loMax, loMin, laMax, laMin));
                     map.enableScrollWheelZoom(true);
                 }, 0)
             },
             showAdd() {
                 this.tt = '新增';
-                setTimeout(() => {
-                    let map = new BMap.Map(this.$refs.addPosition);
-                    map.centerAndZoom(this.currentPoint ? this.currentPoint : new BMap.Point(116.417578,39.910792), 11);
-                    map.enableScrollWheelZoom(true);
-                    this.currentMap = map;
-                    this.openDrawing(map);
-                }, 0);
                 this.addVisible = true;
-            },
-            openDrawing(map) {
-                let drawingManager = new BMapLib.DrawingManager(map, {
-                    isOpen: false, //是否开启绘制模式
-                    //enableDrawingTool: true, //是否显示工具栏
-                    drawingToolOptions: {
-                        anchor: BMAP_ANCHOR_TOP_RIGHT, //位置
-                        offset: new BMap.Size(5, 5), //偏离值
-                    },
-                    circleOptions: this.styleOptions, //圆的样式
-                    polylineOptions: this.styleOptions, //线的样式
-                    polygonOptions: this.styleOptions, //多边形的样式
-                    rectangleOptions: this.styleOptions //矩形的样式
-                });
-                drawingManager.open()
-                drawingManager.setDrawingMode(BMAP_DRAWING_POLYGON);
-                drawingManager.addEventListener('overlaycomplete', e => {
-                    this.overlays.push(e.overlay);
-                    drawingManager.close()
-                });
+                setTimeout(() => {
+                    let map =new BMap.Map(this.$refs.addPosition);
+                    map.centerAndZoom(new BMap.Point(116.417578,39.910792), 11);
+                    map.enableScrollWheelZoom(true);
+                    let geolocation = new BMap.Geolocation();
+                    geolocation.getCurrentPosition(function(r){
+                        if(this.getStatus() == BMAP_STATUS_SUCCESS){
+                            map.centerAndZoom(r.point, 11);
+
+                        }
+                        else {
+                            alert('failed'+this.getStatus());
+                        }
+                    },{enableHighAccuracy: true})
+                    var menu = new BMap.ContextMenu();
+                    var item1 = new BMap.MenuItem("撤销" , function(location){
+                        map.removeOverlay(overlays[overlays.length-1]);
+                        overlays.splice(overlays.length-1,1)
+                    });
+                    menu.addItem(item1);
+                    map.addContextMenu(menu);
+                    let overlays = [];
+                    let overlaycomplete = function(e){
+                        //获取多边形端点坐标
+                        if (e.drawingMode == BMAP_DRAWING_RECTANGLE ) {
+                            //alert(' 所画的点个数：' + e.overlay.getPath().length);
+                            for(var i=0;i<e.overlay.getPath().length;i++){
+                                alert(" 点"+(i+1)+":经度"+e.overlay.getPath()[i].lng+" 纬度："+e.overlay.getPath()[i].lat);
+                            }
+                            //alert("面积："+BMapLib.GeoUtils.getPolygonArea(e.overlay))
+                        }
+                        drawingManager.close();
+                    }
+                    let styleOptions = {         
+                        strokeColor:"red",    //边线颜色。         
+                        fillColor:"red",      //填充颜色。当参数为空时，圆形将没有填充效果。         
+                        strokeWeight: 3,      //边线的宽度，以像素为单位。
+                        strokeOpacity: 0.8,    //边线透明度，取值范围0 - 1。         
+                        fillOpacity: 0.6,     //填充的透明度，取值范围0 - 1。
+                        strokeStyle: 'solid' //边线的样式，solid或dashed。     
+                    }
+                    //实例化鼠标绘制工具
+                    let drawingManager = new BMapLib.DrawingManager(map, {         
+                        isOpen: false, //是否开启绘制模式         
+                        enableDrawingTool: true, //是否显示工具栏         
+                        drawingToolOptions: {             
+                            anchor: BMAP_ANCHOR_TOP_RIGHT, //位置             
+                            offset: new BMap.Size(5, 5), //偏离值
+                            drawingModes: [//画覆盖物工具栏上显示的可选项           
+                            // BMAP_DRAWING_MARKER,           
+                            // BMAP_DRAWING_CIRCLE,           
+                            // BMAP_DRAWING_POLYLINE,           
+                            // BMAP_DRAWING_POLYGON,           
+                               BMAP_DRAWING_RECTANGLE          
+                            ]       
+                        },         
+                        circleOptions: styleOptions, //圆的样式
+                        polylineOptions: styleOptions, //线的样式         
+                        polygonOptions: styleOptions, //多边形的样式         
+                        rectangleOptions: styleOptions //矩形的样式     
+                    });
+                    //添加鼠标绘制工具监听事件，用于获取绘制结果
+                    drawingManager.addEventListener('overlaycomplete', overlaycomplete);
+                })
             },
             currentChange(currentPage) {
                 this.curPage = currentPage;
@@ -410,16 +331,20 @@
                     console.error(res)
                     this.loading = false;
                 })
+            },
+            getZoom (map, maxLng, minLng, maxLat, minLat) {
+                var zoom = ["50","100","200","500","1000","2000","5000","10000","20000","25000","50000","100000","200000","500000","1000000","2000000"]//级别18到3。
+                var pointA = new BMap.Point(maxLng,maxLat);  // 创建点坐标A
+                var pointB = new BMap.Point(minLng,minLat);  // 创建点坐标B
+                var distance = map.getDistance(pointA,pointB).toFixed(1);  //获取两点距离,保留小数点后两位
+                for (var i = 0,zoomLen = zoom.length; i < zoomLen; i++) {
+                    if(zoom[i] - distance > 0){
+                        return 18 - i + 2;//之所以会多3，是因为地图范围常常是比例尺距离的10倍以上。所以级别会增加3。
+                     }
+                };
             }
         },
         mounted() {
-            let geolocation = new BMap.Geolocation();
-            let that = this;
-            geolocation.getCurrentPosition(function(r){
-                if(this.getStatus() == BMAP_STATUS_SUCCESS){
-                    that.currentPoint = r.point;
-                }
-            },{enableHighAccuracy: true})
         },
         created: function () {
             axios.get('${contextPath}/group/all',{

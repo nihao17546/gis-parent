@@ -10,6 +10,7 @@
     <script src="${contextPath}/static/axios.min.js"></script>
     <script src="${contextPath}/static/hplus/js/jquery.min.js" type="text/javascript"></script>
     <script src="${contextPath}/static/lightbox-dialog/dist/js/lobibox.min.js"></script>
+    <script src="${contextPath}/static/js/common.js"></script>
     <script src="http://api.map.baidu.com/api?v=2.0&ak=GTd8iA2429tSYGH5DC1kmEOO9ma61UvE"></script>
     <style>
         #position {
@@ -88,7 +89,7 @@
         <div id="position" ref="position"></div>
     </el-dialog>
 
-    <el-dialog :title="tt" :visible.sync="addVisible" class="group-dialog">
+    <el-dialog :title="tt" :visible.sync="addVisible" class="group-dialog" :before-close="cancelAdd">
         <el-form :model="addForm" :rules="addRules" ref="addForm" size="small">
             <el-form-item label="名称:" prop="name" :label-width="formLabelWidth">
                 <el-input v-model.trim="addForm.name" autocomplete="off" size="small" maxlength="20"></el-input>
@@ -161,9 +162,7 @@
                                 this.$message.error(res.data.message);
                             }
                             else {
-                                this.addForm = {}
-                                this.$refs.addForm.resetFields();
-                                this.addVisible = false
+                                this.cancelAdd()
                             }
                             this.loading = false;
                             this.getList()
@@ -251,11 +250,13 @@
                 if (row.center && row.centerPoints && row.centerPoints.length > 0) {
                     this.positionVisible = true
                     setTimeout(() => {
-                        let map =new BMap.Map(this.$refs.position); // 创建Map实例
-                        // 初始化地图,设置中心点坐标和地图级别
-                        map.centerAndZoom(new BMap.Point(row.center.longitude, row.center.latitude), 13);
-                        map.enableScrollWheelZoom(true); //开启鼠标滚轮缩放
+                        let map =new BMap.Map(this.$refs.position);
+                        let loMax = undefined, laMax = undefined, loMin = undefined, laMin = undefined;
                         row.centerPoints.forEach(centerPoint => {
+                            loMax = !loMax ? centerPoint.longitude : (centerPoint.longitude > loMax ? centerPoint.longitude : loMax);
+                            laMax = !laMax ? centerPoint.latitude : (centerPoint.latitude > laMax ? centerPoint.latitude : laMax);
+                            loMin = !loMin ? centerPoint.longitude : (centerPoint.longitude < loMin ? centerPoint.longitude : loMin);
+                            laMin = !laMin ? centerPoint.latitude : (centerPoint.latitude < laMin ? centerPoint.latitude : laMin);
                             let point = new BMap.Point(centerPoint.longitude, centerPoint.latitude);
                             let marker = new BMap.Marker(point);
                             map.addOverlay(marker);
@@ -267,6 +268,9 @@
                                 map.openInfoWindow(infoWindow, point); //开启信息窗口
                             });
                         })
+                        map.centerAndZoom(new BMap.Point(row.center.longitude, row.center.latitude),
+                                getZoom(map, loMax, loMin, laMax, laMin));
+                        map.enableScrollWheelZoom(true);
                     }, 0)
                 } else {
                     this.$message({

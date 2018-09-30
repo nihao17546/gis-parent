@@ -91,4 +91,39 @@ public class CenterServiceImpl implements ICenterService {
         }
         centerDAO.deleteById(id);
     }
+
+    @Override
+    public void create(String name, Integer groupId, String manager, String phone, String position, String district, String region) {
+        CenterPO check = centerDAO.selectByName(name);
+        if (check != null) {
+            throw new GisRuntimeException("该名称已经存在");
+        }
+        CenterPO centerPO = new CenterPO();
+        centerPO.setName(name);
+        centerPO.setGroupId(groupId);
+        centerPO.setManager(manager);
+        centerPO.setPhone(phone);
+        centerPO.setPosition(position);
+        centerPO.setDistrict(district);
+        centerPO.setRegion(region);
+        centerDAO.insert(centerPO);
+    }
+
+    @Override
+    public void update(Integer id, String name, Integer groupId, String manager, String phone, String position, String district, String region) {
+        CenterPO check = centerDAO.selectByName(name);
+        if (check != null && !check.getId().equals(id)) {
+            throw new GisRuntimeException("该名称已经存在");
+        }
+        CenterPO centerPO = new CenterPO();
+        centerPO.setName(name);
+        centerPO.setGroupId(groupId);
+        centerPO.setManager(manager);
+        centerPO.setPhone(phone);
+        centerPO.setPosition(position);
+        centerPO.setDistrict(district);
+        centerPO.setRegion(region);
+        centerPO.setId(id);
+        centerDAO.update(centerPO);
+    }
 }

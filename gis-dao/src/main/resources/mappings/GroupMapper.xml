@@ -3,24 +3,24 @@
 <mapper namespace="com.yugoo.gis.dao.GroupDAO">
     <insert id="insert" useGeneratedKeys="true" keyProperty="id"
             parameterType="com.yugoo.gis.pojo.po.GroupPO">
-        insert ignore into tb_group(name,position,ctime)
+        insert ignore into tb_group(`name`,`position`,ctime)
         values(#{name},#{position},now())
     </insert>
     <select id="select" resultType="com.yugoo.gis.pojo.po.GroupPO">
         select * from tb_group where 1=1
          <if test="name != null">
-             and name like concat('%',#{name},'%')
+             and `name` like concat('%',#{name},'%')
          </if>
          order by id desc
     </select>
     <select id="selectCount" resultType="java.lang.Long">
         select count(1) from tb_group where 1=1
         <if test="name != null">
-            and name like concat('%',#{name},'%')
+            and `name` like concat('%',#{name},'%')
         </if>
     </select>
     <update id="update" parameterType="com.yugoo.gis.pojo.po.GroupPO">
-        update tb_group set name=#{name},position=#{position} where id=#{id}
+        update tb_group set `name`=#{name},`position`=#{position} where id=#{id}
     </update>
     <select id="selectById" resultType="com.yugoo.gis.pojo.po.GroupPO">
         select * from tb_group where id = #{id}

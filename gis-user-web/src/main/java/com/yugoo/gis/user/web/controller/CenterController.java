@@ -48,4 +48,30 @@ public class CenterController extends BaseController {
         }
         return ok().json();
     }
+
+    @RequestMapping("/create")
+    public String create(@RequestParam String name, @RequestParam Integer groupId,
+                         @RequestParam String manager, @RequestParam String phone,
+                         @RequestParam String position, @RequestParam String district,
+                         @RequestParam String region) {
+        try {
+            centerService.create(name, groupId, manager, phone, position, district, region);
+        } catch (GisRuntimeException e) {
+            return fail(e.getMessage()).json();
+        }
+        return ok().json();
+    }
+
+    @RequestMapping("/edit")
+    public String edit(@RequestParam String name, @RequestParam Integer groupId,
+                       @RequestParam String manager, @RequestParam String phone,
+                       @RequestParam String position, @RequestParam String district,
+                       @RequestParam String region, @RequestParam Integer id) {
+        try {
+            centerService.update(id, name, groupId, manager, phone, position, district, region);
+        } catch (GisRuntimeException e) {
+            return fail(e.getMessage()).json();
+        }
+        return ok().json();
+    }
 }

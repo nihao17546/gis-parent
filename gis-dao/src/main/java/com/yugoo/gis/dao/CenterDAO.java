@@ -20,4 +20,7 @@ public interface CenterDAO {
     @MapKey("id")
     Map<Integer,CenterPO> selectByIds(@Param("ids") List<Integer> ids);
     int deleteById(@Param("id") Integer id);
+    CenterPO selectByName(@Param("name") String name);
+    int insert(CenterPO centerPO);
+    int update(CenterPO centerPO);
 }
