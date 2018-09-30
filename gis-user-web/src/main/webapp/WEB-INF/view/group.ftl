@@ -68,7 +68,7 @@
                 <el-button-group>
                     <el-button type="primary" size="mini" :disabled="loading"
                                @click="position(props.row)">定位</el-button>
-                    <el-button type="primary" size="mini" :disabled="loading">营销中心</el-button>
+                    <el-button type="primary" size="mini" :disabled="loading" @click="openCenter(props.row)">营销中心</el-button>
                     <el-button type="primary" size="mini" :disabled="loading" @click="del(props.row.id)">删除</el-button>
                     <el-button type="primary" size="mini" :disabled="loading" @click="showEdit(props.row)">编辑</el-button>
                 </el-button-group>
@@ -129,6 +129,15 @@
             }
         },
         methods: {
+            openCenter(row) {
+                if ($('#center', parent.document).length == 1) {
+                    $('#center', parent.document).attr('param', row.id);
+                    $('#center', parent.document).attr('name', '营销中心[' + row.name + ']');
+                    $('#center', parent.document).click()
+                } else {
+
+                }
+            },
             showEdit(row) {
                 this.addForm = {
                     id: row.id,

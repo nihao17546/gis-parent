@@ -33,9 +33,10 @@ public class CenterController extends BaseController {
 
     @RequestMapping("/list")
     public String list(@RequestParam(required = false) String name,
+                       @RequestParam(required = false) Integer groupId,
                        @RequestParam(required = false, defaultValue = "1") Integer curPage,
                        @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
-        ListVO<CenterVO> listVO = centerService.list(curPage, pageSize, name);
+        ListVO<CenterVO> listVO = centerService.list(curPage, pageSize, name, groupId);
         return ok().pull("data", listVO).json();
     }
 

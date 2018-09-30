@@ -6,12 +6,18 @@
         <if test="name != null">
             and `name` like concat('%',#{name},'%')
         </if>
+        <if test="groupId != null and groupId != 0">
+            and groupId=#{groupId}
+        </if>
          order by id desc
     </select>
     <select id="selectCount" resultType="java.lang.Long">
         select count(*) from tb_center where 1=1
         <if test="name != null">
             and `name` like concat('%',#{name},'%')
+        </if>
+        <if test="groupId != null and groupId != 0">
+            and groupId=#{groupId}
         </if>
     </select>
     <select id="selectById" resultType="com.yugoo.gis.pojo.po.CenterPO">

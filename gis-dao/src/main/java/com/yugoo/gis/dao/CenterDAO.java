@@ -12,8 +12,8 @@ import java.util.Map;
  * @author nihao 2018/9/20
  */
 public interface CenterDAO {
-    List<CenterPO> select(@Param("name") String name, RowBounds rowBounds);
-    Long selectCount(@Param("name") String name);
+    List<CenterPO> select(@Param("name") String name, @Param("groupId") Integer groupId, RowBounds rowBounds);
+    Long selectCount(@Param("name") String name, @Param("groupId") Integer groupId);
     CenterPO selectById(@Param("id") Integer id);
     List<CenterPO> selectAll(@Param("groupId") Integer groupId);
     List<CenterPO> selectByGroupId(@Param("groupId") Integer groupId);

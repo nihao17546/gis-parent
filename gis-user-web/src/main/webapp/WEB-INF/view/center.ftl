@@ -41,7 +41,7 @@
 </head>
 <body>
 <div id="app" v-loading="loading">
-    <div style="padding-left: 5px;">
+    <div style="padding-left: 5px;" v-if="ifFromIndex">
         <el-button type="primary" size="small" @click="showAdd">新增</el-button>
         <el-input style="width: 260px;border-radius: 0px;" @keyup.enter.native="search" v-on:clear="search"
                   v-model.trim="searchName" size="small" placeholder="请输入搜索名称" clearable>
@@ -158,6 +158,7 @@
         el: '#app',
         data() {
             return {
+                ifFromIndex: true,
                 selectCityName: '',
                 tt: '',
                 formLabelWidth: '110px',
@@ -167,6 +168,7 @@
                 curPage: 1,
                 loading: false,
                 searchName: '',
+                searchGroupId: 0,
                 positionVisible: false,
                 addVisible: false,
                 addForm: {
@@ -415,6 +417,7 @@
             },
             search() {
                 this.curPage = 1;
+                this.searchGroupId = 0;
                 this.getList()
             },
             getList() {
@@ -427,7 +430,8 @@
                     params: {
                         curPage: this.curPage,
                         pageSize: this.pageSize,
-                        name: name
+                        name: name,
+                        groupId: this.searchGroupId
                     }
                 }).then(res => {
                     if (res.data.code == 1) {
@@ -442,7 +446,13 @@
                     console.error(res)
                     this.loading = false;
                 })
-            }
+            },
+            getQueryString(name) {
+                var r = document.location.search.substr(1).match(new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"));
+                if (r != null)
+                    return unescape(r[2]);
+                return null;
+    }
         },
         mounted() {
             let geolocation = new BMap.Geolocation();
@@ -454,8 +464,14 @@
             },{enableHighAccuracy: true})
         },
         created: function () {
+            let groupId = this.getQueryString('groupId');
+            if (groupId) {
+                this.searchGroupId = groupId;
+                this.ifFromIndex = false;
+            }
             axios.get('${contextPath}/group/all',{
                 params: {
+                    groupId: this.searchGroupId
                 }
             }).then(res => {
                 if (res.data.code == 1) {

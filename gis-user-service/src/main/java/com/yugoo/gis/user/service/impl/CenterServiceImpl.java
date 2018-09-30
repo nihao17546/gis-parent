@@ -41,11 +41,11 @@ public class CenterServiceImpl implements ICenterService {
     private UserDAO userDAO;
 
     @Override
-    public ListVO<CenterVO> list(Integer curPage, Integer pageSize, String name) {
-        long count = centerDAO.selectCount(name);
+    public ListVO<CenterVO> list(Integer curPage, Integer pageSize, String name, Integer groupId) {
+        long count = centerDAO.selectCount(name, groupId);
         ListVO<CenterVO> listVO = new ListVO<>(curPage, pageSize);
         if (count > 0) {
-            List<CenterPO> poList = centerDAO.select(name, new RowBounds((curPage - 1) * pageSize, pageSize));
+            List<CenterPO> poList = centerDAO.select(name, groupId, new RowBounds((curPage - 1) * pageSize, pageSize));
             List<Integer> groupIds = new ArrayList<>();
             List<CenterVO> voList = poList.stream().map(po -> {
                 CenterVO vo = new CenterVO();

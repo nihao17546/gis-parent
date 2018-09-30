@@ -52,11 +52,16 @@
                             <li>
                                 <a class="J_menuItem" href="${menu.path}" data-index="${menu.index}"
                                    <#if menu.target ??>target="${menu.target}"</#if>
+                                   <#if menu.name == "营销中心">id="centerMenu"</#if>
                                 >
                                     <#if menu.icon ??>
                                         <i class="fa ${menu.icon}"></i>
                                     </#if>
-                                    <span class="nav-label">${menu.name}</span>
+                                    <span class="nav-label"
+                                          <#if menu.name == "营销中心">id="centerMenuLabel"</#if>
+                                    >
+                                        ${menu.name}
+                                    </span>
                                 </a>
                             </li>
                         <#else>
@@ -72,11 +77,18 @@
                                     <ul class="nav nav-second-level">
                                         <#list menu.menus as child>
                                             <li>
-                                                <a class="J_menuItem" href="${child.path}" data-index="${child.index}" <#if menu.target ??>target="${menu.target}"</#if>>
+                                                <a class="J_menuItem" href="${child.path}" data-index="${child.index}"
+                                                   <#if menu.target ??>target="${menu.target}"</#if>
+                                                   <#if menu.name == "营销中心">id="centerMenu"</#if>
+                                                >
                                                     <#if child.icon ??>
                                                         <i class="fa ${child.icon}"></i>
                                                     </#if>
-                                                    <span class="nav-label">${child.name}</span>
+                                                    <span class="nav-label"
+                                                          <#if menu.name == "营销中心">id="centerMenuLabel"</#if>
+                                                    >
+                                                        ${child.name}
+                                                    </span>
                                                 </a>
                                             </li>
                                         </#list>
@@ -146,6 +158,8 @@
             </div>
         </div>
     </div>
+
+    <button id="center" onclick="openCenter(this)" param="" style="display: none">营销中心</button>
 </div>
 
 <script src="${contextPath}/static/hplus/js/jquery.min.js" type="text/javascript"></script>
@@ -187,6 +201,23 @@
             }
         });
     }
+
+    function openCenter(o) {
+        if ($('#centerMenu').length == 1) {
+            if ($(o).attr('param') != '') {
+                let href = $('#centerMenu').attr('href');
+                let html = $('#centerMenuLabel').html();
+                $('#centerMenu').attr('href', href + '?groupId=' + $(o).attr('param'));
+                $('#centerMenuLabel').html($(o).attr('name'));
+                $('#centerMenu').click();
+                $('#centerMenu').attr('href', href);
+                $('#centerMenuLabel').html(html);
+                $(o).attr('param', '');
+                $(o).attr('name', '');
+            }
+        }
+    }
+
     $(function () {
         <#--$.ajax({-->
             <#--type: 'get',-->
