@@ -247,12 +247,17 @@
                 });
             },
             position(row) {
-                if (row.center && row.centerPoints && row.centerPoints.length > 0) {
+                if (row.centerPoints && row.centerPoints.length > 0) {
                     this.positionVisible = true
                     setTimeout(() => {
                         let map =new BMap.Map(this.$refs.position);
                         let loMax = undefined, laMax = undefined, loMin = undefined, laMin = undefined;
+                        let len = 0;
+                        let wholeLo = 0, wholeLa = 0;
                         row.centerPoints.forEach(centerPoint => {
+                            len ++;
+                            wholeLo = wholeLo + centerPoint.longitude;
+                            wholeLa = wholeLa + centerPoint.latitude;
                             loMax = !loMax ? centerPoint.longitude : (centerPoint.longitude > loMax ? centerPoint.longitude : loMax);
                             laMax = !laMax ? centerPoint.latitude : (centerPoint.latitude > laMax ? centerPoint.latitude : laMax);
                             loMin = !loMin ? centerPoint.longitude : (centerPoint.longitude < loMin ? centerPoint.longitude : loMin);
@@ -268,7 +273,7 @@
                                 map.openInfoWindow(infoWindow, point); //开启信息窗口
                             });
                         })
-                        map.centerAndZoom(new BMap.Point(row.center.longitude, row.center.latitude),
+                        map.centerAndZoom(new BMap.Point(wholeLo / len, wholeLa / len),
                                 getZoom(map, loMax, loMin, laMax, laMin));
                         map.enableScrollWheelZoom(true);
                     }, 0)

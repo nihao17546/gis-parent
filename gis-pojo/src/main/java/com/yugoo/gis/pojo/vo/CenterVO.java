@@ -22,5 +22,4 @@ public class CenterVO {
 
     private String groupName;
     private List<PointVO> points;
-    private PointVO center;
 }

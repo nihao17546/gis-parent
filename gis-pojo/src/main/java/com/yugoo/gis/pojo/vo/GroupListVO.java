@@ -18,5 +18,4 @@ public class GroupListVO {
     private String managerName;
     private String managerPhone;
     private List<PointVO> centerPoints;
-    private PointVO center;
 }

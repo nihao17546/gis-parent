@@ -283,17 +283,22 @@
                     let map = new BMap.Map(this.$refs.addPosition);
                     let region = [];
                     let loMax = undefined, laMax = undefined, loMin = undefined, laMin = undefined;
+                    let len = 0;
+                    let wholeLo = 0, wholeLa = 0;
                     row.points.forEach(po => {
                         region.push(new BMap.Point(po.longitude, po.latitude))
                         loMax = !loMax ? po.longitude : (po.longitude > loMax ? po.longitude : loMax);
                         laMax = !laMax ? po.latitude : (po.latitude > laMax ? po.latitude : laMax);
                         loMin = !loMin ? po.longitude : (po.longitude < loMin ? po.longitude : loMin);
                         laMin = !laMin ? po.latitude : (po.latitude < laMin ? po.latitude : laMin);
+                        len ++;
+                        wholeLo = wholeLo + po.longitude;
+                        wholeLa = wholeLa + po.latitude;
                     })
                     let polygon = new BMap.Polygon(region, {strokeColor:"blue", strokeWeight:2, strokeOpacity:0.5});
                     map.addOverlay(polygon);
                     this.overlays.push(polygon);
-                    map.centerAndZoom(new BMap.Point(row.center.longitude, row.center.latitude),
+                    map.centerAndZoom(new BMap.Point(wholeLo / len, wholeLa / len),
                             getZoom(map, loMax, loMin, laMax, laMin));
                     map.enableScrollWheelZoom(true);
                     this.currentMap = map;
@@ -333,15 +338,20 @@
                     let map =new BMap.Map(this.$refs.position);
                     let region = [];
                     let loMax = undefined, laMax = undefined, loMin = undefined, laMin = undefined;
+                    let len = 0;
+                    let wholeLo = 0, wholeLa = 0;
                     row.points.forEach(po => {
                         region.push(new BMap.Point(po.longitude, po.latitude))
                         loMax = !loMax ? po.longitude : (po.longitude > loMax ? po.longitude : loMax);
                         laMax = !laMax ? po.latitude : (po.latitude > laMax ? po.latitude : laMax);
                         loMin = !loMin ? po.longitude : (po.longitude < loMin ? po.longitude : loMin);
                         laMin = !laMin ? po.latitude : (po.latitude < laMin ? po.latitude : laMin);
+                        len ++;
+                        wholeLo = wholeLo + po.longitude;
+                        wholeLa = wholeLa + po.latitude;
                     })
                     map.addOverlay(new BMap.Polygon(region, {strokeColor:"blue", strokeWeight:2, strokeOpacity:0.5}));
-                    map.centerAndZoom(new BMap.Point(row.center.longitude, row.center.latitude),
+                    map.centerAndZoom(new BMap.Point(wholeLo / len, wholeLa / len),
                             getZoom(map, loMax, loMin, laMax, laMin));
                     map.enableScrollWheelZoom(true);
                 }, 0)

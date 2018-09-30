@@ -9,7 +9,6 @@ import com.yugoo.gis.dao.UserDAO;
 import com.yugoo.gis.pojo.po.CenterPO;
 import com.yugoo.gis.pojo.po.GroupPO;
 import com.yugoo.gis.pojo.po.UserPO;
-import com.yugoo.gis.pojo.util.MapUtil;
 import com.yugoo.gis.pojo.vo.GroupListVO;
 import com.yugoo.gis.pojo.vo.ListVO;
 import com.yugoo.gis.pojo.vo.PointVO;
@@ -21,6 +20,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,14 +57,13 @@ public class GroupServiceImpl implements IGroupService {
                     for (CenterPO centerPO : centerPOList) {
                         if (centerPO.getRegion() != null && !centerPO.getRegion().equals("")) {
                             List<List<Double>> lists = JSON.parseObject(centerPO.getRegion(), new TypeReference<List<List<Double>>>(){});
-                            PointVO pointVO = MapUtil.getCenterB(lists);
+                            PointVO pointVO = getCenter(lists);
                             pointVO.setName(centerPO.getName());
                             pointVOList.add(pointVO);
                         }
                     }
                     vo.setCenterPoints(pointVOList);
                 }
-                vo.setCenter(MapUtil.getCenterA(vo.getCenterPoints()));
                 UserPO userPO = userDAO.selectManager(vo.getId());
                 if (userPO != null) {
                     vo.setManagerName(userPO.getName());
@@ -89,5 +88,23 @@ public class GroupServiceImpl implements IGroupService {
             throw new GisRuntimeException("该要客组关联有用户，不能删除");
         }
         groupDAO.deleteById(id);
+    }
+
+    private final DecimalFormat df = new DecimalFormat("0.000000");
+    public final PointVO getCenter(List<List<Double>> list) {
+        if (list == null || list.isEmpty()) {
+            return null;
+        }
+        int size = list.size();
+        double allLongitude = 0.0;
+        double allLatitude = 0.0;
+        for (List<Double> doubles : list) {
+            allLongitude += doubles.get(0);
+            allLatitude += doubles.get(1);
+        }
+        PointVO center = new PointVO();
+        center.setLongitude(Double.parseDouble(df.format(allLongitude / size)));
+        center.setLatitude(Double.parseDouble(df.format(allLatitude / size)));
+        return center;
     }
 }

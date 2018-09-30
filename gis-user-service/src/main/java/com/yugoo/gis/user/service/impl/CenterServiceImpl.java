@@ -9,7 +9,6 @@ import com.yugoo.gis.dao.UserDAO;
 import com.yugoo.gis.pojo.po.CenterPO;
 import com.yugoo.gis.pojo.po.GroupPO;
 import com.yugoo.gis.pojo.po.UserPO;
-import com.yugoo.gis.pojo.util.MapUtil;
 import com.yugoo.gis.pojo.vo.CenterVO;
 import com.yugoo.gis.pojo.vo.ListVO;
 import com.yugoo.gis.pojo.vo.PointVO;
@@ -62,7 +61,6 @@ public class CenterServiceImpl implements ICenterService {
                     }
                     vo.setPoints(pointVOList);
                 }
-                vo.setCenter(MapUtil.getCenterA(vo.getPoints()));
                 if (!groupIds.contains(vo.getGroupId())) {
                     groupIds.add(vo.getGroupId());
                 }
