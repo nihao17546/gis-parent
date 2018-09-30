@@ -132,9 +132,16 @@
             <el-form-item label="区县:" prop="district" :label-width="formLabelWidth">
                 <el-input v-model.trim="addForm.district" autocomplete="off" size="small" maxlength="100"></el-input>
             </el-form-item>
-            <el-form-item label="编辑地图区域:" :label-width="formLabelWidth">
-                <el-button type="primary" @click="clear" size="mini" :disabled="loading">清除地图区域</el-button>
-                <span style="font-size: 12px;color: grey;float: right;">提示：鼠标单击选择坐标点，双击保存</span>
+            <el-form-item label="编辑地图区域:" :label-width="formLabelWidth" style="margin-bottom: 3px;">
+                <el-button type="primary" @click="clear" size="mini" :disabled="overlays.length == 0">清除地图区域</el-button>
+                <span style="font-size: 12px;color: grey;float: right;padding-right: 10px;">提示：鼠标单击选择坐标点，双击保存</span>
+            </el-form-item>
+            <el-form-item label="" label-width="10px" style="margin-bottom: 5px;">
+                <el-input style="width: 220px;padding-left: 5px;padding-right: 5px;border-radius: 0px;float: right;"
+                          @keyup.enter.native="selectCity" v-model.trim="selectCityName"
+                          size="mini" placeholder="请输入城市名称" maxlength="30" clearable>
+                    <el-button slot="append" :loading="loading" @click="selectCity">定位城市</el-button>
+                </el-input>
             </el-form-item>
             <div id="addPosition" ref="addPosition"></div>
             <el-form-item style="text-align: right">
@@ -151,6 +158,7 @@
         el: '#app',
         data() {
             return {
+                selectCityName: '',
                 tt: '',
                 formLabelWidth: '110px',
                 list: [],
@@ -186,6 +194,11 @@
             }
         },
         methods: {
+            selectCity() {
+                if (this.selectCityName != '') {
+                    this.currentMap.centerAndZoom(this.selectCityName, 13);
+                }
+            },
             clear() {
                 this.overlays.forEach(overlay => {
                     this.currentMap.removeOverlay(overlay)
@@ -265,7 +278,8 @@
                 }
                 this.$refs.addForm.resetFields();
                 this.currentMap = null;
-                this.overlays = []
+                this.overlays = [];
+                this.selectCityName = '',
                 this.addVisible = false
             },
             showEdit(row) {
@@ -301,6 +315,10 @@
                     map.centerAndZoom(new BMap.Point(wholeLo / len, wholeLa / len),
                             getZoom(map, loMax, loMin, laMax, laMin));
                     map.enableScrollWheelZoom(true);
+                    map.addControl(new BMap.NavigationControl({
+                        anchor: BMAP_ANCHOR_TOP_LEFT,
+                        type: BMAP_NAVIGATION_CONTROL_LARGE
+                    }));
                     this.currentMap = map;
                 }, 0);
                 this.addVisible = true
@@ -362,6 +380,10 @@
                     let map = new BMap.Map(this.$refs.addPosition);
                     map.centerAndZoom(this.currentPoint ? this.currentPoint : new BMap.Point(116.417578,39.910792), 11);
                     map.enableScrollWheelZoom(true);
+                    map.addControl(new BMap.NavigationControl({
+                        anchor: BMAP_ANCHOR_TOP_LEFT,
+                        type: BMAP_NAVIGATION_CONTROL_LARGE
+                    }));
                     this.currentMap = map;
                     this.openDrawing(map);
                 }, 0);
