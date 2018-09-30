@@ -54,9 +54,11 @@ public class CenterController extends BaseController {
     public String create(@RequestParam String name, @RequestParam Integer groupId,
                          @RequestParam String manager, @RequestParam String phone,
                          @RequestParam String position, @RequestParam String district,
-                         @RequestParam String region) {
+                         @RequestParam String region, @RequestParam Double loMax,
+                         @RequestParam Double loMin, @RequestParam Double laMax,
+                         @RequestParam Double laMin) {
         try {
-            centerService.create(name, groupId, manager, phone, position, district, region);
+            centerService.create(name, groupId, manager, phone, position, district, region, loMax, loMin, laMax, laMin);
         } catch (GisRuntimeException e) {
             return fail(e.getMessage()).json();
         }
@@ -67,9 +69,11 @@ public class CenterController extends BaseController {
     public String edit(@RequestParam String name, @RequestParam Integer groupId,
                        @RequestParam String manager, @RequestParam String phone,
                        @RequestParam String position, @RequestParam String district,
-                       @RequestParam String region, @RequestParam Integer id) {
+                       @RequestParam String region, @RequestParam Integer id,
+                       @RequestParam Double loMax, @RequestParam Double loMin,
+                       @RequestParam Double laMax, @RequestParam Double laMin) {
         try {
-            centerService.update(id, name, groupId, manager, phone, position, district, region);
+            centerService.update(id, name, groupId, manager, phone, position, district, region, loMax, loMin, laMax, laMin);
         } catch (GisRuntimeException e) {
             return fail(e.getMessage()).json();
         }

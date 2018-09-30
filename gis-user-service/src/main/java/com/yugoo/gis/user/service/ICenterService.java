@@ -10,7 +10,9 @@ public interface ICenterService {
     ListVO<CenterVO> list(Integer curPage, Integer pageSize, String name, Integer groupId);
     void delete(Integer id);
     void create(String name, Integer groupId, String manager, String phone, String position,
-                String district, String region);
+                String district, String region,
+                Double loMax, Double loMin, Double laMax, Double laMin);
     void update(Integer id, String name, Integer groupId, String manager, String phone, String position,
-              String district, String region);
+              String district, String region,
+                Double loMax, Double loMin, Double laMax, Double laMin);
 }

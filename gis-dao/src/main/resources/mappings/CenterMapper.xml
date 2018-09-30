@@ -43,8 +43,8 @@
     </select>
     <insert id="insert" useGeneratedKeys="true" keyProperty="id"
             parameterType="com.yugoo.gis.pojo.po.CenterPO">
-        insert into tb_center(`name`,groupId,manager,phone,`position`,district,region,ctime)
-        value(#{name},#{groupId},#{manager},#{phone},#{position},#{district},#{region},now())
+        insert into tb_center(`name`,groupId,manager,phone,`position`,district,region,loMax,loMin,laMax,laMin,ctime)
+        value(#{name},#{groupId},#{manager},#{phone},#{position},#{district},#{region},#{loMax},#{loMin},#{laMax},#{laMin},now())
     </insert>
     <update id="update" parameterType="com.yugoo.gis.pojo.po.CenterPO">
         update tb_center
@@ -56,6 +56,10 @@
             <if test="position!=null">`position`=#{position},</if>
             <if test="district!=null">district=#{district},</if>
             <if test="region!=null">region=#{region},</if>
+            loMax=#{loMax},
+            loMin=#{loMin},
+            laMax=#{laMax},
+            laMin=#{laMin},
         </trim>
         where id=#{id}
     </update>

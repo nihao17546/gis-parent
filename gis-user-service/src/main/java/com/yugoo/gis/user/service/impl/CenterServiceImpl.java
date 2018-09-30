@@ -91,7 +91,8 @@ public class CenterServiceImpl implements ICenterService {
     }
 
     @Override
-    public void create(String name, Integer groupId, String manager, String phone, String position, String district, String region) {
+    public void create(String name, Integer groupId, String manager, String phone, String position, String district,
+                       String region, Double loMax, Double loMin, Double laMax, Double laMin) {
         CenterPO check = centerDAO.selectByName(name);
         if (check != null) {
             throw new GisRuntimeException("该名称已经存在");
@@ -104,11 +105,16 @@ public class CenterServiceImpl implements ICenterService {
         centerPO.setPosition(position);
         centerPO.setDistrict(district);
         centerPO.setRegion(region);
+        centerPO.setLoMax(loMax);
+        centerPO.setLoMin(loMin);
+        centerPO.setLaMax(laMax);
+        centerPO.setLaMin(laMin);
         centerDAO.insert(centerPO);
     }
 
     @Override
-    public void update(Integer id, String name, Integer groupId, String manager, String phone, String position, String district, String region) {
+    public void update(Integer id, String name, Integer groupId, String manager, String phone, String position,
+                       String district, String region ,Double loMax, Double loMin, Double laMax, Double laMin) {
         CenterPO check = centerDAO.selectByName(name);
         if (check != null && !check.getId().equals(id)) {
             throw new GisRuntimeException("该名称已经存在");
@@ -121,6 +127,10 @@ public class CenterServiceImpl implements ICenterService {
         centerPO.setPosition(position);
         centerPO.setDistrict(district);
         centerPO.setRegion(region);
+        centerPO.setLoMax(loMax);
+        centerPO.setLoMin(loMin);
+        centerPO.setLaMax(laMax);
+        centerPO.setLaMin(laMin);
         centerPO.setId(id);
         centerDAO.update(centerPO);
     }

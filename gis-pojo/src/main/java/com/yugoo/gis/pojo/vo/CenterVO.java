@@ -18,6 +18,10 @@ public class CenterVO {
     private String position;
     private String district;
     private String region;
+    private Double loMax;
+    private Double loMin;
+    private Double laMax;
+    private Double laMin;
     private Date ctime;
 
     private String groupName;
