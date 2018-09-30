@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yugoo.gis.dao.StreetDAO">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.yugoo.gis.pojo.po.StreetPO">
+        insert into tb_street(`name`,`position`,`type`,manager,phone,pic,remark,competitor,ctime)
+        values(#{name},#{position},#{type},#{manager},#{phone},#{pic},#{remark},#{competitor},now())
+    </insert>
+    <select id="selectByName" resultType="com.yugoo.gis.pojo.po.StreetPO">
+        select id,`name`,`position`,`type`,manager,phone,remark,ctime from tb_street where `name`=#{name}
+    </select>
+    <select id="select" resultType="com.yugoo.gis.pojo.po.StreetPO">
+        select * from tb_street where 1=1
+        <if test="name != null">
+            and `name` like concat('%',#{name},'%')
+        </if>
+        order by id desc
+    </select>
+    <select id="selectCount" resultType="java.lang.Long">
+        select count(1) from tb_street where 1=1
+        <if test="name != null">
+            and `name` like concat('%',#{name},'%')
+        </if>
+    </select>
+</mapper>

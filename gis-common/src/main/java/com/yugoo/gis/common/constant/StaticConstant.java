@@ -36,9 +36,11 @@ public class StaticConstant {
             "/center/delete",
             "/center/create",
             "/center/edit",
+            "/street/list",
             "/user.html",
             "/group.html",
-            "/center.html");
+            "/center.html",
+            "/street.html");
     public static List<String> getPathByRole(Integer roleId) {
         Role role = Role.getByValue(roleId);
         List<String> list = Lists.newArrayList(JUST_NEED_LOGIN_PATH);
