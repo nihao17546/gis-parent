@@ -30,7 +30,7 @@
             `type`=#{type},
             manager=#{manager},
             phone=#{phone},
-            pic=#{pic},
+            <if test="pic!=null">pic=#{pic},</if>
             remark=#{remark},
             competitor=#{competitor},
         </trim>

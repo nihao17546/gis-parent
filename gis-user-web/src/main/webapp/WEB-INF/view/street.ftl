@@ -369,7 +369,6 @@
                     else {
                         this.addForm = res.data.info
                         if (res.data.info.pic && res.data.info.pic.length > 0) {
-                            this.addForm.file = res.data.info.pic
                             this.picBase64 = 'data:image/jpeg;base64,' + res.data.info.pic;
                         }
                         this.tt = '编辑';

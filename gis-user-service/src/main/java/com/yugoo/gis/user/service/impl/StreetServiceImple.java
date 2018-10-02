@@ -32,15 +32,10 @@ public class StreetServiceImple implements IStreetService {
 
     @Override
     public ListVO<StreetVO> list(Integer curPage, Integer pageSize, String name) {
-        long a = System.currentTimeMillis();
         long count = streetDAO.selectCount(name);
-        logger.info("1->{}", System.currentTimeMillis() - a);
         ListVO<StreetVO> listVO = new ListVO<>(curPage, pageSize);
         if (count > 0) {
-            long b = System.currentTimeMillis();
             List<StreetPO> streetPOList = streetDAO.select(name, new RowBounds((curPage - 1) * pageSize, pageSize));
-            logger.info("2->{}", System.currentTimeMillis() - b);
-            long c = System.currentTimeMillis();
             List<StreetVO> streetVOList = streetPOList.stream().map(po -> {
                 StreetVO vo = new StreetVO();
                 BeanUtils.copyProperties(po, vo);
@@ -52,7 +47,6 @@ public class StreetServiceImple implements IStreetService {
                 }
                 return vo;
             }).collect(Collectors.toList());
-            logger.info("3->{}", System.currentTimeMillis() - c);
             listVO.setList(streetVOList);
             listVO.setTotalCount(count);
         }
