@@ -3,6 +3,7 @@ package com.yugoo.gis.user.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.yugoo.gis.common.constant.StreetType;
+import com.yugoo.gis.common.exception.GisRuntimeException;
 import com.yugoo.gis.dao.StreetDAO;
 import com.yugoo.gis.pojo.po.StreetPO;
 import com.yugoo.gis.pojo.vo.CompetitorVO;
@@ -31,10 +32,15 @@ public class StreetServiceImple implements IStreetService {
 
     @Override
     public ListVO<StreetVO> list(Integer curPage, Integer pageSize, String name) {
+        long a = System.currentTimeMillis();
         long count = streetDAO.selectCount(name);
+        logger.info("1->{}", System.currentTimeMillis() - a);
         ListVO<StreetVO> listVO = new ListVO<>(curPage, pageSize);
         if (count > 0) {
+            long b = System.currentTimeMillis();
             List<StreetPO> streetPOList = streetDAO.select(name, new RowBounds((curPage - 1) * pageSize, pageSize));
+            logger.info("2->{}", System.currentTimeMillis() - b);
+            long c = System.currentTimeMillis();
             List<StreetVO> streetVOList = streetPOList.stream().map(po -> {
                 StreetVO vo = new StreetVO();
                 BeanUtils.copyProperties(po, vo);
@@ -46,9 +52,61 @@ public class StreetServiceImple implements IStreetService {
                 }
                 return vo;
             }).collect(Collectors.toList());
+            logger.info("3->{}", System.currentTimeMillis() - c);
             listVO.setList(streetVOList);
             listVO.setTotalCount(count);
         }
         return listVO;
+    }
+
+    @Override
+    public void create(String name, String position, Integer type, String manager, String phone, byte[] pic, String remark, String competitor) {
+        StreetPO check = streetDAO.selectByName(name);
+        if (check != null) {
+            throw new GisRuntimeException("该名称已经存在");
+        }
+        StreetPO streetPO = new StreetPO();
+        streetPO.setName(name);
+        streetPO.setPosition(position);
+        streetPO.setType(type);
+        streetPO.setManager(manager);
+        streetPO.setPhone(phone);
+        streetPO.setPic(pic);
+        streetPO.setRemark(remark);
+        streetPO.setCompetitor(competitor);
+        streetDAO.insert(streetPO);
+    }
+
+    @Override
+    public void update(Integer id, String name, String position, Integer type, String manager, String phone, byte[] pic, String remark, String competitor) {
+        StreetPO check = streetDAO.selectByName(name);
+        if (check != null && !check.getId().equals(id)) {
+            throw new GisRuntimeException("该名称已经存在");
+        }
+        StreetPO streetPO = new StreetPO();
+        streetPO.setId(id);
+        streetPO.setName(name);
+        streetPO.setPosition(position);
+        streetPO.setType(type);
+        streetPO.setManager(manager);
+        streetPO.setPhone(phone);
+        streetPO.setPic(pic);
+        streetPO.setRemark(remark);
+        streetPO.setCompetitor(competitor);
+        streetDAO.update(streetPO);
+    }
+
+    @Override
+    public StreetVO getById(Integer id) {
+        StreetPO po = streetDAO.selectById(id);
+        StreetVO vo = new StreetVO();
+        BeanUtils.copyProperties(po, vo);
+        vo.setTypeName(StreetType.getByValue(vo.getType()).getName());
+        if (po.getCompetitor() != null && !po.getCompetitor().equals("")) {
+            List<CompetitorVO> competitors = JSON.parseObject(po.getCompetitor(),
+                    new TypeReference<List<CompetitorVO>>(){});
+            vo.setCompetitors(competitors);
+        }
+        return vo;
     }
 }

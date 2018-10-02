@@ -10,7 +10,7 @@
         select id,`name`,`position`,`type`,manager,phone,remark,ctime from tb_street where `name`=#{name}
     </select>
     <select id="select" resultType="com.yugoo.gis.pojo.po.StreetPO">
-        select * from tb_street where 1=1
+        select id,`name`,`position`,`type`,manager,phone,remark,competitor,ctime from tb_street where 1=1
         <if test="name != null">
             and `name` like concat('%',#{name},'%')
         </if>
@@ -21,5 +21,22 @@
         <if test="name != null">
             and `name` like concat('%',#{name},'%')
         </if>
+    </select>
+    <update id="update" parameterType="com.yugoo.gis.pojo.po.StreetPO">
+        update tb_street
+        <trim prefix="set" suffixOverrides=",">
+            `name`=#{name},
+            `position`=#{position},
+            `type`=#{type},
+            manager=#{manager},
+            phone=#{phone},
+            pic=#{pic},
+            remark=#{remark},
+            competitor=#{competitor},
+        </trim>
+        where id=#{id}
+    </update>
+    <select id="selectById" resultType="com.yugoo.gis.pojo.po.StreetPO">
+        select * from tb_street where id=#{id}
     </select>
 </mapper>

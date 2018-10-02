@@ -14,4 +14,6 @@ public interface StreetDAO {
     StreetPO selectByName(@Param("name") String name);
     List<StreetPO> select(@Param("name") String name, RowBounds rowBounds);
     Long selectCount(@Param("name") String name);
+    int update(StreetPO streetPO);
+    StreetPO selectById(@Param("id") Integer id);
 }

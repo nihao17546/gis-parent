@@ -17,6 +17,8 @@ public class StaticConstant {
             "/role/all",
             "/group/all",
             "/center/all",
+            "/upload/pic",
+            "/street/types",
             "/index.html",
             "/own.html");
     public static final List<String> MEMBER_PATH = Arrays.asList();
@@ -37,6 +39,9 @@ public class StaticConstant {
             "/center/create",
             "/center/edit",
             "/street/list",
+            "/street/create",
+            "/street/edit",
+            "/street/info",
             "/user.html",
             "/group.html",
             "/center.html",

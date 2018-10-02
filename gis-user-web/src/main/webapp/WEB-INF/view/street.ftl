@@ -19,6 +19,22 @@
             padding-top: 3px;
             padding-bottom: 3px;
         }
+        .el-card__body {
+            padding: 5px;
+            font-size: 14px;
+        }
+        .clearfix:before,
+        .clearfix:after {
+            display: table;
+            content: "";
+        }
+        .clearfix:after {
+            clear: both
+        }
+        .el-card__header {
+            padding-top: 0px;
+            padding-bottom: 0px;
+        }
     </style>
 </head>
 <body>
@@ -96,6 +112,84 @@
                 @current-change="currentChange">
         </el-pagination>
     </div>
+
+    <el-dialog :title="tt" :visible.sync="addVisible" :before-close="cancelAdd">
+        <el-form :model="addForm" :rules="addRules" ref="addForm" size="small">
+            <el-form-item label="名称:" prop="name" :label-width="formLabelWidth">
+                <el-input v-model.trim="addForm.name" autocomplete="off" size="small" maxlength="15"></el-input>
+            </el-form-item>
+            <el-form-item label="地址:" prop="position" :label-width="formLabelWidth">
+                <el-input v-model.trim="addForm.position" autocomplete="off" size="small" maxlength="100"></el-input>
+            </el-form-item>
+            <el-form-item label="类型:" prop="type" :label-width="formLabelWidth">
+                <el-select v-model="addForm.type" placeholder="请选择" size="small" style="width: 100%">
+                    <el-option
+                            v-for="item in types"
+                            :key="item.id"
+                            :label="item.name"
+                            :value="item.id">
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="物业负责人:" prop="manager" :label-width="formLabelWidth">
+                <el-input v-model.trim="addForm.manager" autocomplete="off" size="small" maxlength="50"></el-input>
+            </el-form-item>
+            <el-form-item label="物业电话:" prop="phone" :label-width="formLabelWidth">
+                <el-input v-model.trim="addForm.phone" autocomplete="off" size="small" maxlength="50"></el-input>
+            </el-form-item>
+            <el-form-item label="照片:" prop="pic" :label-width="formLabelWidth">
+                <img style="width: 100px;height: 100px;float: left;" :src="picBase64" v-if="picBase64">
+                <el-upload
+                        :on-change="handleChange"
+                        :on-exceed="handleExceed"
+                        :on-remove="handleRemove"
+                        :auto-upload="false"
+                        :file-list="fileList"
+                        accept=".jpg,.jpeg,.png,.gif,.bmp,.JPG,.JPEG,.PNG,.GIF,.BMP"
+                        :limit="1" style="float: left;margin-left: 5px;">
+                    <el-button size="mini" type="primary" slot="trigger" :disabled="loading">选择图片</el-button>
+                </el-upload>
+            </el-form-item>
+            <el-form-item label="竞争对手:" :label-width="formLabelWidth">
+                <el-button @click="addCom" size="small" :disabled="loading">添加</el-button>
+                <el-card class="box-card" shadow="never" v-if="addForm.competitors.length > 0">
+                    <div slot="header" class="clearfix">
+                        <el-col :span="12" style="margin-bottom: 0">
+                            <span>名称</span>
+                        </el-col>
+                        <el-col :span="12" style="margin-bottom: 0">
+                            <span>电话</span>
+                        </el-col>
+                    </div>
+                    <el-col :span="24">
+                        <el-col :span="10">
+                            <el-form-item
+                                    label-width="10px"
+                                    v-for="(competitor, index) in addForm.competitors">
+                                <el-input v-model.trim="competitor.name" maxlength="50" ></el-input>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="14">
+                            <el-form-item
+                                    label-width="20px"
+                                    v-for="(competitor, index) in addForm.competitors">
+                                <el-input v-model.trim="competitor.phone" maxlength="50" >
+                                    <el-button icon="el-icon-delete" @click.prevent="removeCom(competitor)"
+                                               slot="append" :disabled="loading"></el-button>
+                                </el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-col>
+            </el-form-item>
+            <el-form-item label="物业备注:" prop="remark" :label-width="formLabelWidth">
+                <el-input v-model.trim="addForm.remark" autocomplete="off" size="small" maxlength="200"></el-input>
+            </el-form-item>
+            <el-form-item style="text-align: right">
+                <el-button @click="cancelAdd" size="small" :disabled="loading">取 消</el-button>
+                <el-button type="primary" @click="add('addForm')" size="small" :disabled="loading">确 定</el-button>
+            </el-form-item>
+        </el-form>
+    </el-dialog>
 </div>
 <script>
     new Vue({
@@ -103,17 +197,157 @@
         el: '#app',
         data() {
             return {
+                tt: '',
+                formLabelWidth: '100px',
                 loading: false,
                 searchName: '',
                 list: [],
                 totalCount: 0,
                 pageSize: 10,
                 curPage: 1,
+                types: [],
+                addVisible: false,
+                addForm: {
+                    competitors: []
+                },
+                addRules: {
+                    name: [{required : true, message: '请输入名称', trigger: 'blur' }],
+                    position: [{required : true, message: '请输入地址', trigger: 'blur' }],
+                    type: [{required : true, message: '请选择类型', trigger: 'change' }],
+                    manager: [{required : true, message: '请输入物业负责人', trigger: 'change' }],
+                    phone: [{required : true, message: '请输入物业电话', trigger: 'change' }],
+                },
+                picBase64: '',
+                fileList: []
             }
         },
         methods: {
+            removeCom(item) {
+                const index = this.addForm.competitors.indexOf(item);
+                if (index !== -1) {
+                    this.addForm.competitors.splice(index, 1);
+                }
+            },
+            addCom() {
+                this.addForm.competitors.push({
+                    name: '',
+                    phone: ''
+                })
+            },
+            handleRemove(file, fileList) {
+                this.addForm.pic = null;
+                this.picBase64 = '';
+            },
+            handleExceed() {
+                this.$message({
+                    message: '最多只能上传一张照片',
+                    type: 'warning'
+                });
+            },
+            handleChange(file, fileList) {
+                if (file.status == 'ready') {
+                    this.addForm.file = file.raw;
+                    let fd = new FormData();
+                    fd.append("file", file.raw)
+                    axios.post('${contextPath}/upload/pic', fd,
+                            {headers:{'Content-Type': 'application/x-www-form-urlencoded'}}).then(res => {
+                        if (res.data.code == 1) {
+                            this.$message.error(res.data.message);
+                        } else {
+                            this.picBase64 = 'data:image/jpeg;base64,' + res.data.data
+                        }
+                    }).catch(res => {
+                        console.error(res)
+                    })
+                } else {
+                    this.addForm.file = null
+                    this.picBase64 = ''
+                }
+            },
+            add(formName) {
+                this.loading = true;
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        if (this.addForm.competitors && this.addForm.competitors.length > 0) {
+                            for (let i = 0; i < this.addForm.competitors.length; i ++) {
+                                let competitor = this.addForm.competitors[i]
+                                if (!competitor.name || competitor.name == ''
+                                        || !competitor.phone || competitor.phone == '') {
+                                    this.$message({
+                                        message: '竞争对手信息不完整',
+                                        type: 'warning'
+                                    });
+                                    this.loading = false;
+                                    return false;
+                                }
+                            }
+                        }
+                        else {
+                            this.addForm.competitors = []
+                        }
+                        let fd = new FormData();
+                        fd.append("competitor", JSON.stringify(this.addForm.competitors))
+                        if (this.addForm.id) {
+                            fd.append('id', this.addForm.id)
+                        }
+                        if (this.addForm.name) {
+                            fd.append('name', this.addForm.name)
+                        }
+                        if (this.addForm.position) {
+                            fd.append('position', this.addForm.position)
+                        }
+                        if (this.addForm.type) {
+                            fd.append('type', this.addForm.type)
+                        }
+                        if (this.addForm.manager) {
+                            fd.append('manager', this.addForm.manager)
+                        }
+                        if (this.addForm.phone) {
+                            fd.append('phone', this.addForm.phone)
+                        }
+                        if (this.addForm.file) {
+                            fd.append('file', this.addForm.file)
+                        }
+                        if (this.addForm.remark) {
+                            fd.append('remark', this.addForm.remark)
+                        }
+                        let url = '${contextPath}/street/edit';
+                        if ( this.tt == '新增') {
+                            url = '${contextPath}/street/create'
+                        }
+                        axios.post(url, fd,
+                                {headers:{'Content-Type': 'application/x-www-form-urlencoded'}}).then(res => {
+                            if (res.data.code == 1) {
+                                this.$message.error(res.data.message);
+                                this.loading = false;
+                            }
+                            else {
+                                this.cancelAdd()
+                                this.loading = false;
+                                this.getList()
+                            }
+                        }).catch(res => {
+                            console.error(res)
+                            this.loading = false;
+                        })
+                    } else {
+                        this.loading = false;
+                        return false;
+                    }
+                });
+            },
+            cancelAdd() {
+                this.addForm = {
+                    competitors: []
+                }
+                this.fileList = []
+                this.picBase64 = ''
+                this.$refs.addForm.resetFields();
+                this.addVisible = false
+            },
             showAdd() {
-
+                this.tt = '新增'
+                this.addVisible = true
             },
             position(row) {
 
@@ -122,7 +356,30 @@
 
             },
             showEdit(row) {
-
+                this.loading = true;
+                axios.get('${contextPath}/street/info',{
+                    params: {
+                        id: row.id
+                    }
+                }).then(res => {
+                    if (res.data.code == 1) {
+                        this.$message.error(res.data.message);
+                        this.loading = false;
+                    }
+                    else {
+                        this.addForm = res.data.info
+                        if (res.data.info.pic && res.data.info.pic.length > 0) {
+                            this.addForm.file = res.data.info.pic
+                            this.picBase64 = 'data:image/jpeg;base64,' + res.data.info.pic;
+                        }
+                        this.tt = '编辑';
+                        this.loading = false;
+                        this.addVisible = true
+                    }
+                }).catch(res => {
+                    console.error(res)
+                    this.loading = false;
+                })
             },
             currentChange(currentPage) {
                 this.curPage = currentPage;
@@ -160,6 +417,18 @@
             }
         },
         created: function () {
+            axios.get('${contextPath}/street/types',{
+                params: {}
+            }).then(res => {
+                if (res.data.code == 1) {
+                    this.$message.error(res.data.message);
+                }
+                else {
+                    this.types = res.data.list
+                }
+            }).catch(res => {
+                console.error(res)
+            })
             this.getList()
         }
     })

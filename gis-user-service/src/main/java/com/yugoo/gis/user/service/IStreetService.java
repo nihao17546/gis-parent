@@ -8,4 +8,9 @@ import com.yugoo.gis.pojo.vo.StreetVO;
  */
 public interface IStreetService {
     ListVO<StreetVO> list(Integer curPage, Integer pageSize, String name);
+    void create(String name, String position, Integer type, String manager,
+                String phone, byte[] pic, String remark, String competitor);
+    void update(Integer id, String name, String position, Integer type, String manager,
+                String phone, byte[] pic, String remark, String competitor);
+    StreetVO getById(Integer id);
 }

@@ -302,6 +302,7 @@
                                 {headers:{'Content-Type': 'application/x-www-form-urlencoded'}}).then(res => {
                             if (res.data.code == 1) {
                                 this.$message.error(res.data.message);
+                                this.loading = false;
                             }
                             else {
                                 this.addForm = {
@@ -310,9 +311,9 @@
                                 }
                                 this.$refs.addForm.resetFields();
                                 this.addVisible = false
+                                this.loading = false;
+                                this.getList()
                             }
-                            this.loading = false;
-                            this.getList()
                         }).catch(res => {
                             console.error(res)
                             this.loading = false;

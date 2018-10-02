@@ -17,6 +17,7 @@ public class StreetVO {
     private String manager;
     private String phone;
     private String remark;
+    private byte[] pic;
     private Date ctime;
 
     private String typeName;
