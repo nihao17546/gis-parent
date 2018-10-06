@@ -18,5 +18,7 @@ public class StreetPO {
     private byte[] pic;
     private String remark;
     private String competitor;
+    private Double longitude;
+    private Double latitude;
     private Date ctime;
 }

@@ -4,10 +4,13 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.yugoo.gis.common.constant.StreetType;
 import com.yugoo.gis.common.exception.GisRuntimeException;
+import com.yugoo.gis.dao.BuildingDAO;
 import com.yugoo.gis.dao.StreetDAO;
+import com.yugoo.gis.pojo.po.BuildingPO;
 import com.yugoo.gis.pojo.po.StreetPO;
 import com.yugoo.gis.pojo.vo.CompetitorVO;
 import com.yugoo.gis.pojo.vo.ListVO;
+import com.yugoo.gis.pojo.vo.PointVO;
 import com.yugoo.gis.pojo.vo.StreetVO;
 import com.yugoo.gis.user.service.IStreetService;
 import org.apache.ibatis.session.RowBounds;
@@ -17,6 +20,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,6 +33,8 @@ public class StreetServiceImple implements IStreetService {
 
     @Autowired
     private StreetDAO streetDAO;
+    @Autowired
+    private BuildingDAO buildingDAO;
 
     @Override
     public ListVO<StreetVO> list(Integer curPage, Integer pageSize, String name) {
@@ -36,6 +42,7 @@ public class StreetServiceImple implements IStreetService {
         ListVO<StreetVO> listVO = new ListVO<>(curPage, pageSize);
         if (count > 0) {
             List<StreetPO> streetPOList = streetDAO.select(name, new RowBounds((curPage - 1) * pageSize, pageSize));
+            List<Integer> streetIds = new ArrayList<>();
             List<StreetVO> streetVOList = streetPOList.stream().map(po -> {
                 StreetVO vo = new StreetVO();
                 BeanUtils.copyProperties(po, vo);
@@ -45,8 +52,26 @@ public class StreetServiceImple implements IStreetService {
                             new TypeReference<List<CompetitorVO>>(){});
                     vo.setCompetitors(competitors);
                 }
+                if (!streetIds.contains(po.getId())) {
+                    streetIds.add(po.getId());
+                }
                 return vo;
             }).collect(Collectors.toList());
+            List<BuildingPO> buildingPOList = buildingDAO.selectByStreetIds(streetIds);
+            for (StreetVO vo : streetVOList) {
+                List<PointVO> pointVOS = new ArrayList<>();
+                for (int i = buildingPOList.size() - 1; i >= 0; i --) {
+                    if (buildingPOList.get(i).getStreetId().equals(vo.getId())) {
+                        PointVO pointVO = new PointVO();
+                        pointVO.setName(buildingPOList.get(i).getName());
+                        pointVO.setLongitude(buildingPOList.get(i).getLongitude());
+                        pointVO.setLatitude(buildingPOList.get(i).getLatitude());
+                        pointVOS.add(pointVO);
+                        buildingPOList.remove(i);
+                    }
+                }
+                vo.setBuildingPoints(pointVOS);
+            }
             listVO.setList(streetVOList);
             listVO.setTotalCount(count);
         }

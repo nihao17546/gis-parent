@@ -2,10 +2,13 @@ package com.yugoo.gis.user.web.controller;
 
 import com.yugoo.gis.common.constant.StreetType;
 import com.yugoo.gis.common.exception.GisRuntimeException;
+import com.yugoo.gis.dao.StreetDAO;
+import com.yugoo.gis.pojo.po.StreetPO;
 import com.yugoo.gis.pojo.vo.ListVO;
 import com.yugoo.gis.pojo.vo.StreetTypeVO;
 import com.yugoo.gis.pojo.vo.StreetVO;
 import com.yugoo.gis.user.service.IStreetService;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,6 +27,8 @@ import java.util.List;
 public class StreetController extends BaseController {
     @Autowired
     private IStreetService streetService;
+    @Autowired
+    private StreetDAO streetDAO;
 
     @RequestMapping("/list")
     public String list(@RequestParam(required = false) String name,
@@ -82,5 +87,12 @@ public class StreetController extends BaseController {
     @RequestMapping("/info")
     public String info(@RequestParam Integer id) {
         return ok().pull("info", streetService.getById(id)).json();
+    }
+
+    @RequestMapping("/all")
+    public String all(@RequestParam(required = false) String name) {
+        RowBounds rowBounds = new RowBounds(0, Integer.MAX_VALUE);
+        List<StreetPO> list = streetDAO.select(name, rowBounds);
+        return ok().pull("list", list).json();
     }
 }

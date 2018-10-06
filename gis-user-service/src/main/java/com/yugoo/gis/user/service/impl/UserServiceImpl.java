@@ -78,6 +78,13 @@ public class UserServiceImpl implements IUserService {
         street.setIndex(3);
         street.setIcon("fa-street-view");
         adminMenus.add(street);
+
+        MenuVO building = new MenuVO();
+        building.setName("建筑信息");
+        building.setPath("building.html");
+        building.setIndex(4);
+        building.setIcon("fa-building");
+        adminMenus.add(building);
     }
 
     @Override

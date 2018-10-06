@@ -39,4 +39,13 @@
     <select id="selectById" resultType="com.yugoo.gis.pojo.po.StreetPO">
         select * from tb_street where id=#{id}
     </select>
+    <select id="selectByIds" resultType="com.yugoo.gis.pojo.po.StreetPO">
+        select id,`name`,`position`,`type`,manager,phone,remark,ctime from tb_street where id in
+        <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+    <update id="updateLoAndLa">
+        update tb_street set longitude=#{longitude},latitude=#{latitude} where id=#{id}
+    </update>
 </mapper>

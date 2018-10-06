@@ -83,7 +83,7 @@
                 <el-button-group>
                     <el-button type="primary" size="mini" :disabled="loading"
                                @click="position(props.row)">定位</el-button>
-                    <el-button type="primary" size="mini" :disabled="loading">建筑群</el-button>
+                    <el-button type="primary" size="mini" :disabled="loading" @click="openBuilding(props.row)">建筑群</el-button>
                     <el-button type="primary" size="mini" :disabled="loading" @click="del(props.row.id)">删除</el-button>
                     <el-button type="primary" size="mini" :disabled="loading" @click="showEdit(props.row)">编辑</el-button>
                 </el-button-group>
@@ -196,6 +196,15 @@
             }
         },
         methods: {
+            openBuilding(row) {
+                if ($('#building', parent.document).length == 1) {
+                    $('#building', parent.document).attr('param', row.id);
+                    $('#building', parent.document).attr('name', '建筑群[' + row.name + ']');
+                    $('#building', parent.document).click()
+                } else {
+
+                }
+            },
             selectCity() {
                 if (this.selectCityName != '') {
                     this.currentMap.centerAndZoom(this.selectCityName, 13);
@@ -291,7 +300,7 @@
                 this.$refs.addForm.resetFields();
                 this.currentMap = null;
                 this.overlays = [];
-                this.selectCityName = '',
+                this.selectCityName = '';
                 this.addVisible = false
             },
             showEdit(row) {
@@ -452,7 +461,7 @@
                 if (r != null)
                     return unescape(r[2]);
                 return null;
-    }
+            }
         },
         mounted() {
             let geolocation = new BMap.Geolocation();

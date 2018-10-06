@@ -22,4 +22,5 @@ public class StreetVO {
 
     private String typeName;
     private List<CompetitorVO> competitors;
+    private List<PointVO> buildingPoints;
 }

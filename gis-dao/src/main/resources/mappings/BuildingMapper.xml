@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yugoo.gis.dao.BuildingDAO">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.yugoo.gis.pojo.po.BuildingPO">
+        insert into tb_building(`name`,streetId,longitude,latitude,ctime)
+        values(#{name},#{streetId},#{longitude},#{latitude},now())
+    </insert>
+    <select id="selectByName" resultType="com.yugoo.gis.pojo.po.BuildingPO">
+        select * from tb_building where `name`=#{name}
+    </select>
+    <select id="select" resultType="com.yugoo.gis.pojo.po.BuildingPO">
+        select * from tb_building where 1=1
+        <if test="name != null">
+            and `name` like concat('%',#{name},'%')
+        </if>
+        order by id desc
+    </select>
+    <select id="selectCount" resultType="java.lang.Long">
+        select count(*) from tb_building where 1=1
+        <if test="name != null">
+            and `name` like concat('%',#{name},'%')
+        </if>
+    </select>
+    <update id="update" parameterType="com.yugoo.gis.pojo.po.BuildingPO">
+        update tb_building
+        <trim prefix="set" suffixOverrides=",">
+            `name`=#{name},
+            `streetId`=#{streetId},
+            `longitude`=#{longitude},
+            latitude=#{latitude},
+        </trim>
+        where id=#{id}
+    </update>
+    <select id="selectAvgByStreetId" resultType="com.yugoo.gis.pojo.po.BuildingPO">
+        select avg(longitude) longitude,avg(latitude) latitude from tb_building where streetId=#{streetId}
+    </select>
+    <select id="selectById" resultType="com.yugoo.gis.pojo.po.BuildingPO">
+        select * from tb_building where id=#{id}
+    </select>
+    <select id="selectByLoAndLa" resultType="com.yugoo.gis.pojo.po.BuildingPO">
+        select * from tb_building where
+        longitude between #{loMin} and #{loMax}
+        and latitude between #{laMin} and #{laMax}
+    </select>
+    <select id="selectByIds" resultType="com.yugoo.gis.pojo.po.BuildingPO">
+        select * from tb_building where id in
+        <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+    <select id="selectByStreetIds" resultType="com.yugoo.gis.pojo.po.BuildingPO">
+        select * from tb_building where streetId in
+        <foreach item="item" index="index" collection="streetIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+</mapper>

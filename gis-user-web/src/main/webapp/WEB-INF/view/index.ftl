@@ -52,13 +52,15 @@
                             <li>
                                 <a class="J_menuItem" href="${menu.path}" data-index="${menu.index}"
                                    <#if menu.target ??>target="${menu.target}"</#if>
-                                   <#if menu.name == "营销中心">id="centerMenu"</#if>
+                                   <#if menu.index == 2>id="centerMenu"</#if>
+                                   <#if menu.index == 4>id="buildingMenu"</#if>
                                 >
                                     <#if menu.icon ??>
                                         <i class="fa ${menu.icon}"></i>
                                     </#if>
                                     <span class="nav-label"
-                                          <#if menu.name == "营销中心">id="centerMenuLabel"</#if>
+                                          <#if menu.index == 2>id="centerMenuLabel"</#if>
+                                          <#if menu.index == 4>id="buildingMenuLabel"</#if>
                                     >
                                         ${menu.name}
                                     </span>
@@ -79,13 +81,15 @@
                                             <li>
                                                 <a class="J_menuItem" href="${child.path}" data-index="${child.index}"
                                                    <#if menu.target ??>target="${menu.target}"</#if>
-                                                   <#if menu.name == "营销中心">id="centerMenu"</#if>
+                                                   <#if menu.index == 2>id="centerMenu"</#if>
+                                                   <#if menu.index == 4>id="buildingMenu"</#if>
                                                 >
                                                     <#if child.icon ??>
                                                         <i class="fa ${child.icon}"></i>
                                                     </#if>
                                                     <span class="nav-label"
-                                                          <#if menu.name == "营销中心">id="centerMenuLabel"</#if>
+                                                          <#if menu.index == 2>id="centerMenuLabel"</#if>
+                                                          <#if menu.index == 4>id="buildingMenuLabel"</#if>
                                                     >
                                                         ${child.name}
                                                     </span>
@@ -153,13 +157,14 @@
         <div class="row J_mainContent" id="content-main">
             <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="/stu/page/welcome" frameborder="0" data-id="welcome.html" seamless></iframe>
         </div>
-        <div class="footer">
-            <div class="pull-right">&copy; 2015-2016 <a href="javascript:void(0);" target="_blank">gis</a>
-            </div>
-        </div>
+        <#--<div class="footer">-->
+            <#--&lt;#&ndash;<div class="pull-right">&copy; 2015-2016 <a href="javascript:void(0);" target="_blank">gis</a>&ndash;&gt;-->
+            <#--&lt;#&ndash;</div>&ndash;&gt;-->
+        <#--</div>-->
     </div>
 
     <button id="center" onclick="openCenter(this)" param="" style="display: none">营销中心</button>
+    <button id="building" onclick="openBuilding(this)" param="" style="display: none">营销中心</button>
 </div>
 
 <script src="${contextPath}/static/hplus/js/jquery.min.js" type="text/javascript"></script>
@@ -212,6 +217,22 @@
                 $('#centerMenu').click();
                 $('#centerMenu').attr('href', href);
                 $('#centerMenuLabel').html(html);
+                $(o).attr('param', '');
+                $(o).attr('name', '');
+            }
+        }
+    }
+
+    function openBuilding(o) {
+        if ($('#buildingMenu').length == 1) {
+            if ($(o).attr('param') != '') {
+                let href = $('#buildingMenu').attr('href');
+                let html = $('#buildingMenuLabel').html();
+                $('#buildingMenu').attr('href', href + '?centerId=' + $(o).attr('param'));
+                $('#buildingMenuLabel').html($(o).attr('name'));
+                $('#buildingMenu').click();
+                $('#buildingMenu').attr('href', href);
+                $('#buildingMenuLabel').html(html);
                 $(o).attr('param', '');
                 $(o).attr('name', '');
             }

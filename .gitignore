@@ -16,3 +16,4 @@ lib
 jdbc.properties
 redis.properties
 config.properties
+*.log

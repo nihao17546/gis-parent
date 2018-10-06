@@ -10,6 +10,8 @@
     <script src="${contextPath}/static/axios.min.js"></script>
     <script src="${contextPath}/static/hplus/js/jquery.min.js" type="text/javascript"></script>
     <script src="${contextPath}/static/lightbox-dialog/dist/js/lobibox.min.js"></script>
+    <script src="${contextPath}/static/js/common.js"></script>
+    <script src="http://api.map.baidu.com/api?v=2.0&ak=GTd8iA2429tSYGH5DC1kmEOO9ma61UvE"></script>
     <style>
         .competitors .is-leaf {
             padding-top: 3px;
@@ -34,6 +36,23 @@
         .el-card__header {
             padding-top: 0px;
             padding-bottom: 0px;
+        }
+        #position {
+            height: 270px;
+            overflow: hidden;
+        }
+        el-dialog__body {
+            padding-top: 5px;
+            padding-bottom: 8px;
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+        .el-dialog__header {
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+        .el-dialog__headerbtn {
+            top: 10px;
         }
     </style>
 </head>
@@ -112,6 +131,10 @@
                 @current-change="currentChange">
         </el-pagination>
     </div>
+
+    <el-dialog title="定位" :visible.sync="positionVisible">
+        <div id="position" ref="position"></div>
+    </el-dialog>
 
     <el-dialog :title="tt" :visible.sync="addVisible" :before-close="cancelAdd">
         <el-form :model="addForm" :rules="addRules" ref="addForm" size="small">
@@ -218,7 +241,8 @@
                     phone: [{required : true, message: '请输入物业电话', trigger: 'change' }],
                 },
                 picBase64: '',
-                fileList: []
+                fileList: [],
+                positionVisible: false
             }
         },
         methods: {
@@ -350,7 +374,42 @@
                 this.addVisible = true
             },
             position(row) {
-
+                if (row.buildingPoints.length > 0) {
+                    this.positionVisible = true
+                    setTimeout(() => {
+                        let map =new BMap.Map(this.$refs.position);
+                        let loMax = undefined, laMax = undefined, loMin = undefined, laMin = undefined;
+                        let len = 0;
+                        let wholeLo = 0, wholeLa = 0;
+                        row.buildingPoints.forEach(centerPoint => {
+                            len ++;
+                            wholeLo = wholeLo + centerPoint.longitude;
+                            wholeLa = wholeLa + centerPoint.latitude;
+                            loMax = !loMax ? centerPoint.longitude : (centerPoint.longitude > loMax ? centerPoint.longitude : loMax);
+                            laMax = !laMax ? centerPoint.latitude : (centerPoint.latitude > laMax ? centerPoint.latitude : laMax);
+                            loMin = !loMin ? centerPoint.longitude : (centerPoint.longitude < loMin ? centerPoint.longitude : loMin);
+                            laMin = !laMin ? centerPoint.latitude : (centerPoint.latitude < laMin ? centerPoint.latitude : laMin);
+                            let point = new BMap.Point(centerPoint.longitude, centerPoint.latitude);
+                            let marker = new BMap.Marker(point);
+                            map.addOverlay(marker);
+                            let infoWindow = new BMap.InfoWindow(centerPoint.name, {
+                                width : 100,
+                                height: 20
+                            });
+                            marker.addEventListener("click", function(){
+                                map.openInfoWindow(infoWindow, point); //开启信息窗口
+                            });
+                        })
+                        map.centerAndZoom(new BMap.Point(wholeLo / len, wholeLa / len),
+                                getZoom(map, loMax, loMin, laMax, laMin));
+                        map.enableScrollWheelZoom(true);
+                    }, 0)
+                } else {
+                    this.$message({
+                        message: '该物业街道没有建筑信息',
+                        type: 'success'
+                    });
+                }
             },
             del(id) {
 
