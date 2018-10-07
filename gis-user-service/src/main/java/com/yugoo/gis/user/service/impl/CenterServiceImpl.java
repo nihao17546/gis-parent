@@ -105,6 +105,19 @@ public class CenterServiceImpl implements ICenterService {
         centerPO.setPosition(position);
         centerPO.setDistrict(district);
         centerPO.setRegion(region);
+        if (loMax == null) {
+            List<List<Double>> lists = JSON.parseObject(region, new TypeReference<List<List<Double>>>(){});
+            for (List<Double> list : lists) {
+                // 最大经度
+                loMax = loMin == null ? list.get(0) : (list.get(0) > loMax ? list.get(0) : loMax);
+                // 最大纬度
+                laMax = laMax == null ? list.get(1) : (list.get(1) > laMax ? list.get(1) : laMax);
+                // 最小经度
+                loMin = loMin == null ? list.get(0) : (list.get(0) < loMin ? list.get(0) : loMin);
+                // 最小纬度
+                laMin = laMin == null ? list.get(1) : (list.get(1) < laMin ? list.get(1) : laMin);
+            }
+        }
         centerPO.setLoMax(loMax);
         centerPO.setLoMin(loMin);
         centerPO.setLaMax(laMax);
@@ -127,6 +140,19 @@ public class CenterServiceImpl implements ICenterService {
         centerPO.setPosition(position);
         centerPO.setDistrict(district);
         centerPO.setRegion(region);
+        if (loMax == null) {
+            List<List<Double>> lists = JSON.parseObject(region, new TypeReference<List<List<Double>>>(){});
+            for (List<Double> list : lists) {
+                // 最大经度
+                loMax = loMin == null ? list.get(0) : (list.get(0) > loMax ? list.get(0) : loMax);
+                // 最大纬度
+                laMax = laMax == null ? list.get(1) : (list.get(1) > laMax ? list.get(1) : laMax);
+                // 最小经度
+                loMin = loMin == null ? list.get(0) : (list.get(0) < loMin ? list.get(0) : loMin);
+                // 最小纬度
+                laMin = laMin == null ? list.get(1) : (list.get(1) < laMin ? list.get(1) : laMin);
+            }
+        }
         centerPO.setLoMax(loMax);
         centerPO.setLoMin(loMin);
         centerPO.setLaMax(laMax);
