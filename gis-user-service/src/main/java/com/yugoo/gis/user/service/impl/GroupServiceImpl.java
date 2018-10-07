@@ -10,6 +10,7 @@ import com.yugoo.gis.pojo.po.CenterPO;
 import com.yugoo.gis.pojo.po.GroupPO;
 import com.yugoo.gis.pojo.po.UserPO;
 import com.yugoo.gis.pojo.vo.GroupListVO;
+import com.yugoo.gis.pojo.vo.GroupVO;
 import com.yugoo.gis.pojo.vo.ListVO;
 import com.yugoo.gis.pojo.vo.PointVO;
 import com.yugoo.gis.user.service.IGroupService;
@@ -88,6 +89,15 @@ public class GroupServiceImpl implements IGroupService {
             throw new GisRuntimeException("该要客组关联有用户，不能删除");
         }
         groupDAO.deleteById(id);
+    }
+
+    @Override
+    public GroupVO getById(Integer id) {
+        GroupPO groupPO = groupDAO.selectById(id);
+        GroupVO vo  = new GroupVO();
+        BeanUtils.copyProperties(groupPO, vo);
+        vo.setCenters(centerDAO.selectByGroupId(id));
+        return vo;
     }
 
     private final DecimalFormat df = new DecimalFormat("0.000000");

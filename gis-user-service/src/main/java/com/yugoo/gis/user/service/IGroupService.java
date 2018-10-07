@@ -1,6 +1,7 @@
 package com.yugoo.gis.user.service;
 
 import com.yugoo.gis.pojo.vo.GroupListVO;
+import com.yugoo.gis.pojo.vo.GroupVO;
 import com.yugoo.gis.pojo.vo.ListVO;
 
 /**
@@ -9,4 +10,5 @@ import com.yugoo.gis.pojo.vo.ListVO;
 public interface IGroupService {
     ListVO<GroupListVO> list(Integer curPage, Integer pageSize, String name);
     void delete(Integer id);
+    GroupVO getById(Integer id);
 }

@@ -4,6 +4,7 @@ import com.yugoo.gis.common.exception.GisRuntimeException;
 import com.yugoo.gis.dao.GroupDAO;
 import com.yugoo.gis.pojo.po.GroupPO;
 import com.yugoo.gis.pojo.vo.GroupListVO;
+import com.yugoo.gis.pojo.vo.GroupVO;
 import com.yugoo.gis.pojo.vo.ListVO;
 import com.yugoo.gis.user.service.IGroupService;
 import org.apache.ibatis.session.RowBounds;
@@ -71,5 +72,11 @@ public class GroupController extends BaseController {
         groupPO.setId(id);
         groupDAO.update(groupPO);
         return ok().json();
+    }
+
+    @RequestMapping("/info")
+    public String info(@RequestParam Integer id) {
+        GroupVO groupVO = groupService.getById(id);
+        return ok().pull("info", groupVO).json();
     }
 }
