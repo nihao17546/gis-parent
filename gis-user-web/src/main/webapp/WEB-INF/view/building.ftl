@@ -10,9 +10,8 @@
     <script src="${contextPath}/static/axios.min.js"></script>
     <script src="${contextPath}/static/hplus/js/jquery.min.js" type="text/javascript"></script>
     <script src="${contextPath}/static/lightbox-dialog/dist/js/lobibox.min.js"></script>
+    <script src="${contextPath}/static/js/common.js"></script>
     <script src="http://api.map.baidu.com/api?v=2.0&ak=GTd8iA2429tSYGH5DC1kmEOO9ma61UvE"></script>
-    <script type="text/javascript" src="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.js"></script>
-    <link rel="stylesheet" href="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.css" />
     <style>
         #addPosition {
             height: 270px;
@@ -157,6 +156,7 @@
                 clearBtnDisabled: true,
                 positionVisible: false,
                 searchCenterId: 0,
+                searchStreetId: 0,
                 ifFromIndex: true
             }
         },
@@ -337,7 +337,8 @@
                         curPage: this.curPage,
                         pageSize: this.pageSize,
                         name: name,
-                        centerId: this.searchCenterId
+                        centerId: this.searchCenterId,
+                        streetId: this.searchStreetId
                     }
                 }).then(res => {
                     if (res.data.code == 1) {
@@ -371,8 +372,12 @@
         },
         created: function () {
             let centerId = this.getQueryString('centerId');
+            let streetId = this.getQueryString('streetId');
             if (centerId) {
                 this.searchCenterId = centerId;
+                this.ifFromIndex = false;
+            } else if (streetId) {
+                this.searchStreetId = streetId;
                 this.ifFromIndex = false;
             }
             this.getList()

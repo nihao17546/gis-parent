@@ -24,10 +24,13 @@ public class BuildingController extends BaseController {
     public String list(@RequestParam(required = false) String name,
                        @RequestParam(required = false, defaultValue = "1") Integer curPage,
                        @RequestParam(required = false, defaultValue = "10") Integer pageSize,
-                       @RequestParam(required = false) Integer centerId) {
+                       @RequestParam(required = false) Integer centerId,
+                       @RequestParam(required = false) Integer streetId) {
         ListVO<BuildingVO> listVO = null;
         if (centerId == null || centerId == 0) {
-            listVO = buildingService.list(curPage, pageSize, name);
+            if (streetId != null && streetId == 0)
+                streetId = null;
+            listVO = buildingService.list(curPage, pageSize, name, streetId);
         }
         else {
             listVO = buildingService.listByCenterId(centerId);

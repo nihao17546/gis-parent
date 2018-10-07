@@ -42,11 +42,11 @@ public class BuildingServiceImpl implements IBuildingService {
     private CenterDAO centerDAO;
 
     @Override
-    public ListVO<BuildingVO> list(Integer curPage, Integer pageSize, String name) {
-        long count = buildingDAO.selectCount(name);
+    public ListVO<BuildingVO> list(Integer curPage, Integer pageSize, String name, Integer streetId) {
+        long count = buildingDAO.selectCount(name, streetId);
         ListVO<BuildingVO> listVO = new ListVO<>(curPage, pageSize);
         if (count > 0) {
-            List<BuildingPO> poList = buildingDAO.select(name, new RowBounds((curPage - 1) * pageSize, pageSize));
+            List<BuildingPO> poList = buildingDAO.select(name, streetId, new RowBounds((curPage - 1) * pageSize, pageSize));
             List<Integer> streetIds = new ArrayList<>();
             List<BuildingVO> voList = poList.stream().map(po -> {
                 BuildingVO vo = new BuildingVO();

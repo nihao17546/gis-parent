@@ -115,7 +115,7 @@
                 <el-button-group>
                     <el-button type="primary" size="mini" :disabled="loading"
                                @click="position(props.row)">定位</el-button>
-                    <el-button type="primary" size="mini" :disabled="loading">楼栋</el-button>
+                    <el-button type="primary" size="mini" :disabled="loading" @click="openBuilding(props.row)">楼栋</el-button>
                     <el-button type="primary" size="mini" :disabled="loading" @click="del(props.row.id)">删除</el-button>
                     <el-button type="primary" size="mini" :disabled="loading" @click="showEdit(props.row)">编辑</el-button>
                 </el-button-group>
@@ -246,6 +246,16 @@
             }
         },
         methods: {
+            openBuilding(row) {
+                if ($('#building', parent.document).length == 1) {
+                    $('#building', parent.document).attr('param', row.id);
+                    $('#building', parent.document).attr('fromStreet', 1);
+                    $('#building', parent.document).attr('name', '楼栋[' + row.name + ']');
+                    $('#building', parent.document).click()
+                } else {
+
+                }
+            },
             removeCom(item) {
                 const index = this.addForm.competitors.indexOf(item);
                 if (index !== -1) {

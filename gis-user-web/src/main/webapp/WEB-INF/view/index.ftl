@@ -228,13 +228,18 @@
             if ($(o).attr('param') != '') {
                 let href = $('#buildingMenu').attr('href');
                 let html = $('#buildingMenuLabel').html();
-                $('#buildingMenu').attr('href', href + '?centerId=' + $(o).attr('param'));
+                if ($(o).attr('fromStreet') == 1) {
+                    $('#buildingMenu').attr('href', href + '?streetId=' + $(o).attr('param'));
+                } else {
+                    $('#buildingMenu').attr('href', href + '?centerId=' + $(o).attr('param'));
+                }
                 $('#buildingMenuLabel').html($(o).attr('name'));
                 $('#buildingMenu').click();
                 $('#buildingMenu').attr('href', href);
                 $('#buildingMenuLabel').html(html);
                 $(o).attr('param', '');
                 $(o).attr('name', '');
+                $(o).attr('fromStreet', '');
             }
         }
     }

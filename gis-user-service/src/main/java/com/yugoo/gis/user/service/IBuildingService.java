@@ -8,7 +8,7 @@ import com.yugoo.gis.pojo.vo.ListVO;
  * @create 2018/10/5
  **/
 public interface IBuildingService {
-    ListVO<BuildingVO> list(Integer curPage, Integer pageSize, String name);
+    ListVO<BuildingVO> list(Integer curPage, Integer pageSize, String name, Integer streetId);
     void create(String name, Integer streetId, Double longitude, Double latitude);
     void update(Integer id, String name, Integer streetId, Double longitude, Double latitude);
     ListVO<BuildingVO> listByCenterId(Integer centerId);
