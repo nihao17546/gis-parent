@@ -44,6 +44,7 @@ public class StaticConstant {
             "/street/create",
             "/street/edit",
             "/street/info",
+            "/street/listByCenter",
             "/building/list",
             "/building/create",
             "/building/edit",

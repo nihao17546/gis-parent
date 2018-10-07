@@ -5,14 +5,17 @@ import com.alibaba.fastjson.TypeReference;
 import com.yugoo.gis.common.constant.StreetType;
 import com.yugoo.gis.common.exception.GisRuntimeException;
 import com.yugoo.gis.dao.BuildingDAO;
+import com.yugoo.gis.dao.CenterDAO;
 import com.yugoo.gis.dao.StreetDAO;
 import com.yugoo.gis.pojo.po.BuildingPO;
+import com.yugoo.gis.pojo.po.CenterPO;
 import com.yugoo.gis.pojo.po.StreetPO;
 import com.yugoo.gis.pojo.vo.CompetitorVO;
 import com.yugoo.gis.pojo.vo.ListVO;
 import com.yugoo.gis.pojo.vo.PointVO;
 import com.yugoo.gis.pojo.vo.StreetVO;
 import com.yugoo.gis.user.service.IStreetService;
+import com.yugoo.gis.user.service.util.MapUtil;
 import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +38,8 @@ public class StreetServiceImple implements IStreetService {
     private StreetDAO streetDAO;
     @Autowired
     private BuildingDAO buildingDAO;
+    @Autowired
+    private CenterDAO centerDAO;
 
     @Override
     public ListVO<StreetVO> list(Integer curPage, Integer pageSize, String name) {
@@ -127,5 +132,29 @@ public class StreetServiceImple implements IStreetService {
             vo.setCompetitors(competitors);
         }
         return vo;
+    }
+
+    @Override
+    public List<StreetVO> selectByCenterId(Integer centerId) {
+        CenterPO centerPO = centerDAO.selectById(centerId);
+        if (centerPO == null)
+            throw new GisRuntimeException("营销中心[" + centerId + "]不存在");
+        List<List<Double>> lists = JSON.parseObject(centerPO.getRegion(), new TypeReference<List<List<Double>>>(){});
+        List<StreetPO> streetPOList = streetDAO.selectByLoAndLa(centerPO.getLoMin(), centerPO.getLoMax(), centerPO.getLaMin(), centerPO.getLaMax());
+        List<StreetVO> list = new ArrayList<>();
+        for (StreetPO streetPO : streetPOList) {
+            if (MapUtil.isPtInPoly(streetPO.getLongitude(), streetPO.getLatitude(), lists)) {
+                StreetVO vo = new StreetVO();
+                BeanUtils.copyProperties(streetPO, vo);
+                vo.setTypeName(StreetType.getByValue(vo.getType()).getName());
+                if (streetPO.getCompetitor() != null && !streetPO.getCompetitor().equals("")) {
+                    List<CompetitorVO> competitors = JSON.parseObject(streetPO.getCompetitor(),
+                            new TypeReference<List<CompetitorVO>>(){});
+                    vo.setCompetitors(competitors);
+                }
+                list.add(vo);
+            }
+        }
+        return list;
     }
 }

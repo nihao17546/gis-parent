@@ -1,98 +1,27 @@
 {
   "code": 0,
   "message": "success",
-  "data": {
-    "curPage": 1,
-    "pageSize": 10,
-    "totalCount": 2,
-    "totalPage": 1,
-    "list": [
-      {
-        "id": 6,
-        "laMax": 30.7763,
-        "laMin": 30.710748,
-        "loMax": 104.09437,
-        "loMin": 103.992035,
-        "manager": "casca",
-        "name": "cascascascsacascas",
-        "phone": "13281058155",
-        "ctime": "2018-09-30 15:35:02",
-        "district": "撒擦上",
-        "groupId": 4,
-        "groupName": "要客组q",
-        "points": [
-          {
-            "latitude": 30.7763,
-            "longitude": 104.042627,
-            "name": null
-          },
-          {
-            "latitude": 30.72863,
-            "longitude": 103.992035,
-            "name": null
-          },
-          {
-            "latitude": 30.710748,
-            "longitude": 104.054125,
-            "name": null
-          },
-          {
-            "latitude": 30.735583,
-            "longitude": 104.09437,
-            "name": null
-          }
-        ],
-        "position": "擦拭擦撒",
-        "region": "[[104.042627,30.7763],[103.992035,30.72863],[104.054125,30.710748],[104.09437,30.735583]]"
-      },
-      {
-        "id": 5,
-        "laMax": 30.704786,
-        "laMin": 30.450082,
-        "loMax": 104.451967,
-        "loMin": 104.201304,
-        "manager": "vavava",
-        "name": "yxascca",
-        "phone": "13281058888",
-        "ctime": "2018-09-30 15:34:31",
-        "district": "bebwrbwere",
-        "groupId": 4,
-        "groupName": "要客组q",
-        "points": [
-          {
-            "latitude": 30.640179,
-            "longitude": 104.264545,
-            "name": null
-          },
-          {
-            "latitude": 30.503865,
-            "longitude": 104.201304,
-            "name": null
-          },
-          {
-            "latitude": 30.450082,
-            "longitude": 104.343883,
-            "name": null
-          },
-          {
-            "latitude": 30.517804,
-            "longitude": 104.451967,
-            "name": null
-          },
-          {
-            "latitude": 30.704786,
-            "longitude": 104.312837,
-            "name": null
-          },
-          {
-            "latitude": 30.702799,
-            "longitude": 104.247297,
-            "name": null
-          }
-        ],
-        "position": "dwevqew",
-        "region": "[[104.264545,30.640179],[104.201304,30.503865],[104.343883,30.450082],[104.451967,30.517804],[104.312837,30.704786],[104.247297,30.702799]]"
-      }
-    ]
-  }
+  "list": [
+    {
+      "id": 6,
+      "name": "990",
+      "manager": "3464",
+      "phone": "645654",
+      "position": "4643",
+      "remark": "备注",
+      "type": 1,
+      "typeName": "商务楼宇",
+      "competitors": [
+        {
+          "name": "对手1",
+          "phone": "15928745053"
+        },
+        {
+          "name": "对手2",
+          "phone": "15928745055"
+        }
+      ],
+      "ctime": "2018-10-07 11:21:18"
+    }
+  ]
 }

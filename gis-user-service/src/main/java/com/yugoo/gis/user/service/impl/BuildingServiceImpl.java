@@ -123,6 +123,8 @@ public class BuildingServiceImpl implements IBuildingService {
     @Override
     public ListVO<BuildingVO> listByCenterId(Integer centerId) {
         CenterPO centerPO = centerDAO.selectById(centerId);
+        if (centerPO == null)
+            throw new GisRuntimeException("营销中心[" + centerId + "]不存在");
         List<List<Double>> lists = JSON.parseObject(centerPO.getRegion(), new TypeReference<List<List<Double>>>(){});
         List<BuildingPO> buildingPOList = buildingDAO.selectByLoAndLa(centerPO.getLoMin(), centerPO.getLoMax(), centerPO.getLaMin(), centerPO.getLaMax());
         ListVO<BuildingVO> listVO = new ListVO<>();

@@ -48,4 +48,9 @@
     <update id="updateLoAndLa">
         update tb_street set longitude=#{longitude},latitude=#{latitude} where id=#{id}
     </update>
+    <select id="selectByLoAndLa" resultType="com.yugoo.gis.pojo.po.StreetPO">
+        select id,`name`,`position`,`type`,manager,phone,remark,ctime,longitude,latitude,competitor from tb_street where
+        longitude between #{loMin} and #{loMax}
+        and latitude between #{laMin} and #{laMax}
+    </select>
 </mapper>

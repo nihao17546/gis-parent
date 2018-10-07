@@ -95,4 +95,11 @@ public class StreetController extends BaseController {
         List<StreetPO> list = streetDAO.select(name, rowBounds);
         return ok().pull("list", list).json();
     }
+
+    @RequestMapping("/listByCenter")
+    public String listByCenter(@RequestParam Integer centerId) {
+        List<StreetVO> list = streetService.selectByCenterId(centerId);
+        return ok().pull("list", list).json();
+    }
+
 }
