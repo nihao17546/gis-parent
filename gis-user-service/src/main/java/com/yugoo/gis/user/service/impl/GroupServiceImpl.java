@@ -100,6 +100,19 @@ public class GroupServiceImpl implements IGroupService {
         return vo;
     }
 
+    @Override
+    public void update(Integer id, String name, String position) {
+        GroupPO check = groupDAO.selectByName(name);
+        if (check != null && !check.getId().equals(id)) {
+            throw new GisRuntimeException("该名称已经存在");
+        }
+        GroupPO groupPO = new GroupPO();
+        groupPO.setName(name);
+        groupPO.setPosition(position);
+        groupPO.setId(id);
+        groupDAO.update(groupPO);
+    }
+
     private final DecimalFormat df = new DecimalFormat("0.000000");
     public final PointVO getCenter(List<List<Double>> list) {
         if (list == null || list.isEmpty()) {

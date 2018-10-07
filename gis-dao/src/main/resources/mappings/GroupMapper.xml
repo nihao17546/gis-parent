@@ -34,4 +34,7 @@
             #{item}
         </foreach>
     </select>
+    <select id="selectByName" resultType="com.yugoo.gis.pojo.po.GroupPO">
+        select * from tb_group where `name`=#{name}
+    </select>
 </mapper>

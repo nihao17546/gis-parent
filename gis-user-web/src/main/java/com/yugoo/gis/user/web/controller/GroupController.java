@@ -66,11 +66,11 @@ public class GroupController extends BaseController {
 
     @RequestMapping("/edit")
     public String edit(@RequestParam String name, @RequestParam String position, @RequestParam Integer id) {
-        GroupPO groupPO = new GroupPO();
-        groupPO.setName(name);
-        groupPO.setPosition(position);
-        groupPO.setId(id);
-        groupDAO.update(groupPO);
+        try {
+            groupService.update(id, name, position);
+        } catch (GisRuntimeException e) {
+            return fail(e.getMessage()).json();
+        }
         return ok().json();
     }
 

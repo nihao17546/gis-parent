@@ -1,27 +1,13 @@
 {
   "code": 0,
   "message": "success",
-  "info": {
-    "centers": [
+  "data": {
+    "curPage": 1,
+    "pageSize": 10,
+    "totalCount": 2,
+    "totalPage": 1,
+    "list": [
       {
-        "ctime": "2018-09-30 15:34:31",
-        "district": "bebwrbwere",
-        "groupId": 4,
-        "id": 5,
-        "laMax": 30.704786,
-        "laMin": 30.450082,
-        "loMax": 104.451967,
-        "loMin": 104.201304,
-        "manager": "vavava",
-        "name": "yxascca",
-        "phone": "13281058888",
-        "position": "dwevqew",
-        "region": "[[104.264545,30.640179],[104.201304,30.503865],[104.343883,30.450082],[104.451967,30.517804],[104.312837,30.704786],[104.247297,30.702799]]"
-      },
-      {
-        "ctime": "2018-09-30 15:35:02",
-        "district": "撒擦上",
-        "groupId": 4,
         "id": 6,
         "laMax": 30.7763,
         "laMin": 30.710748,
@@ -30,30 +16,83 @@
         "manager": "casca",
         "name": "cascascascsacascas",
         "phone": "13281058155",
+        "ctime": "2018-09-30 15:35:02",
+        "district": "撒擦上",
+        "groupId": 4,
+        "groupName": "要客组q",
+        "points": [
+          {
+            "latitude": 30.7763,
+            "longitude": 104.042627,
+            "name": null
+          },
+          {
+            "latitude": 30.72863,
+            "longitude": 103.992035,
+            "name": null
+          },
+          {
+            "latitude": 30.710748,
+            "longitude": 104.054125,
+            "name": null
+          },
+          {
+            "latitude": 30.735583,
+            "longitude": 104.09437,
+            "name": null
+          }
+        ],
         "position": "擦拭擦撒",
         "region": "[[104.042627,30.7763],[103.992035,30.72863],[104.054125,30.710748],[104.09437,30.735583]]"
       },
       {
-        "ctime": "2018-10-02 12:44:51",
-        "district": "nrwnre565654",
+        "id": 5,
+        "laMax": 30.704786,
+        "laMin": 30.450082,
+        "loMax": 104.451967,
+        "loMin": 104.201304,
+        "manager": "vavava",
+        "name": "yxascca",
+        "phone": "13281058888",
+        "ctime": "2018-09-30 15:34:31",
+        "district": "bebwrbwere",
         "groupId": 4,
-        "id": 7,
-        "laMax": 30.696425,
-        "laMin": 30.6576,
-        "loMax": 103.85072,
-        "loMin": 103.805302,
-        "manager": "vbwebrweb",
-        "name": "jopjpojpsdjvbjsd",
-        "phone": "15829755555",
-        "position": "vewb",
-        "region": "[[103.805302,30.682201],[103.810189,30.674499],[103.814788,30.66605],[103.818525,30.6576],[103.834623,30.665056],[103.85072,30.671517],[103.844971,30.681953],[103.840516,30.688102],[103.838935,30.690338],[103.835198,30.696425],[103.82025,30.690338],[103.82025,30.690338]]"
+        "groupName": "要客组q",
+        "points": [
+          {
+            "latitude": 30.640179,
+            "longitude": 104.264545,
+            "name": null
+          },
+          {
+            "latitude": 30.503865,
+            "longitude": 104.201304,
+            "name": null
+          },
+          {
+            "latitude": 30.450082,
+            "longitude": 104.343883,
+            "name": null
+          },
+          {
+            "latitude": 30.517804,
+            "longitude": 104.451967,
+            "name": null
+          },
+          {
+            "latitude": 30.704786,
+            "longitude": 104.312837,
+            "name": null
+          },
+          {
+            "latitude": 30.702799,
+            "longitude": 104.247297,
+            "name": null
+          }
+        ],
+        "position": "dwevqew",
+        "region": "[[104.264545,30.640179],[104.201304,30.503865],[104.343883,30.450082],[104.451967,30.517804],[104.312837,30.704786],[104.247297,30.702799]]"
       }
-    ],
-    "ctime": "2018-09-30 14:29:47",
-    "id": 4,
-    "managerName": null,
-    "managerPhone": null,
-    "name": "要客组q",
-    "position": "中心街道"
+    ]
   }
 }

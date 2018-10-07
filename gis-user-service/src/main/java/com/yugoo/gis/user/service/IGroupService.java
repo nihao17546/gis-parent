@@ -11,4 +11,5 @@ public interface IGroupService {
     ListVO<GroupListVO> list(Integer curPage, Integer pageSize, String name);
     void delete(Integer id);
     GroupVO getById(Integer id);
+    void update(Integer id, String name, String position);
 }

@@ -20,4 +20,5 @@ public interface GroupDAO {
     int deleteById(@Param("id") Integer id);
     @MapKey("id")
     Map<Integer,GroupPO> selectByIds(@Param("ids") List<Integer> ids);
+    GroupPO selectByName(@Param("name") String name);
 }
