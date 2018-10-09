@@ -102,4 +102,14 @@ public class StreetController extends BaseController {
         return ok().pull("list", list).json();
     }
 
+    @RequestMapping("/delete")
+    public String delete(@RequestParam Integer id) {
+        try {
+            streetService.delete(id);
+        } catch (GisRuntimeException e) {
+            return fail(e.getMessage()).json();
+        }
+        return ok().json();
+    }
+
 }

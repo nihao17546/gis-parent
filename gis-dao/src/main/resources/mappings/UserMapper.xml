@@ -55,7 +55,7 @@
         delete from tb_user where id=#{id}
     </delete>
     <select id="selectManager" resultType="com.yugoo.gis.pojo.po.UserPO">
-        select id,`name`,phone from tb_user where groupId=#{groupId} and role=2 limit 1
+        select id,`name`,phone from tb_user where groupId=#{groupId} and role=2
     </select>
     <select id="selectByGroupId" resultType="com.yugoo.gis.pojo.po.UserPO">
         select * from tb_user where groupId=#{groupId}

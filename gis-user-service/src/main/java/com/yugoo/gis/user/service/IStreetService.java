@@ -16,4 +16,5 @@ public interface IStreetService {
                 String phone, byte[] pic, String remark, String competitor);
     StreetVO getById(Integer id);
     List<StreetVO> selectByCenterId(Integer centerId);
+    void delete(Integer id);
 }

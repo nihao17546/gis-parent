@@ -42,8 +42,8 @@
 <body>
 <div id="app" v-loading="loading">
     <div style="padding-left: 5px;" v-if="ifFromIndex">
-        <el-button type="primary" size="small" @click="showAdd">新增</el-button>
-        <el-input style="width: 260px;border-radius: 0px;" @keyup.enter.native="search" v-on:clear="search"
+        <el-button type="primary" size="small" @click="showAdd" v-if="auth.indexOf('/center/create') != -1">新增</el-button>
+        <el-input style="width: 260px;border-radius: 0px;" @keyup.enter.native="search" v-on:clear="search" v-if="auth.indexOf('/center/list') != -1"
                   v-model.trim="searchName" size="small" placeholder="请输入搜索名称" clearable>
             <el-button slot="append" :loading="loading" icon="el-icon-search" @click="search">搜索</el-button>
         </el-input>
@@ -81,11 +81,10 @@
                 width="280">
             <template slot-scope="props">
                 <el-button-group>
-                    <el-button type="primary" size="mini" :disabled="loading"
-                               @click="position(props.row)">定位</el-button>
-                    <el-button type="primary" size="mini" :disabled="loading" @click="openBuilding(props.row)">建筑群</el-button>
-                    <el-button type="primary" size="mini" :disabled="loading" @click="del(props.row.id)">删除</el-button>
-                    <el-button type="primary" size="mini" :disabled="loading" @click="showEdit(props.row)">编辑</el-button>
+                    <el-button type="primary" size="mini" :disabled="loading" @click="position(props.row)">定位</el-button>
+                    <el-button type="primary" size="mini" :disabled="loading" @click="openBuilding(props.row)" v-if="auth.indexOf('/building.html') != -1">建筑群</el-button>
+                    <el-button type="primary" size="mini" :disabled="loading" @click="del(props.row.id)" v-if="auth.indexOf('/center/delete') != -1">删除</el-button>
+                    <el-button type="primary" size="mini" :disabled="loading" @click="showEdit(props.row)" v-if="auth.indexOf('/center/edit') != -1">编辑</el-button>
                 </el-button-group>
             </template>
         </el-table-column>
@@ -157,6 +156,12 @@
         name: 'center',
         el: '#app',
         data() {
+            var validateGroup = (rule, value, callback) => {
+                if (!value || value == 0) {
+                    return callback(new Error('请选择要客组'))
+                }
+                callback()
+            }
             return {
                 ifFromIndex: true,
                 selectCityName: '',
@@ -179,7 +184,8 @@
                     manager: [{required : true, message: '请输入中心主任', trigger: 'blur' }],
                     phone: [{ required: true, validator: validatePhone, trigger: 'blur' }],
                     position: [{required : true, message: '请输入办公地点', trigger: 'blur' }],
-                    district: [{required : true, message: '请输入区县', trigger: 'blur' }]
+                    district: [{required : true, message: '请输入区县', trigger: 'blur' }],
+                    groupId: [{ required: true, validator: validateGroup, trigger: 'change' }]
                 },
                 groups: [],
                 styleOptions: {
@@ -192,7 +198,8 @@
                 },
                 overlays: [],
                 currentPoint: null,
-                currentMap: null
+                currentMap: null,
+                auth: ${auth}
             }
         },
         methods: {

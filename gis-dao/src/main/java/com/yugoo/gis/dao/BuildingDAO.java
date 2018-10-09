@@ -25,4 +25,5 @@ public interface BuildingDAO {
     @MapKey("id")
     Map<Integer,BuildingPO> selectByIds(@Param("ids") List<Integer> ids);
     List<BuildingPO> selectByStreetIds(@Param("streetIds") List<Integer> streetIds);
+    List<BuildingPO> selectByStreetId(@Param("streetId") Integer streetId);
 }

@@ -59,8 +59,8 @@
 <body>
 <div id="app" v-loading="loading">
     <div style="padding-left: 5px;">
-        <el-button type="primary" size="small" @click="showAdd">新增</el-button>
-        <el-input style="width: 260px;border-radius: 0px;" @keyup.enter.native="search" v-on:clear="search"
+        <el-button type="primary" size="small" @click="showAdd" v-if="auth.indexOf('/street/create') != -1">新增</el-button>
+        <el-input style="width: 260px;border-radius: 0px;" @keyup.enter.native="search" v-on:clear="search" v-if="auth.indexOf('/street/list') != -1"
                   v-model.trim="searchName" size="small" placeholder="请输入搜索名称" clearable>
             <el-button slot="append" :loading="loading" icon="el-icon-search" @click="search">搜索</el-button>
         </el-input>
@@ -113,11 +113,10 @@
                 width="280">
             <template slot-scope="props">
                 <el-button-group>
-                    <el-button type="primary" size="mini" :disabled="loading"
-                               @click="position(props.row)">定位</el-button>
-                    <el-button type="primary" size="mini" :disabled="loading" @click="openBuilding(props.row)">楼栋</el-button>
-                    <el-button type="primary" size="mini" :disabled="loading" @click="del(props.row.id)">删除</el-button>
-                    <el-button type="primary" size="mini" :disabled="loading" @click="showEdit(props.row)">编辑</el-button>
+                    <el-button type="primary" size="mini" :disabled="loading" @click="position(props.row)">定位</el-button>
+                    <el-button type="primary" size="mini" :disabled="loading" @click="openBuilding(props.row)" v-if="auth.indexOf('/building.html') != -1">楼栋</el-button>
+                    <el-button type="primary" size="mini" :disabled="loading" @click="del(props.row.id)" v-if="auth.indexOf('/street/delete') != -1">删除</el-button>
+                    <el-button type="primary" size="mini" :disabled="loading" @click="showEdit(props.row)" v-if="auth.indexOf('/street/edit') != -1">编辑</el-button>
                 </el-button-group>
             </template>
         </el-table-column>
@@ -242,7 +241,8 @@
                 },
                 picBase64: '',
                 fileList: [],
-                positionVisible: false
+                positionVisible: false,
+                auth: ${auth}
             }
         },
         methods: {
@@ -422,7 +422,31 @@
                 }
             },
             del(id) {
-
+                this.$confirm('确定要删除?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.loading = true;
+                    axios.get('${contextPath}/street/delete',{
+                        params: {
+                            id: id
+                        }
+                    }).then(res => {
+                        if (res.data.code == 1) {
+                            this.$message.error(res.data.message);
+                            this.loading = false;
+                        }
+                        else {
+                            this.loading = false;
+                            this.getList();
+                        }
+                    }).catch(res => {
+                        console.error(res)
+                        this.loading = false;
+                    })
+                }).catch(() => {
+                });
             },
             showEdit(row) {
                 this.loading = true;

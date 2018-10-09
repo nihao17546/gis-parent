@@ -1,7 +1,9 @@
 package com.yugoo.gis.user.web.controller;
 
+import com.yugoo.gis.common.constant.Role;
 import com.yugoo.gis.common.exception.GisRuntimeException;
 import com.yugoo.gis.dao.GroupDAO;
+import com.yugoo.gis.dao.UserDAO;
 import com.yugoo.gis.pojo.po.GroupPO;
 import com.yugoo.gis.pojo.vo.GroupListVO;
 import com.yugoo.gis.pojo.vo.GroupVO;
@@ -26,19 +28,27 @@ public class GroupController extends BaseController {
     private GroupDAO groupDAO;
     @Autowired
     private IGroupService groupService;
+    @Autowired
+    private UserDAO userDAO;
 
     @RequestMapping("/all")
-    public String all() {
+    public String all(@Value("#{request.getAttribute('uid')}") Integer uid,
+                      @Value("#{request.getAttribute('role')}") Integer role) {
+        Integer groupId = null;
+        if (role != Role.admin.getValue()) {
+            groupId = userDAO.selectById(uid).getGroupId();
+        }
         RowBounds rowBounds = new RowBounds(0, Integer.MAX_VALUE);
-        List<GroupPO> list = groupDAO.select(null, rowBounds);
+        List<GroupPO> list = groupDAO.select(null, groupId, rowBounds);
         return ok().pull("list", list).json();
     }
 
     @RequestMapping("/list")
     public String list(@RequestParam(required = false) String name,
                        @RequestParam(required = false, defaultValue = "1") Integer curPage,
-                       @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
-        ListVO<GroupListVO> listVO = groupService.list(curPage, pageSize, name);
+                       @RequestParam(required = false, defaultValue = "10") Integer pageSize,
+                       @Value("#{request.getAttribute('uid')}") Integer uid) {
+        ListVO<GroupListVO> listVO = groupService.list(curPage, pageSize, name, uid);
         return ok().pull("data", listVO).json();
     }
 
@@ -65,7 +75,12 @@ public class GroupController extends BaseController {
     }
 
     @RequestMapping("/edit")
-    public String edit(@RequestParam String name, @RequestParam String position, @RequestParam Integer id) {
+    public String edit(@RequestParam String name, @RequestParam String position, @RequestParam Integer id,
+                       @Value("#{request.getAttribute('uid')}") Integer uid,
+                       @Value("#{request.getAttribute('role')}") Integer role) {
+        if (role != Role.admin.getValue() && !id.equals(userDAO.selectById(uid).getGroupId())) {
+            return fail("不能编辑其他要客组信息").json();
+        }
         try {
             groupService.update(id, name, position);
         } catch (GisRuntimeException e) {

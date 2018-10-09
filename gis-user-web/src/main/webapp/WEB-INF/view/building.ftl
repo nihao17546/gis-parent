@@ -39,8 +39,8 @@
 <body>
 <div id="app" v-loading="loading">
     <div style="padding-left: 5px;"  v-if="ifFromIndex">
-        <el-button type="primary" size="small" @click="showAdd">新增</el-button>
-        <el-input style="width: 260px;border-radius: 0px;" @keyup.enter.native="search" v-on:clear="search"
+        <el-button type="primary" size="small" @click="showAdd" v-if="auth.indexOf('/building/create') != -1">新增</el-button>
+        <el-input style="width: 260px;border-radius: 0px;" @keyup.enter.native="search" v-on:clear="search" v-if="auth.indexOf('/building/list') != -1"
                   v-model.trim="searchName" size="small" placeholder="请输入搜索名称" clearable>
             <el-button slot="append" :loading="loading" icon="el-icon-search" @click="search">搜索</el-button>
         </el-input>
@@ -62,12 +62,11 @@
                 width="335">
             <template slot-scope="props">
                 <el-button-group>
-                    <el-button type="primary" size="mini" :disabled="loading"
-                               @click="position(props.row)">定位</el-button>
+                    <el-button type="primary" size="mini" :disabled="loading" @click="position(props.row)">定位</el-button>
                     <el-button type="primary" size="mini" :disabled="loading">客户</el-button>
                     <el-button type="primary" size="mini" :disabled="loading">网络资源</el-button>
-                    <el-button type="primary" size="mini" :disabled="loading" @click="del(props.row.id)">删除</el-button>
-                    <el-button type="primary" size="mini" :disabled="loading" @click="showEdit(props.row)">编辑</el-button>
+                    <el-button type="primary" size="mini" :disabled="loading" @click="del(props.row.id)" v-if="auth.indexOf('/building/delete') != -1">删除</el-button>
+                    <el-button type="primary" size="mini" :disabled="loading" @click="showEdit(props.row)" v-if="auth.indexOf('/building/edit') != -1">编辑</el-button>
                 </el-button-group>
             </template>
         </el-table-column>
@@ -157,7 +156,8 @@
                 positionVisible: false,
                 searchCenterId: 0,
                 searchStreetId: 0,
-                ifFromIndex: true
+                ifFromIndex: true,
+                auth: ${auth}
             }
         },
         methods: {

@@ -53,4 +53,7 @@
         longitude between #{loMin} and #{loMax}
         and latitude between #{laMin} and #{laMax}
     </select>
+    <delete id="deleteById">
+        delete from tb_street where id=#{id}
+    </delete>
 </mapper>

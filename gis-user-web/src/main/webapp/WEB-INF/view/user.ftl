@@ -20,7 +20,7 @@
 <body>
 <div id="app" v-loading="loading">
     <div style="padding-left: 5px;">
-        <el-button type="primary" size="small" @click="showAdd">新增</el-button>
+        <el-button type="primary" size="small" @click="showAdd" v-if="auth.indexOf('/user/create') != -1">新增</el-button>
     </div>
     <el-table
             :data="list"
@@ -58,8 +58,10 @@
                 label="操作"
                 width="100">
             <template slot-scope="props">
-                <el-button type="text" size="small" @click="del(props.row.id)" :disabled="loading">删除</el-button>
-                <el-button type="text" size="small" @click="showEdit(props.row)" :disabled="loading">编辑</el-button>
+                <el-button type="text" size="small" @click="del(props.row.id)" :disabled="loading"
+                           v-if="auth.indexOf('/user/delete') != -1">删除</el-button>
+                <el-button type="text" size="small" @click="showEdit(props.row)" :disabled="loading"
+                           v-if="auth.indexOf('/user/edit') != -1">编辑</el-button>
             </template>
         </el-table-column>
     </el-table>
@@ -172,9 +174,9 @@
                     groupId: [{ required: true, validator: validateGroup, trigger: 'change' }],
                     centerId: [{ required: true, validator: validateCenter, trigger: 'change' }]
                 },
-
                 groupVisible: true,
-                centerVisible: true
+                centerVisible: true,
+                auth: ${auth}
             }
         },
         methods: {

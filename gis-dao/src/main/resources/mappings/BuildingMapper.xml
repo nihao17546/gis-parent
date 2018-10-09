@@ -61,4 +61,7 @@
             #{item}
         </foreach>
     </select>
+    <select id="selectByStreetId" resultType="com.yugoo.gis.pojo.po.BuildingPO">
+        select * from tb_building where streetId=#{streetId}
+    </select>
 </mapper>

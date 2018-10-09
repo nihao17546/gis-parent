@@ -1,12 +1,16 @@
 package com.yugoo.gis.user.web.controller;
 
+import com.yugoo.gis.common.constant.Role;
 import com.yugoo.gis.common.exception.GisRuntimeException;
 import com.yugoo.gis.dao.CenterDAO;
+import com.yugoo.gis.dao.UserDAO;
 import com.yugoo.gis.pojo.po.CenterPO;
+import com.yugoo.gis.pojo.po.UserPO;
 import com.yugoo.gis.pojo.vo.CenterVO;
 import com.yugoo.gis.pojo.vo.ListVO;
 import com.yugoo.gis.user.service.ICenterService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +28,8 @@ public class CenterController extends BaseController {
     private CenterDAO centerDAO;
     @Autowired
     private ICenterService centerService;
+    @Autowired
+    private UserDAO userDAO;
 
     @RequestMapping("/all")
     public String all(@RequestParam Integer groupId) {
@@ -35,7 +41,13 @@ public class CenterController extends BaseController {
     public String list(@RequestParam(required = false) String name,
                        @RequestParam(required = false) Integer groupId,
                        @RequestParam(required = false, defaultValue = "1") Integer curPage,
-                       @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
+                       @RequestParam(required = false, defaultValue = "10") Integer pageSize,
+                       @Value("#{request.getAttribute('uid')}") Integer uid,
+                       @Value("#{request.getAttribute('role')}") Integer role) {
+        if ((groupId == null || groupId == 0) && role != Role.admin.getValue()) {
+            UserPO currentUser = userDAO.selectById(uid);
+            groupId = currentUser.getGroupId();
+        }
         ListVO<CenterVO> listVO = centerService.list(curPage, pageSize, name, groupId);
         return ok().pull("data", listVO).json();
     }

@@ -64,6 +64,7 @@ public class UserServiceImpl implements IUserService {
         group.setIndex(1);
         group.setIcon("fa-sitemap");
         adminMenus.add(group);
+        headmanMenus.add(group);
 
         MenuVO center = new MenuVO();
         center.setName("营销中心");
@@ -71,6 +72,7 @@ public class UserServiceImpl implements IUserService {
         center.setIndex(2);
         center.setIcon("fa-home");
         adminMenus.add(center);
+        headmanMenus.add(center);
 
         MenuVO street = new MenuVO();
         street.setName("物业街道");
@@ -78,6 +80,8 @@ public class UserServiceImpl implements IUserService {
         street.setIndex(3);
         street.setIcon("fa-street-view");
         adminMenus.add(street);
+        headmanMenus.add(street);
+        memberMenus.add(street);
 
         MenuVO building = new MenuVO();
         building.setName("建筑信息");
@@ -85,6 +89,16 @@ public class UserServiceImpl implements IUserService {
         building.setIndex(4);
         building.setIcon("fa-building");
         adminMenus.add(building);
+        headmanMenus.add(building);
+        memberMenus.add(building);
+
+        MenuVO consumer = new MenuVO();
+        consumer.setName("客户信息");
+        consumer.setPath("consumer.html");
+        consumer.setIndex(5);
+        consumer.setIcon("fa-building");
+        adminMenus.add(consumer);
+        memberMenus.add(consumer);
     }
 
     @Override
@@ -98,6 +112,10 @@ public class UserServiceImpl implements IUserService {
         }
         else if (roleEnum == Role.headman) {
             centerId = 0;
+            UserPO headManUser = userDAO.selectManager(groupId);
+            if (headManUser != null) {
+                throw new GisRuntimeException("该要客组已存在组长");
+            }
         }
         else {
             CenterPO centerPO = centerDAO.selectById(centerId);
@@ -128,6 +146,10 @@ public class UserServiceImpl implements IUserService {
         }
         else if (roleEnum == Role.headman) {
             centerId = 0;
+            UserPO headManUser = userDAO.selectManager(groupId);
+            if (headManUser != null && !headManUser.getId().equals(id)) {
+                throw new GisRuntimeException("该要客组已存在组长");
+            }
         }
         else {
             CenterPO centerPO = centerDAO.selectById(centerId);

@@ -41,11 +41,12 @@ public class GroupServiceImpl implements IGroupService {
     private UserDAO userDAO;
 
     @Override
-    public ListVO<GroupListVO> list(Integer curPage, Integer pageSize, String name) {
-        long count = groupDAO.selectCount(name);
+    public ListVO<GroupListVO> list(Integer curPage, Integer pageSize, String name, Integer uid) {
+        UserPO currentUser = userDAO.selectById(uid);
+        long count = groupDAO.selectCount(name, currentUser.getGroupId());
         ListVO<GroupListVO> listVO = new ListVO<>(curPage, pageSize);
         if (count > 0) {
-            List<GroupPO> poList = groupDAO.select(name, new RowBounds((curPage - 1) * pageSize, pageSize));
+            List<GroupPO> poList = groupDAO.select(name, currentUser.getGroupId(), new RowBounds((curPage - 1) * pageSize, pageSize));
             List<GroupListVO> groupListVOList = poList.stream().map(po -> {
                 GroupListVO vo = new GroupListVO();
                 BeanUtils.copyProperties(po, vo);

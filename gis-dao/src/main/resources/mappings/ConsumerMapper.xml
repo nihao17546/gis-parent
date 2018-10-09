@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yugoo.gis.dao.ConsumerDAO">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.yugoo.gis.pojo.po.ConsumerPO">
+        insert into tb_consumer(`name`,buildingId,floor,`number`,`position`,pic,category,nature,peopleNum,linkman,
+        phone,operator,expenses,expirationDate,bandwidth,serviceType,status,legal,lineNum,lineType,
+        lineOpenDate,lineStatus,groupCode,groupGrade,userId,ctime)
+        values(#{name},#{buildingId},#{floor},#{number},#{position},#{pic},#{category},#{nature},#{peopleNum},#{linkman},
+        #{phone},#{operator},#{expenses},#{expirationDate},#{bandwidth},#{serviceType},#{status},#{legal},#{lineNum},#{lineType},
+        #{lineOpenDate},#{lineStatus},#{groupCode},#{groupGrade},#{userId},now())
+    </insert>
+    <select id="selectByName" resultType="com.yugoo.gis.pojo.po.ConsumerPO">
+        select id,`name` from tb_consumer where `name`=#{name}
+    </select>
+</mapper>

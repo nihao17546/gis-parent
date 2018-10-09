@@ -157,4 +157,13 @@ public class StreetServiceImple implements IStreetService {
         }
         return list;
     }
+
+    @Override
+    public void delete(Integer id) {
+        List<BuildingPO> buildingPOList = buildingDAO.selectByStreetId(id);
+        if (!buildingPOList.isEmpty()) {
+            throw new GisRuntimeException("该物业街道关联有建筑，不能删除");
+        }
+        streetDAO.deleteById(id);
+    }
 }

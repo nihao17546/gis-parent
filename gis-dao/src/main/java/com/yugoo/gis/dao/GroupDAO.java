@@ -13,8 +13,8 @@ import java.util.Map;
  */
 public interface GroupDAO {
     int insert(GroupPO groupPO);
-    List<GroupPO> select(@Param("name") String name, RowBounds rowBounds);
-    Long selectCount(@Param("name") String name);
+    List<GroupPO> select(@Param("name") String name, @Param("id") Integer id, RowBounds rowBounds);
+    Long selectCount(@Param("name") String name, @Param("id") Integer id);
     int update(GroupPO groupPO);
     GroupPO selectById(@Param("id") Integer id);
     int deleteById(@Param("id") Integer id);

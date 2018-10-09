@@ -24,4 +24,5 @@ public interface StreetDAO {
                       @Param("latitude") Double latitude);
     List<StreetPO> selectByLoAndLa(@Param("loMin") Double loMin, @Param("loMax") Double loMax,
                                      @Param("laMin") Double laMin, @Param("laMax") Double laMax);
+    int deleteById(@Param("id") Integer id);
 }

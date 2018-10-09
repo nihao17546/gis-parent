@@ -35,8 +35,8 @@
 <body>
 <div id="app" v-loading="loading">
     <div style="padding-left: 5px;">
-        <el-button type="primary" size="small" @click="showAdd">新增</el-button>
-        <el-input style="width: 260px;border-radius: 0px;" @keyup.enter.native="search" v-on:clear="search"
+        <el-button type="primary" size="small" @click="showAdd" v-if="auth.indexOf('/group/create') != -1">新增</el-button>
+        <el-input style="width: 260px;border-radius: 0px;" @keyup.enter.native="search" v-on:clear="search" v-if="auth.indexOf('/group/list') != -1"
                   v-model.trim="searchName" size="small" placeholder="请输入搜索名称" clearable>
             <el-button slot="append" :loading="loading" icon="el-icon-search" @click="search">搜索</el-button>
         </el-input>
@@ -68,9 +68,9 @@
                 <el-button-group>
                     <el-button type="primary" size="mini" :disabled="loading"
                                @click="position(props.row)">定位</el-button>
-                    <el-button type="primary" size="mini" :disabled="loading" @click="openCenter(props.row)">营销中心</el-button>
-                    <el-button type="primary" size="mini" :disabled="loading" @click="del(props.row.id)">删除</el-button>
-                    <el-button type="primary" size="mini" :disabled="loading" @click="showEdit(props.row)">编辑</el-button>
+                    <el-button type="primary" size="mini" :disabled="loading" @click="openCenter(props.row)" v-if="auth.indexOf('/center.html') != -1">营销中心</el-button>
+                    <el-button type="primary" size="mini" :disabled="loading" @click="del(props.row.id)" v-if="auth.indexOf('/group/delete') != -1">删除</el-button>
+                    <el-button type="primary" size="mini" :disabled="loading" @click="showEdit(props.row)" v-if="auth.indexOf('/group/edit') != -1">编辑</el-button>
                 </el-button-group>
             </template>
         </el-table-column>
@@ -125,7 +125,8 @@
                 addRules: {
                     name: [{required : true, message: '请输入名称', trigger: 'blur' }],
                     position: [{required : true, message: '请输入办公地点', trigger: 'blur' }]
-                }
+                },
+                auth: ${auth}
             }
         },
         methods: {
