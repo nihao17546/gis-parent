@@ -32,14 +32,9 @@ public class GroupController extends BaseController {
     private UserDAO userDAO;
 
     @RequestMapping("/all")
-    public String all(@Value("#{request.getAttribute('uid')}") Integer uid,
-                      @Value("#{request.getAttribute('role')}") Integer role) {
-        Integer groupId = null;
-        if (role != Role.admin.getValue()) {
-            groupId = userDAO.selectById(uid).getGroupId();
-        }
+    public String all() {
         RowBounds rowBounds = new RowBounds(0, Integer.MAX_VALUE);
-        List<GroupPO> list = groupDAO.select(null, groupId, rowBounds);
+        List<GroupPO> list = groupDAO.select(null, null, rowBounds);
         return ok().pull("list", list).json();
     }
 

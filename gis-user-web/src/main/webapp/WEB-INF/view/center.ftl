@@ -185,7 +185,7 @@
                     phone: [{ required: true, validator: validatePhone, trigger: 'blur' }],
                     position: [{required : true, message: '请输入办公地点', trigger: 'blur' }],
                     district: [{required : true, message: '请输入区县', trigger: 'blur' }],
-                    groupId: [{ required: true, validator: validateGroup, trigger: 'change' }]
+                    // groupId: [{ required: true, validator: validateGroup, trigger: 'change' }]
                 },
                 groups: [],
                 styleOptions: {

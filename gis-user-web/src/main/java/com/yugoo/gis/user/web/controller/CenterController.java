@@ -63,7 +63,7 @@ public class CenterController extends BaseController {
     }
 
     @RequestMapping("/create")
-    public String create(@RequestParam String name, @RequestParam Integer groupId,
+    public String create(@RequestParam String name, @RequestParam(required = false) Integer groupId,
                          @RequestParam String manager, @RequestParam String phone,
                          @RequestParam String position, @RequestParam String district,
                          @RequestParam String region, @RequestParam(required = false) Double loMax,
@@ -78,7 +78,7 @@ public class CenterController extends BaseController {
     }
 
     @RequestMapping("/edit")
-    public String edit(@RequestParam String name, @RequestParam Integer groupId,
+    public String edit(@RequestParam String name, @RequestParam(required = false) Integer groupId,
                        @RequestParam String manager, @RequestParam String phone,
                        @RequestParam String position, @RequestParam String district,
                        @RequestParam String region, @RequestParam Integer id,
