@@ -5,6 +5,7 @@ import com.yugoo.gis.pojo.vo.BuildingVO;
 import com.yugoo.gis.pojo.vo.ListVO;
 import com.yugoo.gis.user.service.IBuildingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -59,5 +60,11 @@ public class BuildingController extends BaseController {
             return fail(e.getMessage()).json();
         }
         return ok().json();
+    }
+
+    @RequestMapping("/listOwn")
+    public String listOwn(@Value("#{request.getAttribute('uid')}") Integer uid,
+                          @RequestParam(required = false) String name) {
+        return ok().pull("list", buildingService.listOwn(uid, name)).json();
     }
 }

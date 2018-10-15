@@ -1,10 +1,12 @@
 package com.yugoo.gis.dao;
 
 import com.yugoo.gis.pojo.po.UserPO;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by nihao on 18/5/8.
@@ -22,4 +24,6 @@ public interface UserDAO {
     UserPO selectManager(@Param("groupId") Integer groupId);
     List<UserPO> selectByGroupId(@Param("groupId") Integer groupId);
     List<UserPO> selectByCenterId(@Param("centerId") Integer centerId);
+    @MapKey("id")
+    Map<Integer,UserPO> selectByIds(@Param("ids") List<Integer> ids);
 }

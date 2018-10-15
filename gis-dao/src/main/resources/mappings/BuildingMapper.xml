@@ -64,4 +64,14 @@
     <select id="selectByStreetId" resultType="com.yugoo.gis.pojo.po.BuildingPO">
         select * from tb_building where streetId=#{streetId}
     </select>
+    <select id="selectByLoAndLaAndName" resultType="com.yugoo.gis.pojo.po.BuildingPO">
+        select * from tb_building where 1=1
+        <if test="loMin != null and loMax != null and laMin != null and laMax != null">
+            and longitude between #{loMin} and #{loMax}
+            and latitude between #{laMin} and #{laMax}
+        </if>
+        <if test="name != null">
+            and `name` like concat('%',#{name},'%')
+        </if>
+    </select>
 </mapper>

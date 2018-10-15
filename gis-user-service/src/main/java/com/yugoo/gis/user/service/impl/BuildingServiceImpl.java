@@ -2,13 +2,16 @@ package com.yugoo.gis.user.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import com.yugoo.gis.common.constant.Role;
 import com.yugoo.gis.common.exception.GisRuntimeException;
 import com.yugoo.gis.dao.BuildingDAO;
 import com.yugoo.gis.dao.CenterDAO;
 import com.yugoo.gis.dao.StreetDAO;
+import com.yugoo.gis.dao.UserDAO;
 import com.yugoo.gis.pojo.po.BuildingPO;
 import com.yugoo.gis.pojo.po.CenterPO;
 import com.yugoo.gis.pojo.po.StreetPO;
+import com.yugoo.gis.pojo.po.UserPO;
 import com.yugoo.gis.pojo.vo.BuildingVO;
 import com.yugoo.gis.pojo.vo.ListVO;
 import com.yugoo.gis.user.service.IBuildingService;
@@ -40,6 +43,8 @@ public class BuildingServiceImpl implements IBuildingService {
     private StreetDAO streetDAO;
     @Autowired
     private CenterDAO centerDAO;
+    @Autowired
+    private UserDAO userDAO;
 
     @Override
     public ListVO<BuildingVO> list(Integer curPage, Integer pageSize, String name, Integer streetId) {
@@ -153,5 +158,46 @@ public class BuildingServiceImpl implements IBuildingService {
         listVO.setPageSize(Integer.MAX_VALUE);
         listVO.setTotalCount(voList.size());
         return listVO;
+    }
+
+    @Override
+    public List<BuildingVO> listOwn(Integer userId, String name) {
+        UserPO userPO = userDAO.selectById(userId);
+        List<BuildingPO> buildingPOList = null;
+        if (userPO.getRole() == Role.admin.getValue()) {
+            buildingPOList = buildingDAO.selectByLoAndLaAndName(null, null, null, null, name);
+        }
+        else if (userPO.getRole() == Role.headman.getValue()) {
+            List<CenterPO> centerPOList = centerDAO.selectByGroupId(userPO.getGroupId());
+            buildingPOList = new ArrayList<>();
+            for (CenterPO centerPO : centerPOList) {
+                List<List<Double>> lists = JSON.parseObject(centerPO.getRegion(), new TypeReference<List<List<Double>>>(){});
+                List<BuildingPO> buildingPOS = buildingDAO.selectByLoAndLaAndName(centerPO.getLoMin(), centerPO.getLoMax(),
+                        centerPO.getLaMin(), centerPO.getLaMax(), name);
+                for (BuildingPO buildingPO : buildingPOS) {
+                    if (MapUtil.isPtInPoly(buildingPO.getLongitude(), buildingPO.getLatitude(), lists)) {
+                        buildingPOList.add(buildingPO);
+                    }
+                }
+            }
+        }
+        else {
+            buildingPOList = new ArrayList<>();
+            CenterPO centerPO = centerDAO.selectById(userPO.getCenterId());
+            List<List<Double>> lists = JSON.parseObject(centerPO.getRegion(), new TypeReference<List<List<Double>>>(){});
+            List<BuildingPO> buildingPOS = buildingDAO.selectByLoAndLaAndName(centerPO.getLoMin(), centerPO.getLoMax(),
+                    centerPO.getLaMin(), centerPO.getLaMax(), name);
+            for (BuildingPO buildingPO : buildingPOS) {
+                if (MapUtil.isPtInPoly(buildingPO.getLongitude(), buildingPO.getLatitude(), lists)) {
+                    buildingPOList.add(buildingPO);
+                }
+            }
+        }
+        List<BuildingVO> buildingVOList = buildingPOList.stream().map(po -> {
+            BuildingVO vo = new BuildingVO();
+            BeanUtils.copyProperties(po, vo);
+            return vo;
+        }).collect(Collectors.toList());
+        return buildingVOList;
     }
 }

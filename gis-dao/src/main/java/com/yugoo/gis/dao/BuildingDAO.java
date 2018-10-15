@@ -26,4 +26,7 @@ public interface BuildingDAO {
     Map<Integer,BuildingPO> selectByIds(@Param("ids") List<Integer> ids);
     List<BuildingPO> selectByStreetIds(@Param("streetIds") List<Integer> streetIds);
     List<BuildingPO> selectByStreetId(@Param("streetId") Integer streetId);
+    List<BuildingPO> selectByLoAndLaAndName(@Param("loMin") Double loMin, @Param("loMax") Double loMax,
+                                            @Param("laMin") Double laMin, @Param("laMax") Double laMax,
+                                            @Param("name") String name);
 }

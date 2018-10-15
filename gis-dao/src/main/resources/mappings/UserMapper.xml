@@ -63,4 +63,10 @@
     <select id="selectByCenterId" resultType="com.yugoo.gis.pojo.po.UserPO">
         select * from tb_user where centerId=#{centerId}
     </select>
+    <select id="selectByIds" resultType="com.yugoo.gis.pojo.po.UserPO">
+        select * from tb_user where id in
+        <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
 </mapper>

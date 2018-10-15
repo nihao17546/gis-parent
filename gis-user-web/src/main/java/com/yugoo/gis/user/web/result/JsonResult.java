@@ -14,7 +14,8 @@ public class JsonResult<K,V> extends HashMap<K,V> {
         return JSON.toJSONString(this, SerializerFeature.WriteMapNullValue,
                 SerializerFeature.WriteNullListAsEmpty,
                 SerializerFeature.WriteDateUseDateFormat,
-                SerializerFeature.SkipTransientField);
+                SerializerFeature.SkipTransientField,
+                SerializerFeature.WriteBigDecimalAsPlain);
     }
 
     public JsonResult<K,V> pull(K key, V value){

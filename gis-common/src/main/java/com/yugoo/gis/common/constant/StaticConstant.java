@@ -20,6 +20,7 @@ public class StaticConstant {
             "/street/all",
             "/upload/pic",
             "/street/types",
+            "/consumer/serviceTypes",
             "/index.html",
             "/own.html");
     public static final List<String> MEMBER_PATH = Arrays.asList(
@@ -34,7 +35,15 @@ public class StaticConstant {
             "/building.html",
             "/building/list",
             "/building/create",
-            "/building/edit"
+            "/building/edit",
+            "/building/listOwn",
+            "/consumer.html",
+            "/consumer/create",
+            "/consumer/list",
+            "/consumer/import",
+            "/consumer/export",
+            "/consumer/edit",
+            "/consumer/info"
     );
     public static final List<String> HEADMAN_PATH = Arrays.asList(
             "/group.html",
@@ -57,6 +66,7 @@ public class StaticConstant {
             "/center/delete",
             "/street/delete",
             "/building/delete",
+            "/consumer/delete",
             "/user.html");
     public static List<String> getPathByRole(Integer roleId) {
         Role role = Role.getByValue(roleId);

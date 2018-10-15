@@ -5,12 +5,112 @@
             parameterType="com.yugoo.gis.pojo.po.ConsumerPO">
         insert into tb_consumer(`name`,buildingId,floor,`number`,`position`,pic,category,nature,peopleNum,linkman,
         phone,operator,expenses,expirationDate,bandwidth,serviceType,status,legal,lineNum,lineType,
-        lineOpenDate,lineStatus,groupCode,groupGrade,userId,ctime)
+        lineOpenDate,lineStatus,groupCode,groupGrade,userId,`type`,ctime)
         values(#{name},#{buildingId},#{floor},#{number},#{position},#{pic},#{category},#{nature},#{peopleNum},#{linkman},
         #{phone},#{operator},#{expenses},#{expirationDate},#{bandwidth},#{serviceType},#{status},#{legal},#{lineNum},#{lineType},
-        #{lineOpenDate},#{lineStatus},#{groupCode},#{groupGrade},#{userId},now())
+        #{lineOpenDate},#{lineStatus},#{groupCode},#{groupGrade},#{userId},#{type},now())
     </insert>
     <select id="selectByName" resultType="com.yugoo.gis.pojo.po.ConsumerPO">
         select id,`name` from tb_consumer where `name`=#{name}
     </select>
+    <select id="select" resultType="com.yugoo.gis.pojo.po.ConsumerPO">
+        select id,`name`,buildingId,floor,`number`,`position`,category,nature,peopleNum,linkman,
+        phone,operator,expenses,expirationDate,bandwidth,serviceType,status,legal,lineNum,lineType,
+        lineOpenDate,lineStatus,groupCode,groupGrade,userId,`type`,ctime from tb_consumer
+        where 1=1
+        <choose>
+            <!-- 管理员 -->
+            <when test="roleId == 1">
+            </when>
+            <!-- 组长 -->
+            <when test="roleId == 2">
+                and buildingId in
+                <foreach item="item" index="index" collection="buildingIds" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </when>
+            <!-- 客户经理 -->
+            <otherwise>
+                and buildingId in
+                <foreach item="item" index="index" collection="buildingIds" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                and userId in (#{userId},0)
+            </otherwise>
+        </choose>
+        <if test="name != null">
+            and `name` like concat('%',#{name},'%')
+        </if>
+        order by id desc
+    </select>
+    <select id="selectCount" resultType="java.lang.Long">
+        select count(1) from tb_consumer
+        where 1=1
+        <choose>
+            <!-- 管理员 -->
+            <when test="roleId == 1">
+            </when>
+            <!-- 组长 -->
+            <when test="roleId == 2">
+                and buildingId in
+                <foreach item="item" index="index" collection="buildingIds" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </when>
+            <!-- 客户经理 -->
+            <otherwise>
+                and buildingId in
+                <foreach item="item" index="index" collection="buildingIds" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+                and userId in (#{userId},0)
+            </otherwise>
+        </choose>
+        <if test="name != null">
+            and `name` like concat('%',#{name},'%')
+        </if>
+    </select>
+    <select id="selectById" resultType="com.yugoo.gis.pojo.po.ConsumerPO">
+        select * from tb_consumer where id=#{id}
+    </select>
+    <select id="selectExePicById" resultType="com.yugoo.gis.pojo.po.ConsumerPO">
+        select `name`,buildingId,floor,`number`,`position`,category,nature,peopleNum,linkman,
+        phone,operator,expenses,expirationDate,bandwidth,serviceType,status,legal,lineNum,lineType,
+        lineOpenDate,lineStatus,groupCode,groupGrade,userId,`type`,ctime from tb_consumer where id=#{id}
+    </select>
+    <update id="update" parameterType="com.yugoo.gis.pojo.po.ConsumerPO">
+        update tb_consumer
+        <trim prefix="set" suffixOverrides=",">
+            `name`=#{name},
+            buildingId=#{buildingId},
+            floor=#{floor},
+            `number`=#{number},
+            `position`=#{position},
+            <if test="pic!=null">pic=#{pic},</if>
+            category=#{category},
+            nature=#{nature},
+            peopleNum=#{peopleNum},
+            linkman=#{linkman},
+            phone=#{phone},
+            operator=#{operator},
+            expenses=#{expenses},
+            expirationDate=#{expirationDate},
+            bandwidth=#{bandwidth},
+            serviceType=#{serviceType},
+            status=#{status},
+            legal=#{legal},
+            lineNum=#{lineNum},
+            lineType=#{lineType},
+            lineOpenDate=#{lineOpenDate},
+            lineStatus=#{lineStatus},
+            groupCode=#{groupCode},
+            groupGrade=#{groupGrade},
+            userId=#{userId},
+            `type`=#{type},
+        </trim>
+        where id=#{id}
+    </update>
+    <delete id="deleteById">
+        delete from tb_consumer where id=#{id}
+    </delete>
 </mapper>

@@ -19,4 +19,10 @@ public class UserPO {
     private Integer centerId;
     private String key;
     private Date ctime;
+
+    public UserPO() {}
+    public UserPO(Integer id, Integer role) {
+        this.id = id;
+        this.role = role;
+    }
 }

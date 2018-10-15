@@ -96,8 +96,9 @@ public class UserServiceImpl implements IUserService {
         consumer.setName("客户信息");
         consumer.setPath("consumer.html");
         consumer.setIndex(5);
-        consumer.setIcon("fa-building");
+        consumer.setIcon("fa-male");
         adminMenus.add(consumer);
+        headmanMenus.add(consumer);
         memberMenus.add(consumer);
     }
 

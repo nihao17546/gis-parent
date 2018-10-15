@@ -1,4 +1,4 @@
-package com.yugoo.gis.pojo.po;
+package com.yugoo.gis.pojo.vo;
 
 import lombok.Data;
 
@@ -6,10 +6,11 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * @author nihao 2018/10/9
- */
+ * @author nihao
+ * @create 2018/10/15
+ **/
 @Data
-public class ConsumerPO {
+public class ConsumerVO {
     private Integer id;
     private String name;
     private Integer buildingId;
@@ -38,4 +39,11 @@ public class ConsumerPO {
     private Integer userId;
     private Integer type;
     private Date ctime;
+
+    private String typeName;
+    private String buildingName;
+    private String serviceTypeName;
+    private String expirationDateStr;
+    private String lineOpenDateStr;
+    private String userName;
 }
