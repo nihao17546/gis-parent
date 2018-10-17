@@ -18,6 +18,8 @@ public class UserPO {
     private Integer groupId;
     private Integer centerId;
     private String key;
+    private String number;
+    private String post;
     private Date ctime;
 
     public UserPO() {}

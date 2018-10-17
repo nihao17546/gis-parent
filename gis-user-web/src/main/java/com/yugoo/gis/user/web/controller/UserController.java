@@ -47,9 +47,10 @@ public class UserController extends BaseController {
                            @RequestParam(required = false) String key,
                            @RequestParam Integer role, @RequestParam(required = false) Integer groupId,
                            @RequestParam(required = false) Integer centerId,
-                           @RequestParam(required = false) String password) {
+                           @RequestParam(required = false) String password,
+                           @RequestParam String number, @RequestParam(required = false) String post) {
         try {
-            userService.create(name, phone, password, role, department, groupId, centerId, key);
+            userService.create(name, phone, password, role, department, groupId, centerId, key, number, post);
         } catch (GisRuntimeException e) {
             return fail(e.getMessage()).json();
         }
@@ -77,12 +78,13 @@ public class UserController extends BaseController {
                        @RequestParam(required = false) Integer centerId,
                        @RequestParam(required = false) String password,
                        @RequestParam Integer id,
-                       @Value("#{request.getAttribute('uid')}") Integer uid) {
+                       @Value("#{request.getAttribute('uid')}") Integer uid,
+                       @RequestParam String number, @RequestParam(required = false) String post) {
         if (id.equals(uid)) {
             return fail("要修改自己的信息，请到个人中心修改").json();
         }
         try {
-            userService.edit(id, name, phone, password, role, department, groupId, centerId, key);
+            userService.edit(id, name, phone, password, role, department, groupId, centerId, key, number, post);
         } catch (GisRuntimeException e) {
             return fail(e.getMessage()).json();
         }

@@ -56,6 +56,12 @@
         <div class="text item">
             部门: {{ info.department }}
         </div>
+        <div class="text item">
+            工号: {{ info.number }}
+        </div>
+        <div class="text item">
+            职位: {{ info.post }}
+        </div>
         <div class="text item" v-if="info.groupName">
             要客组: {{ info.groupName }}
         </div>

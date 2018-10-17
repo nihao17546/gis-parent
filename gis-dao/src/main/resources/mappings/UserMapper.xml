@@ -3,8 +3,8 @@
 <mapper namespace="com.yugoo.gis.dao.UserDAO">
     <insert id="insert" useGeneratedKeys="true" keyProperty="id"
             parameterType="com.yugoo.gis.pojo.po.UserPO">
-        insert into tb_user(`name`,phone,password,role,department,groupId,centerId,`key`,ctime)
-        values(#{name},#{phone},#{password},#{role},#{department},#{groupId},#{centerId},#{key},now())
+        insert into tb_user(`name`,phone,password,role,department,groupId,centerId,`key`,`number`,post,ctime)
+        values(#{name},#{phone},#{password},#{role},#{department},#{groupId},#{centerId},#{key},#{number},#{post},now())
     </insert>
     <update id="update" parameterType="com.yugoo.gis.pojo.po.UserPO">
         update tb_user
@@ -17,6 +17,8 @@
             <if test="groupId!=null">groupId=#{groupId},</if>
             <if test="centerId!=null">centerId=#{centerId},</if>
             <if test="key!=null">`key`=#{key},</if>
+            <if test="number!=null">`number`=#{number},</if>
+            <if test="post!=null">`post`=#{post},</if>
         </trim>
         where id=#{id}
     </update>
@@ -68,5 +70,8 @@
         <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
             #{item}
         </foreach>
+    </select>
+    <select id="selectByNumber" resultType="com.yugoo.gis.pojo.po.UserPO">
+        select * from tb_user where `number`=#{number}
     </select>
 </mapper>

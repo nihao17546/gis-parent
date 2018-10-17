@@ -17,6 +17,8 @@ public class UserListVO {
     private Integer groupId;
     private Integer centerId;
     private String key;
+    private String number;
+    private String post;
     private Date ctime;
 
     private String roleName;

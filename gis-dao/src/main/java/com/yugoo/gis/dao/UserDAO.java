@@ -26,4 +26,5 @@ public interface UserDAO {
     List<UserPO> selectByCenterId(@Param("centerId") Integer centerId);
     @MapKey("id")
     Map<Integer,UserPO> selectByIds(@Param("ids") List<Integer> ids);
+    UserPO selectByNumber(@Param("number") String number);
 }
