@@ -11,7 +11,7 @@ import com.yugoo.gis.pojo.vo.UserListVO;
  */
 public interface IUserService {
     void create(String name, String phone, String password, Integer role, String department,
-                Integer groupId, Integer centerId, String key);
+                Integer groupId, Integer centerId, String key, String number, String post);
 
     /**
      * 后台编辑
@@ -24,9 +24,11 @@ public interface IUserService {
      * @param groupId
      * @param centerId
      * @param key
+     * @param number
+     * @param post
      */
     void edit(Integer id, String name, String phone, String password, Integer role, String department,
-              Integer groupId, Integer centerId, String key);
+              Integer groupId, Integer centerId, String key, String number, String post);
 
     void edit(Integer id, String name, String phone, String department);
 

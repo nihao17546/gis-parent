@@ -35,6 +35,14 @@
                 label="部门">
         </el-table-column>
         <el-table-column
+                prop="number"
+                label="工号">
+        </el-table-column>
+        <el-table-column
+                prop="post"
+                label="职位">
+        </el-table-column>
+        <el-table-column
                 prop="phone"
                 label="手机号">
         </el-table-column>
@@ -85,6 +93,12 @@
             </el-form-item>
             <el-form-item label="部门:" prop="department" :label-width="formLabelWidth">
                 <el-input v-model.trim="addForm.department" autocomplete="off" size="small" maxlength="50"></el-input>
+            </el-form-item>
+            <el-form-item label="工号:" prop="number" :label-width="formLabelWidth">
+                <el-input v-model.trim="addForm.number" autocomplete="off" size="small" maxlength="50"></el-input>
+            </el-form-item>
+            <el-form-item label="职位:" prop="post" :label-width="formLabelWidth">
+                <el-input v-model.trim="addForm.post" autocomplete="off" size="small" maxlength="50"></el-input>
             </el-form-item>
             <el-form-item label="角色:" prop="role" :label-width="formLabelWidth">
                 <el-select v-model="addForm.role" placeholder="请选择" size="small" style="width: 100%"
@@ -170,6 +184,7 @@
                     name: [{required : true, message: '请输入姓名', trigger: 'blur' }],
                     phone: [{ required: true, validator: validatePhone, trigger: 'blur' }],
                     department: [{required : true, message: '请输入部门', trigger: 'blur' }],
+                    number: [{required : true, message: '请输入工号', trigger: 'blur' }],
                     role: [{required : true, message: '请选择角色', trigger: 'blur' }],
                     groupId: [{ required: true, validator: validateGroup, trigger: 'change' }],
                     centerId: [{ required: true, validator: validateCenter, trigger: 'change' }]
@@ -186,6 +201,8 @@
                     name: row.name,
                     phone: row.phone,
                     department: row.department,
+                    number: row.number,
+                    post: row.post,
                     role: row.role,
                     groupId: row.groupId,
                     centerId: row.centerId,
@@ -283,6 +300,12 @@
                         }
                         if (this.addForm.department) {
                             fd.append('department', this.addForm.department)
+                        }
+                        if (this.addForm.number) {
+                            fd.append('number', this.addForm.number)
+                        }
+                        if (this.addForm.post) {
+                            fd.append('post', this.addForm.post)
                         }
                         if (this.addForm.role) {
                             fd.append('role', this.addForm.role)

@@ -20,5 +20,7 @@ public class UserInfoVO {
     private Integer centerId;
     private String centerName;
     private String key;
+    private String number;
+    private String post;
     private List<MenuVO> menus;
 }

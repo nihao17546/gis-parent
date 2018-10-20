@@ -104,8 +104,9 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public void create(String name, String phone, String password, Integer role, String department,
-                       Integer groupId, Integer centerId, String key) {
+                       Integer groupId, Integer centerId, String key, String number, String post) {
         checkPhone(null, phone);
+        checkNumber(null, number);
         Role roleEnum = Role.getByValue(role);
         if (roleEnum == Role.admin) {
             groupId = 0;
@@ -134,12 +135,17 @@ public class UserServiceImpl implements IUserService {
         userPO.setGroupId(groupId);
         userPO.setCenterId(centerId);
         userPO.setKey(key);
+        userPO.setNumber(number);
+        userPO.setPost(post);
         userDAO.insert(userPO);
     }
 
     @Override
-    public void edit(Integer id, String name, String phone, String password, Integer role, String department, Integer groupId, Integer centerId, String key) {
+    public void edit(Integer id, String name, String phone, String password, Integer role,
+                     String department, Integer groupId, Integer centerId, String key,
+                     String number, String post) {
         checkPhone(id, phone);
+        checkNumber(id, number);
         Role roleEnum = Role.getByValue(role);
         if (roleEnum == Role.admin) {
             groupId = 0;
@@ -168,6 +174,8 @@ public class UserServiceImpl implements IUserService {
         userPO.setGroupId(groupId);
         userPO.setCenterId(centerId);
         userPO.setKey(key);
+        userPO.setNumber(number);
+        userPO.setPost(post);
         userDAO.update(userPO);
     }
 
@@ -176,6 +184,15 @@ public class UserServiceImpl implements IUserService {
         if (user != null) {
             if (id == null || !id.equals(user.getId())) {
                 throw new GisRuntimeException("该手机号已存在");
+            }
+        }
+    }
+
+    private void checkNumber(Integer id, String number) {
+        UserPO user = userDAO.selectByNumber(number);
+        if (user != null) {
+            if (id == null || !id.equals(user.getId())) {
+                throw new GisRuntimeException("该工号已存在");
             }
         }
     }
