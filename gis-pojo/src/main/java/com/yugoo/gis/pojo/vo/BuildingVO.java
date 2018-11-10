@@ -1,21 +1,13 @@
 package com.yugoo.gis.pojo.vo;
 
+import com.yugoo.gis.pojo.po.BuildingPO;
 import lombok.Data;
-
-import java.util.Date;
 
 /**
  * @author nihao
  * @create 2018/10/5
  **/
 @Data
-public class BuildingVO {
-    private Integer id;
-    private String name;
-    private Integer streetId;
-    private Double longitude;
-    private Double latitude;
-    private Date ctime;
-
+public class BuildingVO extends BuildingPO {
     private String streetName;
 }

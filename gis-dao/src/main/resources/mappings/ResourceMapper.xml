@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yugoo.gis.dao.ResourceDAO">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.yugoo.gis.pojo.po.ResourcePO">
+        insert into tb_resource(buildingId,district,floor,`number`,allPortCount,idelPortCount,sceneA,sceneB,overlayScene,longitude,latitude,ctime)
+        values(#{buildingId},#{district},#{floor},#{number},#{allPortCount},#{idelPortCount},
+        #{sceneA},#{sceneB},#{overlayScene},#{longitude},#{latitude},now())
+    </insert>
+    <update id="update" parameterType="com.yugoo.gis.pojo.po.ResourcePO">
+        update tb_resource
+        <trim prefix="set" suffixOverrides=",">
+            `buildingId`=#{buildingId},
+            `district`=#{district},
+            `floor`=#{floor},
+            `number`=#{number},
+            `allPortCount`=#{allPortCount},
+            `idelPortCount`=#{idelPortCount},
+            `sceneA`=#{sceneA},
+            `sceneB`=#{sceneB},
+            `overlayScene`=#{overlayScene},
+            longitude=#{longitude},
+            latitude=#{latitude},
+        </trim>
+        where id=#{id}
+    </update>
+    <select id="select" resultType="com.yugoo.gis.pojo.po.ResourcePO">
+        select * from tb_resource where 1=1
+        <if test="buildingId != null and buildingId != 0">
+            and buildingId=#{buildingId}
+        </if>
+        order by id desc
+    </select>
+    <select id="selectCount" resultType="java.lang.Long">
+        select count(*) from tb_resource where 1=1
+        <if test="buildingId != null and buildingId != 0">
+            and buildingId=#{buildingId}
+        </if>
+    </select>
+    <select id="selectByBuildingIdAndFloorAndNumber" resultType="com.yugoo.gis.pojo.po.ResourcePO">
+        select * from tb_resource where buildingId=#{buildingId}
+        and `floor`=#{floor} and `number`=#{number}
+    </select>
+    <delete id="delete">
+        delete from tb_resource where id=#{id}
+    </delete>
+    <select id="selectCountByBuildingId" resultType="java.lang.Long">
+        select count(1) from tb_resource where buildingId=#{buildingId}
+    </select>
+    <update id="updateLoAndLaByBuildingId">
+        update tb_resource set longitude=#{longitude},latitude=#{latitude} where buildingId=#{buildingId}
+    </update>
+    <insert id="batchInsert">
+        insert into tb_resource (buildingId,district,floor,`number`,allPortCount,idelPortCount,sceneA,sceneB,overlayScene,longitude,latitude,ctime)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.buildingId},#{item.district},#{item.floor},#{item.number},#{item.allPortCount},#{item.idelPortCount},
+            #{item.sceneA},#{item.sceneB},#{item.overlayScene},#{item.longitude},#{item.latitude},now())
+        </foreach>
+    </insert>
+    <select id="selectByCenter" resultType="com.yugoo.gis.pojo.po.ResourcePO">
+        select id,allPortCount,idelPortCount,longitude,latitude from tb_resource
+        where longitude between #{loMin} and #{loMax}
+        and latitude between #{laMin} and #{laMax}
+    </select>
+</mapper>

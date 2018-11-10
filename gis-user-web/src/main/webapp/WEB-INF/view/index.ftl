@@ -54,6 +54,8 @@
                                    <#if menu.target ??>target="${menu.target}"</#if>
                                    <#if menu.index == 2>id="centerMenu"</#if>
                                    <#if menu.index == 4>id="buildingMenu"</#if>
+                                   <#if menu.index == 5>id="consumerMenu"</#if>
+                                   <#if menu.index == 6>id="resourceMenu"</#if>
                                 >
                                     <#if menu.icon ??>
                                         <i class="fa ${menu.icon}"></i>
@@ -61,6 +63,8 @@
                                     <span class="nav-label"
                                           <#if menu.index == 2>id="centerMenuLabel"</#if>
                                           <#if menu.index == 4>id="buildingMenuLabel"</#if>
+                                          <#if menu.index == 5>id="consumerMenuLabel"</#if>
+                                          <#if menu.index == 6>id="resourceMenuLabel"</#if>
                                     >
                                         ${menu.name}
                                     </span>
@@ -83,6 +87,8 @@
                                                    <#if menu.target ??>target="${menu.target}"</#if>
                                                    <#if menu.index == 2>id="centerMenu"</#if>
                                                    <#if menu.index == 4>id="buildingMenu"</#if>
+                                                   <#if menu.index == 5>id="consumerMenu"</#if>
+                                                   <#if menu.index == 6>id="resourceMenu"</#if>
                                                 >
                                                     <#if child.icon ??>
                                                         <i class="fa ${child.icon}"></i>
@@ -90,6 +96,8 @@
                                                     <span class="nav-label"
                                                           <#if menu.index == 2>id="centerMenuLabel"</#if>
                                                           <#if menu.index == 4>id="buildingMenuLabel"</#if>
+                                                          <#if menu.index == 5>id="consumerMenuLabel"</#if>
+                                                          <#if menu.index == 6>id="resourceMenuLabel"</#if>
                                                     >
                                                         ${child.name}
                                                     </span>
@@ -154,8 +162,8 @@
             fa-sign-out"></i>
                 退出</a>
         </div>
-        <div class="row J_mainContent" id="content-main">
-            <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="/stu/page/welcome" frameborder="0" data-id="welcome.html" seamless></iframe>
+        <div class="row J_mainContent" id="content-main" style="height:calc(100% - 100px)">
+            <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="welcome.html" frameborder="0" data-id="welcome.html" seamless></iframe>
         </div>
         <#--<div class="footer">-->
             <#--&lt;#&ndash;<div class="pull-right">&copy; 2015-2016 <a href="javascript:void(0);" target="_blank">gis</a>&ndash;&gt;-->
@@ -163,8 +171,10 @@
         <#--</div>-->
     </div>
 
-    <button id="center" onclick="openCenter(this)" param="" style="display: none">营销中心</button>
-    <button id="building" onclick="openBuilding(this)" param="" style="display: none">营销中心</button>
+    <button id="center" onclick="openCenter(this)" param="" centerId="" style="display: none">营销中心</button>
+    <button id="building" onclick="openBuilding(this)" param="" buildingId="" style="display: none">建筑信息</button>
+    <button id="consumer" onclick="openConsumer(this)" param="" style="display: none">客户信息</button>
+    <button id="resource" onclick="openResource(this)" param="" style="display: none">资源信息</button>
 </div>
 
 <script src="${contextPath}/static/hplus/js/jquery.min.js" type="text/javascript"></script>
@@ -220,6 +230,17 @@
                 $(o).attr('param', '');
                 $(o).attr('name', '');
             }
+            else if ($(o).attr('centerId') != '') {
+                let href = $('#centerMenu').attr('href');
+                let html = $('#centerMenuLabel').html();
+                $('#centerMenu').attr('href', href + '?id=' + $(o).attr('centerId'));
+                $('#centerMenuLabel').html($(o).attr('name'));
+                $('#centerMenu').click();
+                $('#centerMenu').attr('href', href);
+                $('#centerMenuLabel').html(html);
+                $(o).attr('centerId', '');
+                $(o).attr('name', '');
+            }
         }
     }
 
@@ -240,6 +261,60 @@
                 $(o).attr('param', '');
                 $(o).attr('name', '');
                 $(o).attr('fromStreet', '');
+            }
+            else if ($(o).attr('buildingId') != '') {
+                let href = $('#buildingMenu').attr('href');
+                let html = $('#buildingMenuLabel').html();
+                $('#buildingMenu').attr('href', href + '?id=' + $(o).attr('buildingId'));
+                $('#buildingMenuLabel').html($(o).attr('name'));
+                $('#buildingMenu').click();
+                $('#buildingMenu').attr('href', href);
+                $('#buildingMenuLabel').html(html);
+                $(o).attr('buildingId', '');
+                $(o).attr('name', '');
+            }
+        }
+    }
+
+    function openConsumer(o) {
+        if ($('#consumerMenu').length == 1) {
+            if ($(o).attr('param') != '') {
+                let href = $('#consumerMenu').attr('href');
+                let html = $('#consumerMenuLabel').html();
+                $('#consumerMenu').attr('href', href + '?buildingId=' + $(o).attr('param'));
+                $('#consumerMenuLabel').html($(o).attr('name'));
+                $('#consumerMenu').click();
+                $('#consumerMenu').attr('href', href);
+                $('#consumerMenuLabel').html(html);
+                $(o).attr('param', '');
+                $(o).attr('name', '');
+            }
+            else if ($(o).attr('consumerId') != '') {
+                let href = $('#consumerMenu').attr('href');
+                let html = $('#consumerMenuLabel').html();
+                $('#consumerMenu').attr('href', href + '?id=' + $(o).attr('consumerId'));
+                $('#consumerMenuLabel').html($(o).attr('name'));
+                $('#consumerMenu').click();
+                $('#consumerMenu').attr('href', href);
+                $('#consumerMenuLabel').html(html);
+                $(o).attr('consumerId', '');
+                $(o).attr('name', '');
+            }
+        }
+    }
+
+    function openResource(o) {
+        if ($('#resourceMenu').length == 1) {
+            if ($(o).attr('param') != '') {
+                let href = $('#resourceMenu').attr('href');
+                let html = $('#resourceMenuLabel').html();
+                $('#resourceMenu').attr('href', href + '?buildingId=' + $(o).attr('param'));
+                $('#resourceMenuLabel').html($(o).attr('name'));
+                $('#resourceMenu').click();
+                $('#resourceMenu').attr('href', href);
+                $('#resourceMenuLabel').html(html);
+                $(o).attr('param', '');
+                $(o).attr('name', '');
             }
         }
     }

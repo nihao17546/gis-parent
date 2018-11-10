@@ -153,13 +153,13 @@
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         let fd = new FormData();
-                        if (this.addForm.id) {
+                        if (typeof(this.addForm.id) != "undefined" && this.addForm.id != null) {
                             fd.append('id', this.addForm.id)
                         }
-                        if (this.addForm.name) {
+                        if (typeof(this.addForm.name) != "undefined" && this.addForm.name != null && this.addForm.name != '') {
                             fd.append('name', this.addForm.name)
                         }
-                        if (this.addForm.position) {
+                        if (typeof(this.addForm.position) != "undefined" && this.addForm.position != null && this.addForm.position != '') {
                             fd.append('position', this.addForm.position)
                         }
                         let url = '${contextPath}/group/edit';

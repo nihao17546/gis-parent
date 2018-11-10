@@ -1,7 +1,6 @@
 package com.yugoo.gis.user.web.handler;
 
 import com.yugoo.gis.user.web.result.JsonResult;
-import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.method.HandlerMethod;
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
 
 /**
  * Created by nihao on 16/10/22.
@@ -21,13 +19,22 @@ import java.util.Map;
 public class ExceptionHandler implements HandlerExceptionResolver {
     private Logger logger = LoggerFactory.getLogger(ExceptionHandler.class);
     @Override
-    public ModelAndView resolveException(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o, Exception e) {
-        logger.error("\r\n请求路径:{},类:{},方法:{},错误信息:{}",
-                httpServletRequest.getServletPath(),
-                ((HandlerMethod)o).getBean().getClass().getName(),
-                ((HandlerMethod)o).getMethod().getName(),
-                e.getMessage(),
-                e);
+    public ModelAndView resolveException(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object obj, Exception e) {
+        if (obj instanceof HandlerMethod) {
+            logger.error("\r\n请求路径:{},类:{},方法:{},错误信息:{}",
+                    httpServletRequest.getServletPath(),
+                    ((HandlerMethod)obj).getBean().getClass().getName(),
+                    ((HandlerMethod)obj).getMethod().getName(),
+                    e.getMessage(),
+                    e);
+        }
+        else {
+            logger.error("\r\n请求路径:{},错误信息:{}",
+                    httpServletRequest.getServletPath(),
+                    e.getMessage(),
+                    e);
+        }
+
         String message = e.getClass().getName()+" "+e.getMessage();
         if (httpServletRequest.getServletPath().endsWith(".html")) {
             httpServletRequest.setAttribute("errorMsg", message);

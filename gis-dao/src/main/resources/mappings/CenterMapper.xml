@@ -3,21 +3,21 @@
 <mapper namespace="com.yugoo.gis.dao.CenterDAO">
     <select id="select" resultType="com.yugoo.gis.pojo.po.CenterPO">
         select * from tb_center where 1=1
+        <if test="groupId != null and groupId != 0">
+            and groupId in (#{groupId},0)
+        </if>
         <if test="name != null">
             and `name` like concat('%',#{name},'%')
-        </if>
-        <if test="groupId != null and groupId != 0">
-            and groupId=#{groupId}
         </if>
          order by id desc
     </select>
     <select id="selectCount" resultType="java.lang.Long">
         select count(*) from tb_center where 1=1
+        <if test="groupId != null and groupId != 0">
+            and groupId in (#{groupId},0)
+        </if>
         <if test="name != null">
             and `name` like concat('%',#{name},'%')
-        </if>
-        <if test="groupId != null and groupId != 0">
-            and groupId=#{groupId}
         </if>
     </select>
     <select id="selectById" resultType="com.yugoo.gis.pojo.po.CenterPO">
@@ -49,13 +49,13 @@
     <update id="update" parameterType="com.yugoo.gis.pojo.po.CenterPO">
         update tb_center
         <trim prefix="set" suffixOverrides=",">
-            <if test="name!=null">`name`=#{name},</if>
-            <if test="groupId!=null">groupId=#{groupId},</if>
-            <if test="manager!=null">manager=#{manager},</if>
-            <if test="phone!=null">phone=#{phone},</if>
-            <if test="position!=null">`position`=#{position},</if>
-            <if test="district!=null">district=#{district},</if>
-            <if test="region!=null">region=#{region},</if>
+            `name`=#{name},
+            groupId=#{groupId},
+            manager=#{manager},
+            phone=#{phone},
+            `position`=#{position},
+            district=#{district},
+            region=#{region},
             loMax=#{loMax},
             loMin=#{loMin},
             laMax=#{laMax},
@@ -63,4 +63,31 @@
         </trim>
         where id=#{id}
     </update>
+    <select id="selectLikeName" resultType="com.yugoo.gis.pojo.po.CenterPO">
+        select * from tb_center where `name` like concat('%',#{name},'%')
+    </select>
+    <select id="selectFromMap" resultType="com.yugoo.gis.pojo.po.CenterPO">
+        select * from tb_center
+        where 1=1
+        and loMax between #{loMin} and #{loMax}
+        and loMin between #{loMin} and #{loMax}
+        and laMax between #{laMin} and #{laMax}
+        and laMin between #{laMin} and #{laMax}
+        <if test="groupId != null and groupId != 0">
+            and groupId in (#{groupId},0)
+        </if>
+        and `name` like concat('%',#{name},'%')
+    </select>
+    <select id="selectIdByGroupIdAndLikeName" resultType="java.lang.Integer">
+        select id from tb_center where 1=1
+        <if test="id != null">
+            and id=#{id}
+        </if>
+        <if test="groupId != null">
+            and groupId=#{groupId}
+        </if>
+        <if test="name != null">
+            and `name` like concat('%',#{name},'%')
+        </if>
+    </select>
 </mapper>

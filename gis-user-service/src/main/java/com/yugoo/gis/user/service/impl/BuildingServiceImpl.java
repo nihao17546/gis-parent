@@ -6,6 +6,8 @@ import com.yugoo.gis.common.constant.Role;
 import com.yugoo.gis.common.exception.GisRuntimeException;
 import com.yugoo.gis.dao.BuildingDAO;
 import com.yugoo.gis.dao.CenterDAO;
+import com.yugoo.gis.dao.ConsumerDAO;
+import com.yugoo.gis.dao.ResourceDAO;
 import com.yugoo.gis.dao.StreetDAO;
 import com.yugoo.gis.dao.UserDAO;
 import com.yugoo.gis.pojo.po.BuildingPO;
@@ -45,6 +47,10 @@ public class BuildingServiceImpl implements IBuildingService {
     private CenterDAO centerDAO;
     @Autowired
     private UserDAO userDAO;
+    @Autowired
+    private ConsumerDAO consumerDAO;
+    @Autowired
+    private ResourceDAO resourceDAO;
 
     @Override
     public ListVO<BuildingVO> list(Integer curPage, Integer pageSize, String name, Integer streetId) {
@@ -123,6 +129,12 @@ public class BuildingServiceImpl implements IBuildingService {
             BuildingPO avg = buildingDAO.selectAvgByStreetId(streetId);
             streetDAO.updateLoAndLa(streetId, avg.getLongitude(), avg.getLatitude());
         }
+        // 更新客户、资源的经纬度
+        if (!oldBuildingPO.getLongitude().equals(longitude)
+                || !oldBuildingPO.getLatitude().equals(latitude)) {
+            consumerDAO.updateLoAndLaByBuildingId(id, longitude, latitude);
+            resourceDAO.updateLoAndLaByBuildingId(id, longitude, latitude);
+        }
     }
 
     @Override
@@ -199,5 +211,65 @@ public class BuildingServiceImpl implements IBuildingService {
             return vo;
         }).collect(Collectors.toList());
         return buildingVOList;
+    }
+
+    @Transactional
+    @Override
+    public void delete(Integer id) {
+        long l1 = consumerDAO.selectCountByBuildingId(id);
+        if (l1 > 0L) {
+            throw new GisRuntimeException("该建筑下关联有客户信息，不能删除");
+        }
+        long l2 = resourceDAO.selectCountByBuildingId(id);
+        if (l2 > 0L) {
+            throw new GisRuntimeException("该建筑下关联有网络资源，不能删除");
+        }
+        BuildingPO oldBuildingPO = buildingDAO.selectById(id);
+        buildingDAO.deleteById(id);
+        if (oldBuildingPO.getStreetId() != null && oldBuildingPO.getStreetId() != 0) {
+            BuildingPO avg = buildingDAO.selectAvgByStreetId(oldBuildingPO.getStreetId());
+            if (avg != null) {
+                streetDAO.updateLoAndLa(oldBuildingPO.getStreetId(), avg.getLongitude(), avg.getLatitude());
+            }
+            else {
+                streetDAO.updateLoAndLa(oldBuildingPO.getStreetId(), -999.0, -999.0);
+            }
+        }
+    }
+
+    @Override
+    public List<BuildingVO> searchByName(String name) {
+        List<BuildingPO> buildingPOList = buildingDAO.selectLikeName(name);
+        List<BuildingVO> buildingVOList = buildingPOList.stream().map(po -> {
+            BuildingVO vo = new BuildingVO();
+            BeanUtils.copyProperties(po, vo);
+            return vo;
+        }).collect(Collectors.toList());
+        return buildingVOList;
+    }
+
+    @Override
+    public List<BuildingVO> searchFromMap(String name, Double loMin, Double loMax, Double laMin, Double laMax) {
+        List<BuildingPO> buildingPOList = buildingDAO.selectFromMap(name, loMin, loMax, laMin, laMax);
+        List<BuildingVO> buildingVOList = buildingPOList.stream().map(po -> {
+            BuildingVO vo = new BuildingVO();
+            BeanUtils.copyProperties(po, vo);
+            return vo;
+        }).collect(Collectors.toList());
+        return buildingVOList;
+    }
+
+    @Override
+    public BuildingVO getById(Integer id) {
+        BuildingPO buildingPO = buildingDAO.selectById(id);
+        BuildingVO vo = new BuildingVO();
+        BeanUtils.copyProperties(buildingPO, vo);
+        if (buildingPO.getStreetId() != null && buildingPO.getStreetId() != 0) {
+            StreetPO streetPO = streetDAO.selectById(buildingPO.getStreetId());
+            if (streetPO != null) {
+                vo.setStreetName(streetPO.getName());
+            }
+        }
+        return vo;
     }
 }

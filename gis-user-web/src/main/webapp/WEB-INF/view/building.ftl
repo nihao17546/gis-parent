@@ -63,8 +63,8 @@
             <template slot-scope="props">
                 <el-button-group>
                     <el-button type="primary" size="mini" :disabled="loading" @click="position(props.row)">定位</el-button>
-                    <el-button type="primary" size="mini" :disabled="loading">客户</el-button>
-                    <el-button type="primary" size="mini" :disabled="loading">网络资源</el-button>
+                    <el-button type="primary" size="mini" :disabled="loading" @click="openConsumer(props.row)" v-if="auth.indexOf('/consumer.html') != -1">客户</el-button>
+                    <el-button type="primary" size="mini" :disabled="loading" @click="openResource(props.row)" v-if="auth.indexOf('/resource.html') != -1">网络资源</el-button>
                     <el-button type="primary" size="mini" :disabled="loading" @click="del(props.row.id)" v-if="auth.indexOf('/building/delete') != -1">删除</el-button>
                     <el-button type="primary" size="mini" :disabled="loading" @click="showEdit(props.row)" v-if="auth.indexOf('/building/edit') != -1">编辑</el-button>
                 </el-button-group>
@@ -156,11 +156,30 @@
                 positionVisible: false,
                 searchCenterId: 0,
                 searchStreetId: 0,
+                searchId: 0,
                 ifFromIndex: true,
                 auth: ${auth}
             }
         },
         methods: {
+            openConsumer(row) {
+                if ($('#consumer', parent.document).length == 1) {
+                    $('#consumer', parent.document).attr('param', row.id);
+                    $('#consumer', parent.document).attr('name', '客户[' + row.name + ']');
+                    $('#consumer', parent.document).click()
+                } else {
+
+                }
+            },
+            openResource(row) {
+                if ($('#resource', parent.document).length == 1) {
+                    $('#resource', parent.document).attr('param', row.id);
+                    $('#resource', parent.document).attr('name', '网络资源[' + row.name + ']');
+                    $('#resource', parent.document).click()
+                } else {
+
+                }
+            },
             selectCity() {
                 if (this.selectCityName != '') {
                     this.currentMap.centerAndZoom(this.selectCityName, 13);
@@ -205,19 +224,19 @@
                             return false;
                         }
                         let fd = new FormData();
-                        if (this.addForm.id) {
+                        if (typeof(this.addForm.id) != "undefined" && this.addForm.id != null) {
                             fd.append('id', this.addForm.id)
                         }
-                        if (this.addForm.name) {
+                        if (typeof(this.addForm.name) != "undefined" && this.addForm.name != null && this.addForm.name != '') {
                             fd.append('name', this.addForm.name)
                         }
-                        if (this.addForm.streetId) {
+                        if (typeof(this.addForm.streetId) != "undefined" && this.addForm.streetId != null) {
                             fd.append('streetId', this.addForm.streetId)
                         }
-                        if (this.addForm.longitude) {
+                        if (typeof(this.addForm.longitude) != "undefined" && this.addForm.longitude != null) {
                             fd.append('longitude', this.addForm.longitude)
                         }
-                        if (this.addForm.latitude) {
+                        if (typeof(this.addForm.latitude) != "undefined" && this.addForm.latitude != null) {
                             fd.append('latitude', this.addForm.latitude)
                         }
                         let url = '${contextPath}/building/edit';
@@ -281,7 +300,31 @@
                 this.addVisible = true
             },
             del(id) {
-
+                this.$confirm('确定要删除?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.loading = true;
+                    axios.get('${contextPath}/building/delete',{
+                        params: {
+                            id: id
+                        }
+                    }).then(res => {
+                        if (res.data.code == 1) {
+                            this.$message.error(res.data.message);
+                            this.loading = false;
+                        }
+                        else {
+                            this.loading = false;
+                            this.getList();
+                        }
+                    }).catch(res => {
+                        console.error(res)
+                        this.loading = false;
+                    })
+                }).catch(() => {
+                });
             },
             position(row) {
                 this.positionVisible = true
@@ -324,6 +367,9 @@
             },
             search() {
                 this.curPage = 1;
+                this.searchCenterId = 0;
+                this.searchStreetId = 0;
+                this.searchId = 0;
                 this.getList()
             },
             getList() {
@@ -338,7 +384,8 @@
                         pageSize: this.pageSize,
                         name: name,
                         centerId: this.searchCenterId,
-                        streetId: this.searchStreetId
+                        streetId: this.searchStreetId,
+                        id: this.searchId
                     }
                 }).then(res => {
                     if (res.data.code == 1) {
@@ -378,6 +425,11 @@
                 this.ifFromIndex = false;
             } else if (streetId) {
                 this.searchStreetId = streetId;
+                this.ifFromIndex = false;
+            }
+            let id = this.getQueryString('id');
+            if (id) {
+                this.searchId = id;
                 this.ifFromIndex = false;
             }
             this.getList()

@@ -11,7 +11,7 @@ import java.util.List;
 public class MenuVO {
     private String name;
     private String path;
-    private List<MenuVO> children;
+    private List<MenuVO> menus;
     private String target;
     private Integer index;
     private String icon;

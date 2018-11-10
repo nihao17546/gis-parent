@@ -23,4 +23,12 @@ public interface CenterDAO {
     CenterPO selectByName(@Param("name") String name);
     int insert(CenterPO centerPO);
     int update(CenterPO centerPO);
+    List<CenterPO> selectLikeName(@Param("name") String name);
+    List<CenterPO> selectFromMap(@Param("name") String name,
+                                 @Param("loMin") Double loMin, @Param("loMax") Double loMax,
+                                 @Param("laMin") Double laMin, @Param("laMax") Double laMax,
+                                 @Param("groupId") Integer groupId);
+    List<Integer> selectIdByGroupIdAndLikeName(@Param("id") Integer id,
+                                               @Param("groupId") Integer groupId,
+                                                     @Param("name") String name);
 }

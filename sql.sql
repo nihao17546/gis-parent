@@ -28,7 +28,7 @@ CREATE TABLE `tb_group` (
 CREATE TABLE `tb_center` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL COMMENT '名称',
-  `groupId` int(11) NOT NULL COMMENT '所属要客组ID',
+  `groupId` `groupId` int(11) default '0' NOT NULL comment '所属要客组ID,0表示未关联任何要客组',
   `manager` varchar(100) DEFAULT NULL COMMENT '中心主任',
   `phone` varchar(50) DEFAULT NULL COMMENT '中心主任电话',
   `position` varchar(256) NOT NULL COMMENT '办公地点',
@@ -104,6 +104,129 @@ CREATE TABLE `tb_consumer` (
   `ctime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '操作时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `tb_resource` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `buildingId` INT(11) NOT NULL DEFAULT 0 COMMENT '所属建筑ID',
+  `district` VARCHAR(256) NULL COMMENT '区县',
+  `floor` VARCHAR(20) NULL COMMENT '楼层',
+  `number` VARCHAR(50) NULL COMMENT '户号',
+  `allPortCount` INT(5) NOT NULL DEFAULT 0 COMMENT '总端口数',
+  `idelPortCount` INT(5) NOT NULL DEFAULT 0 COMMENT '空闲端口数',
+  `sceneA` VARCHAR(256) NULL COMMENT '用户场景一类',
+  `sceneB` VARCHAR(256) NULL COMMENT '用户场景二类',
+  `overlayScene` VARCHAR(256) NULL COMMENT '覆盖场景',
+  `ctime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '操作时间',
+  PRIMARY KEY (`id`));
+
+ALTER TABLE `tb_resource`
+CHANGE COLUMN `buildingId` `buildingId` INT(11) NOT NULL DEFAULT '0' COMMENT '所属建筑ID。0表示未关联建筑，此时定位以经纬度坐标为准，如果关联了建筑、就以建筑的经纬度坐标来定位' ,
+ADD COLUMN `longitude` DOUBLE(9,6) NULL COMMENT '经度,当未关联建筑时,此字段不为空' AFTER `overlayScene`,
+ADD COLUMN `latitude` DOUBLE(9,6) NULL COMMENT '纬度,当未关联建筑时,此字段不为空' AFTER `longitude`;
+
+ALTER TABLE `tb_consumer`
+CHANGE COLUMN `buildingId` `buildingId` INT(11) NOT NULL DEFAULT 0 COMMENT '所属建筑ID。0表示未关联建筑，此时定位以经纬度坐标为准，如果关联了建筑、就以建筑的经纬度坐标来定位' ,
+ADD COLUMN `longitude` DOUBLE(9,6) NULL COMMENT '经度,当未关联建筑时,此字段不为空' AFTER `type`,
+ADD COLUMN `latitude` DOUBLE(9,6) NULL COMMENT '纬度,当未关联建筑时,此字段不为空' AFTER `longitude`;
+
+ALTER TABLE `tb_consumer`
+CHANGE COLUMN `longitude` `longitude` DOUBLE(9,6) NOT NULL COMMENT '经度,当关联建筑时,此字段等于关联建筑的经度' ,
+CHANGE COLUMN `latitude` `latitude` DOUBLE(9,6) NOT NULL COMMENT '纬度,当关联建筑时,此字段等于关联建筑的纬度' ;
+
+ALTER TABLE `tb_resource`
+CHANGE COLUMN `longitude` `longitude` DOUBLE(9,6) NOT NULL COMMENT '经度,当关联建筑时,此字段等于关联建筑的经度' ,
+CHANGE COLUMN `latitude` `latitude` DOUBLE(9,6) NOT NULL COMMENT '纬度,当关联建筑时,此字段等于关联建筑的纬度' ;
+
+create table `tb_config`(
+   `mapSearchRegion` int(5) NOT NULL DEFAULT '0' COMMENT '地图搜索半径，单位：米',
+   `expirationDateLimit` int(5) NOT NULL DEFAULT '0' COMMENT '业务到期提醒时间，单位：天'
+)
+
+alter table `tb_consumer`
+add column `expensesName` varchar(100) NULL COMMENT '订购资费名称，当serviceType为2或3时、必填' after `lineStatus`,
+add column `orderTime` bigint(20) NULL COMMENT '订购时间，当serviceType为2或3时、必填' after `expensesName`,
+add column `memberRole` varchar(50) NULL COMMENT '成员角色，当serviceType为2或3时、必填' after `orderTime`,
+add column `memberRoleRealNum` varchar(100) NULL COMMENT '成员真实号码，当serviceType为2或3时、必填' after `memberRole`,
+add column `memberExpensesName` varchar(100) NULL COMMENT '成员侧资费名称，当serviceType为2或3时、必填' after `memberRoleRealNum`,
+change `expenses` `expenses` decimal(7,2) NULL  comment '现有业务资费',
+change `expirationDate` `expirationDate` bigint(20) NULL  comment '业务到期时间',
+change `serviceType` `serviceType` int(2) NULL  comment '业务类型。1：专线产品，2：酒店产品，3：商务动力',
+change `lineNum` `lineNum` int(5) NULL  comment '专线条数，当serviceType为1时、必填',
+change `lineType` `lineType` varchar(100) character set utf8 collate utf8_general_ci NULL  comment '专线类型，当serviceType为1时、必填',
+change `lineOpenDate` `lineOpenDate` bigint(20) NULL  comment '专线开户时间，当serviceType为1时、必填',
+change `lineStatus` `lineStatus` varchar(100) character set utf8 collate utf8_general_ci NULL  comment '专线状态，当serviceType为1时、必填';
+
+ALTER TABLE `tb_resource`
+CHANGE COLUMN `longitude` `longitude` DOUBLE(9,6) NOT NULL DEFAULT -999.000000 COMMENT '经度。如果关联了建筑、此时必须等于建筑的经度，如果是通过地图抓取的、此时等于抓取的经度，如果是通过excel导入创建的、此时等于-999、表示没有定位' ,
+CHANGE COLUMN `latitude` `latitude` DOUBLE(9,6) NOT NULL DEFAULT -999.000000 COMMENT '纬度。如果关联了建筑、此时必须等于建筑的纬度，如果是通过地图抓取的、此时等于抓取的纬度，如果是通过excel导入创建的、此时等于-999、表示没有定位' ;
+
+ALTER TABLE `tb_consumer`
+CHANGE COLUMN `longitude` `longitude` DOUBLE(9,6) NOT NULL DEFAULT -999.000000 COMMENT '经度。如果关联了建筑、此时必须等于建筑的经度，如果是通过地图抓取的、此时等于抓取的经度，如果是通过excel导入创建的、此时等于-999、表示没有定位' ,
+CHANGE COLUMN `latitude` `latitude` DOUBLE(9,6) NOT NULL DEFAULT -999.000000 COMMENT '纬度。如果关联了建筑、此时必须等于建筑的纬度，如果是通过地图抓取的、此时等于抓取的纬度，如果是通过excel导入创建的、此时等于-999、表示没有定位' ;
+
+CREATE TABLE `tb_statistic_center` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `centerId` INT(11) NOT NULL COMMENT '营销中心id',
+  `notArchiveCount` INT(10) NOT NULL DEFAULT 0 COMMENT '未建档数',
+  `basicArchiveCount` INT(10) NOT NULL DEFAULT 0 COMMENT '基础建档数',
+  `effectiveArchiveCount` INT(10) NOT NULL DEFAULT 0 COMMENT '有效建档数/完整建档数/已建档数',
+  `wholePortCount` INT(10) NOT NULL DEFAULT 0 COMMENT '总端口数',
+  `usedPortCount` INT(10) NOT NULL DEFAULT 0 COMMENT '已占用端口数',
+  `specialLineRatio` FLOAT(5,4) NOT NULL DEFAULT 0.0000 COMMENT '专线比率',
+  `hotelRatio` FLOAT(5,4) NOT NULL DEFAULT 0.0000 COMMENT '酒店比率',
+  `businessRatio` FLOAT(5,4) NOT NULL DEFAULT 0.0000 COMMENT '商务动力比率',
+  `ctime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`))
+COMMENT = '营销中心统计';
+
+ALTER TABLE `tb_consumer`
+ADD INDEX `index_expiration` (`expirationDate` ASC);
+
+ALTER TABLE `tb_consumer`
+CHANGE COLUMN `expirationDate` `expirationDate` BIGINT(20) NOT NULL DEFAULT 0 COMMENT '业务到期时间。0表示未填写' ,
+CHANGE COLUMN `lineOpenDate` `lineOpenDate` BIGINT(20) NOT NULL DEFAULT 0 COMMENT '专线开户时间，当serviceType为1时、必填。  0表示未填写' ,
+CHANGE COLUMN `orderTime` `orderTime` BIGINT(20) NOT NULL DEFAULT 0 COMMENT '订购时间，当serviceType为2或3时、必填。  0表示未填写' ;
+
+ALTER TABLE `tb_consumer`
+ADD INDEX `index_buildingId` (`buildingId` ASC);
+
+ALTER TABLE `tb_consumer`
+ADD INDEX `index_lo_la` (`longitude` ASC, `latitude` ASC);
+
+ALTER TABLE `tb_consumer`
+CHANGE COLUMN `userId` `userId` INT(11) NOT NULL DEFAULT 0 COMMENT '绑定到的客户经理ID。0表示未绑定' ;
+
+ALTER TABLE `tb_consumer`
+ADD INDEX `index_userId` (`userId` ASC);
+
+ALTER TABLE `tb_resource`
+ADD INDEX `index_buildingId` (`buildingId` ASC),
+ADD INDEX `index_lo_la` (`longitude` ASC, `latitude` ASC);
+
+ALTER TABLE `tb_building`
+DROP INDEX `index_lo&la` ,
+ADD INDEX `index_lo_la` (`longitude` ASC, `latitude` ASC);
+
+ALTER TABLE `tb_center`
+ADD INDEX `index_groupId` (`groupId` ASC),
+ADD INDEX `index_lo_la` (`loMax` ASC, `loMin` ASC, `laMax` ASC, `laMin` ASC);
+
+CREATE TABLE `tb_statistic_user` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `userId` INT(11) NOT NULL COMMENT '客户经理id',
+  `basicArchiveCount` INT(10) NOT NULL DEFAULT '0' COMMENT '基础建档数',
+  `effectiveArchiveCount` INT(10) NOT NULL DEFAULT '0' COMMENT '有效建档数/完整建档数/已建档数',
+  `specialLineCount` INT(10) NOT NULL DEFAULT '0' COMMENT '新建专线数量',
+  `ctime` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8 COMMENT='客户经理业务统计'
+
+
+
+
+
+
+
 
 
 

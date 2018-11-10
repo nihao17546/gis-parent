@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,15 +41,30 @@ public class CenterController extends BaseController {
     @RequestMapping("/list")
     public String list(@RequestParam(required = false) String name,
                        @RequestParam(required = false) Integer groupId,
+                       @RequestParam(required = false) Integer id,
                        @RequestParam(required = false, defaultValue = "1") Integer curPage,
                        @RequestParam(required = false, defaultValue = "10") Integer pageSize,
                        @Value("#{request.getAttribute('uid')}") Integer uid,
                        @Value("#{request.getAttribute('role')}") Integer role) {
-        if ((groupId == null || groupId == 0) && role != Role.admin.getValue()) {
-            UserPO currentUser = userDAO.selectById(uid);
-            groupId = currentUser.getGroupId();
+        ListVO<CenterVO> listVO = null;
+        if (id == null || id == 0) {
+            if ((groupId == null || groupId == 0) && role != Role.admin.getValue()) {
+                UserPO currentUser = userDAO.selectById(uid);
+                groupId = currentUser.getGroupId();
+            }
+            listVO = centerService.list(curPage, pageSize, name, groupId);
         }
-        ListVO<CenterVO> listVO = centerService.list(curPage, pageSize, name, groupId);
+        else {
+            CenterVO centerVO = centerService.getById(id);
+            listVO = new ListVO<>();
+            listVO.setCurPage(1);
+            listVO.setPageSize(10);
+            listVO.setTotalPage(1);
+            listVO.setTotalCount(1);
+            List<CenterVO> list = new ArrayList<>();
+            list.add(centerVO);
+            listVO.setList(list);
+        }
         return ok().pull("data", listVO).json();
     }
 
@@ -90,5 +106,11 @@ public class CenterController extends BaseController {
             return fail(e.getMessage()).json();
         }
         return ok().json();
+    }
+
+    @RequestMapping("/mapSearch")
+    public String mapSearch(@RequestParam String name) {
+        List<CenterVO> list = centerService.searchByName(name);
+        return ok().pull("list", list).json();
     }
 }

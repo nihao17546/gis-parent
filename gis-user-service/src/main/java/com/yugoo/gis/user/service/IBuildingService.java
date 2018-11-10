@@ -15,4 +15,8 @@ public interface IBuildingService {
     void update(Integer id, String name, Integer streetId, Double longitude, Double latitude);
     ListVO<BuildingVO> listByCenterId(Integer centerId);
     List<BuildingVO> listOwn(Integer userId, String name);
+    void delete(Integer id);
+    List<BuildingVO> searchByName(String name);
+    List<BuildingVO> searchFromMap(String name, Double loMin, Double loMax, Double laMin, Double laMax);
+    BuildingVO getById(Integer id);
 }

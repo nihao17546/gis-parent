@@ -22,7 +22,8 @@ public class StaticConstant {
             "/street/types",
             "/consumer/serviceTypes",
             "/index.html",
-            "/own.html");
+            "/own.html",
+            "/welcome.html");
     public static final List<String> MEMBER_PATH = Arrays.asList(
             "/consumer/create",
             "/consumer.html",
@@ -43,7 +44,20 @@ public class StaticConstant {
             "/consumer/import",
             "/consumer/export",
             "/consumer/edit",
-            "/consumer/info"
+            "/consumer/info",
+            "/resource.html",
+            "/resource/create",
+            "/resource/list",
+            "/resource/import",
+            "/resource/export",
+            "/resource/edit",
+            "/center/mapSearch",
+            "/building/mapSearch",
+            "/map/search",
+            "/config/info",
+            "/statistic/consumer",
+            "/statistic/export/consumer",
+            "/statisticConsumer.html"
     );
     public static final List<String> HEADMAN_PATH = Arrays.asList(
             "/group.html",
@@ -53,7 +67,14 @@ public class StaticConstant {
             "/center.html",
             "/center/list",
             "/center/create",
-            "/center/edit"
+            "/center/edit",
+            "/user/searchSubordinates",
+            "/statistic/center",
+            "/statistic/export/center",
+            "/statisticCenter.html",
+            "/statistic/user",
+            "/statistic/export/user",
+            "/statisticUser.html"
     );
     public static final List<String> ADMIN_PATH = Arrays.asList(
             "/user/edit",
@@ -67,7 +88,10 @@ public class StaticConstant {
             "/street/delete",
             "/building/delete",
             "/consumer/delete",
-            "/user.html");
+            "/resource/delete",
+            "/user.html",
+            "/config/cu",
+            "/config.html");
     public static List<String> getPathByRole(Integer roleId) {
         Role role = Role.getByValue(roleId);
         List<String> list = Lists.newArrayList(JUST_NEED_LOGIN_PATH);

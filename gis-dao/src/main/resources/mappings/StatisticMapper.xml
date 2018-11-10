@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yugoo.gis.dao.StatisticDAO">
+    <insert id="batchInsertCenter">
+        insert into tb_statistic_center (centerId,notArchiveCount,basicArchiveCount,effectiveArchiveCount,
+        wholePortCount,usedPortCount,specialLineRatio,hotelRatio,businessRatio,ctime)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.centerId},#{item.notArchiveCount},#{item.basicArchiveCount},#{item.effectiveArchiveCount},
+            #{item.wholePortCount},#{item.usedPortCount},#{item.specialLineRatio},#{item.hotelRatio},#{item.businessRatio},now())
+        </foreach>
+    </insert>
+    <delete id="deleteCenter">
+        delete from tb_statistic_center
+    </delete>
+    <select id="selectCenter" resultType="com.yugoo.gis.pojo.po.StatisticCenterPO">
+        select * from tb_statistic_center
+        <if test="centerIds != null">
+            where centerId in (
+            <foreach collection="centerIds" item="item" index="index" separator=",">
+                #{item}
+            </foreach>
+            )
+        </if>
+        <if test="sortColumn != null and order != null">
+            order by ${sortColumn} ${order}
+        </if>
+    </select>
+    <select id="selectConsumer" resultType="com.yugoo.gis.pojo.po.ConsumerPO">
+        select id,`name`,expirationDate,operator,linkman,phone,`position`
+        from tb_consumer where expirationDate between 1 and #{expirationDate}
+        <if test="userIds != null">
+            and userId in
+            <foreach collection="userIds" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="name != null">
+            and `name` like concat ('%',#{name},'%')
+        </if>
+        <if test="order != null">
+            order by expirationDate ${order}
+        </if>
+    </select>
+    <select id="selectConsumerCount" resultType="java.lang.Long">
+        select count(1)
+        from tb_consumer where expirationDate between 1 and #{expirationDate}
+        <if test="userIds != null">
+            and userId in
+            <foreach collection="userIds" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="name != null">
+            and `name` like concat ('%',#{name},'%')
+        </if>
+    </select>
+    <select id="selectStatisticUser" resultType="com.yugoo.gis.pojo.po.StatisticUserPO">
+        select userId,
+        sum(if(`type`=2,1,0)) basicArchiveCount,
+        sum(if(`type`=3,1,0)) effectiveArchiveCount,
+        sum(if(`serviceType`=1,1,0)) specialLineCount
+        from tb_consumer where userId in
+        <foreach collection="userIds" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        group by userId
+    </select>
+    <insert id="batchInsertUser">
+        insert into tb_statistic_user (userId,basicArchiveCount,effectiveArchiveCount,
+        specialLineCount,ctime)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.userId},#{item.basicArchiveCount},#{item.effectiveArchiveCount},
+            #{item.specialLineCount},now())
+        </foreach>
+    </insert>
+    <delete id="deleteUser">
+        delete from tb_statistic_user
+    </delete>
+    <select id="selectUser" resultType="com.yugoo.gis.pojo.po.StatisticUserPO">
+        select * from tb_statistic_user
+        <if test="userIds != null">
+            where userId in (
+            <foreach collection="userIds" item="item" index="index" separator=",">
+                #{item}
+            </foreach>
+            )
+        </if>
+        <if test="sortColumn != null and order != null">
+            order by ${sortColumn} ${order}
+        </if>
+    </select>
+</mapper>

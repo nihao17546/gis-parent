@@ -33,9 +33,16 @@ public class ConsumerPO {
     private String lineType;
     private Long lineOpenDate;
     private String lineStatus;
+    private String expensesName;
+    private Long orderTime;
+    private String memberRole;
+    private String memberRoleRealNum;
+    private String memberExpensesName;
     private String groupCode;
     private String groupGrade;
     private Integer userId;
     private Integer type;
+    private Double longitude;
+    private Double latitude;
     private Date ctime;
 }

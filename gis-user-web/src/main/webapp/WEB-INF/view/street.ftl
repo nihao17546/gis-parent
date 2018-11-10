@@ -321,28 +321,28 @@
                         }
                         let fd = new FormData();
                         fd.append("competitor", JSON.stringify(this.addForm.competitors))
-                        if (this.addForm.id) {
+                        if (typeof(this.addForm.id) != "undefined" && this.addForm.id != null) {
                             fd.append('id', this.addForm.id)
                         }
-                        if (this.addForm.name) {
+                        if (typeof(this.addForm.name) != "undefined" && this.addForm.name != null && this.addForm.name != '') {
                             fd.append('name', this.addForm.name)
                         }
-                        if (this.addForm.position) {
+                        if (typeof(this.addForm.position) != "undefined" && this.addForm.position != null && this.addForm.position != '') {
                             fd.append('position', this.addForm.position)
                         }
-                        if (this.addForm.type) {
+                        if (typeof(this.addForm.type) != "undefined" && this.addForm.type != null) {
                             fd.append('type', this.addForm.type)
                         }
-                        if (this.addForm.manager) {
+                        if (typeof(this.addForm.manager) != "undefined" && this.addForm.manager != null && this.addForm.manager != '') {
                             fd.append('manager', this.addForm.manager)
                         }
-                        if (this.addForm.phone) {
+                        if (typeof(this.addForm.phone) != "undefined" && this.addForm.phone != null && this.addForm.phone != '') {
                             fd.append('phone', this.addForm.phone)
                         }
-                        if (this.addForm.file) {
+                        if (typeof(this.addForm.file) != "undefined" && this.addForm.file != null) {
                             fd.append('file', this.addForm.file)
                         }
-                        if (this.addForm.remark) {
+                        if (typeof(this.addForm.remark) != "undefined" && this.addForm.remark != null && this.addForm.remark != '') {
                             fd.append('remark', this.addForm.remark)
                         }
                         let url = '${contextPath}/street/edit';

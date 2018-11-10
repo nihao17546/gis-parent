@@ -51,13 +51,6 @@ public class UserServiceImpl implements IUserService {
 
     @PostConstruct
     public void init() {
-        MenuVO user = new MenuVO();
-        user.setName("用户管理");
-        user.setPath("user.html");
-        user.setIndex(0);
-        user.setIcon("fa-group");
-        adminMenus.add(user);
-
         MenuVO group = new MenuVO();
         group.setName("要客组");
         group.setPath("group.html");
@@ -100,6 +93,67 @@ public class UserServiceImpl implements IUserService {
         adminMenus.add(consumer);
         headmanMenus.add(consumer);
         memberMenus.add(consumer);
+
+        MenuVO resource = new MenuVO();
+        resource.setName("网路资源");
+        resource.setPath("resource.html");
+        resource.setIndex(6);
+        resource.setIcon("fa-support");
+        adminMenus.add(resource);
+        headmanMenus.add(resource);
+        memberMenus.add(resource);
+
+        MenuVO user = new MenuVO();
+        user.setName("用户管理");
+        user.setPath("user.html");
+        user.setIndex(0);
+        user.setIcon("fa-group");
+        adminMenus.add(user);
+
+
+        MenuVO centerSta = new MenuVO();
+        centerSta.setName("营销中心业务统计");
+        centerSta.setPath("statisticCenter.html");
+        centerSta.setIndex(81);
+        centerSta.setIcon("fa-bar-chart");
+        MenuVO consumerSta = new MenuVO();
+        consumerSta.setName("即将到期业务汇总");
+        consumerSta.setPath("statisticConsumer.html");
+        consumerSta.setIndex(82);
+        consumerSta.setIcon("fa-bar-chart");
+        MenuVO userSta = new MenuVO();
+        userSta.setName("客户经理业务统计");
+        userSta.setPath("statisticUser.html");
+        userSta.setIndex(83);
+        userSta.setIcon("fa-bar-chart");
+
+        MenuVO statisticA = new MenuVO();
+        statisticA.setName("统计报表");
+        statisticA.setIcon("fa-th");
+        statisticA.setIndex(8);
+        List<MenuVO> statisticListA = new ArrayList<>();
+        statisticListA.add(centerSta);
+        statisticListA.add(consumerSta);
+        statisticListA.add(userSta);
+        statisticA.setMenus(statisticListA);
+        adminMenus.add(statisticA);
+        headmanMenus.add(statisticA);
+
+        MenuVO statisticB = new MenuVO();
+        statisticB.setName("统计报表");
+        statisticB.setIcon("fa-th");
+        statisticB.setIndex(8);
+        List<MenuVO> statisticListB = new ArrayList<>();
+        statisticListB.add(consumerSta);
+        statisticB.setMenus(statisticListB);
+        memberMenus.add(statisticB);
+
+        MenuVO config = new MenuVO();
+        config.setName("系统配置");
+        config.setPath("config.html");
+        config.setIndex(7);
+        config.setIcon("fa-wrench");
+        adminMenus.add(config);
     }
 
     @Override
@@ -305,5 +359,32 @@ public class UserServiceImpl implements IUserService {
             listVO.setTotalCount(count);
         }
         return listVO;
+    }
+
+    @Override
+    public List<UserListVO> getSubordinates(Integer id, String searchParam) {
+        UserPO userPO = userDAO.selectById(id);
+        Integer groupId = -1;
+        if (userPO.getRole() == Role.admin.getValue()) {
+            groupId = null;
+        }
+        else if (userPO.getRole() == Role.headman.getValue()) {
+            groupId = userPO.getGroupId();
+        }
+        else {
+
+        }
+        if (groupId != null && groupId == -1) {
+            return new ArrayList<>();
+        }
+        else {
+            List<UserPO> userPOList = userDAO.selectSubordinates(groupId, searchParam);
+            List<UserListVO> userListVOList = userPOList.stream().map(po -> {
+                UserListVO userListVO = new UserListVO();
+                BeanUtils.copyProperties(po, userListVO);
+                return userListVO;
+            }).collect(Collectors.toList());
+            return userListVOList;
+        }
     }
 }

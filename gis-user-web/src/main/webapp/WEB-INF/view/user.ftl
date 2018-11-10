@@ -133,7 +133,7 @@
                 </el-select>
             </el-form-item>
             <el-form-item label="手机序列号:" :label-width="formLabelWidth">
-                <el-input v-model="addForm.key" autocomplete="off" size="small"></el-input>
+                <el-input v-model.trim="addForm.key" autocomplete="off" size="small"></el-input>
             </el-form-item>
             <el-form-item style="text-align: right">
                 <el-button @click="cancelAdd" size="small" :disabled="loading">取 消</el-button>
@@ -289,34 +289,34 @@
                 this.$refs[formName].validate((valid) => {
                     if (valid) {
                         let fd = new FormData();
-                        if (this.addForm.id) {
+                        if (typeof(this.addForm.id) != "undefined" && this.addForm.id != null) {
                             fd.append('id', this.addForm.id)
                         }
-                        if (this.addForm.name) {
+                        if (typeof(this.addForm.name) != "undefined" && this.addForm.name != null && this.addForm.name != '') {
                             fd.append('name', this.addForm.name)
                         }
-                        if (this.addForm.phone) {
+                        if (typeof(this.addForm.phone) != "undefined" && this.addForm.phone != null && this.addForm.phone != '') {
                             fd.append('phone', this.addForm.phone)
                         }
-                        if (this.addForm.department) {
+                        if (typeof(this.addForm.department) != "undefined" && this.addForm.department != null && this.addForm.department != '') {
                             fd.append('department', this.addForm.department)
                         }
-                        if (this.addForm.number) {
+                        if (typeof(this.addForm.number) != "undefined" && this.addForm.number != null && this.addForm.number != '') {
                             fd.append('number', this.addForm.number)
                         }
-                        if (this.addForm.post) {
+                        if (typeof(this.addForm.post) != "undefined" && this.addForm.post != null && this.addForm.post != '') {
                             fd.append('post', this.addForm.post)
                         }
-                        if (this.addForm.role) {
+                        if (typeof(this.addForm.role) != "undefined" && this.addForm.role != null) {
                             fd.append('role', this.addForm.role)
                         }
-                        if (this.addForm.groupId) {
+                        if (typeof(this.addForm.groupId) != "undefined" && this.addForm.groupId != null) {
                             fd.append('groupId', this.addForm.groupId)
                         }
-                        if (this.addForm.centerId) {
+                        if (typeof(this.addForm.centerId) != "undefined" && this.addForm.centerId != null) {
                             fd.append('centerId', this.addForm.centerId)
                         }
-                        if (this.addForm.key) {
+                        if (typeof(this.addForm.key) != "undefined" && this.addForm.key != null && this.addForm.key != '') {
                             fd.append('key', this.addForm.key)
                         }
                         let url = '${contextPath}/user/edit';

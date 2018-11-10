@@ -8,21 +8,21 @@
     </insert>
     <select id="select" resultType="com.yugoo.gis.pojo.po.GroupPO">
         select * from tb_group where 1=1
-         <if test="name != null">
-             and `name` like concat('%',#{name},'%')
-         </if>
         <if test="id != null and id != 0">
             and id=#{id}
         </if>
+         <if test="name != null">
+             and `name` like concat('%',#{name},'%')
+         </if>
          order by id desc
     </select>
     <select id="selectCount" resultType="java.lang.Long">
         select count(1) from tb_group where 1=1
-        <if test="name != null">
-            and `name` like concat('%',#{name},'%')
-        </if>
         <if test="id != null and id != 0">
             and id=#{id}
+        </if>
+        <if test="name != null">
+            and `name` like concat('%',#{name},'%')
         </if>
     </select>
     <update id="update" parameterType="com.yugoo.gis.pojo.po.GroupPO">

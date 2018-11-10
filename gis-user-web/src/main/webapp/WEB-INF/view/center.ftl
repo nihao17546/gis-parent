@@ -174,6 +174,7 @@
                 loading: false,
                 searchName: '',
                 searchGroupId: 0,
+                searchId: 0,
                 positionVisible: false,
                 addVisible: false,
                 addForm: {
@@ -237,26 +238,34 @@
                             this.loading = false;
                             return false;
                         }
+                        if (!this.overlays || this.overlays[0].getPath().length <= 3) {
+                            this.$message({
+                                message: '地图区域至少需要4个坐标点',
+                                type: 'warning'
+                            });
+                            this.loading = false;
+                            return false;
+                        }
                         let fd = new FormData();
-                        if (this.addForm.id) {
+                        if (typeof(this.addForm.id) != "undefined" && this.addForm.id != null) {
                             fd.append('id', this.addForm.id)
                         }
-                        if (this.addForm.name) {
+                        if (typeof(this.addForm.name) != "undefined" && this.addForm.name != null && this.addForm.name != '') {
                             fd.append('name', this.addForm.name)
                         }
-                        if (this.addForm.groupId) {
+                        if (typeof(this.addForm.groupId) != "undefined" && this.addForm.groupId != null) {
                             fd.append('groupId', this.addForm.groupId)
                         }
-                        if (this.addForm.manager) {
+                        if (typeof(this.addForm.manager) != "undefined" && this.addForm.manager != null && this.addForm.manager != '') {
                             fd.append('manager', this.addForm.manager)
                         }
-                        if (this.addForm.phone) {
+                        if (typeof(this.addForm.phone) != "undefined" && this.addForm.phone != null && this.addForm.phone != '') {
                             fd.append('phone', this.addForm.phone)
                         }
-                        if (this.addForm.position) {
+                        if (typeof(this.addForm.position) != "undefined" && this.addForm.position != null && this.addForm.position != '') {
                             fd.append('position', this.addForm.position)
                         }
-                        if (this.addForm.district) {
+                        if (typeof(this.addForm.district) != "undefined" && this.addForm.district != null && this.addForm.district != '') {
                             fd.append('district', this.addForm.district)
                         }
                         let overlay = this.overlays[0].getPath();
@@ -434,6 +443,7 @@
             search() {
                 this.curPage = 1;
                 this.searchGroupId = 0;
+                this.searchId = 0;
                 this.getList()
             },
             getList() {
@@ -447,7 +457,8 @@
                         curPage: this.curPage,
                         pageSize: this.pageSize,
                         name: name,
-                        groupId: this.searchGroupId
+                        groupId: this.searchGroupId,
+                        id: this.searchId
                     }
                 }).then(res => {
                     if (res.data.code == 1) {
@@ -483,6 +494,11 @@
             let groupId = this.getQueryString('groupId');
             if (groupId) {
                 this.searchGroupId = groupId;
+                this.ifFromIndex = false;
+            }
+            let id = this.getQueryString('id');
+            if (id) {
+                this.searchId = id;
                 this.ifFromIndex = false;
             }
             axios.get('${contextPath}/group/all',{

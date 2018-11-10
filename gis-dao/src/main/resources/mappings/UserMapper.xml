@@ -24,27 +24,27 @@
     </update>
     <select id="select" resultType="com.yugoo.gis.pojo.po.UserPO">
         select * from tb_user where 1=1
-         <if test="name != null">
-             and `name` like concat('%',#{name},'%')
-         </if>
         <if test="id != null">
             and id=#{id}
         </if>
         <if test="phone != null">
             and phone=#{phone}
         </if>
+         <if test="name != null">
+             and `name` like concat('%',#{name},'%')
+         </if>
          order by id desc
     </select>
     <select id="selectCount" resultType="java.lang.Long">
         select count(1) from tb_user where 1=1
-        <if test="name != null">
-            and `name` like concat('%',#{name},'%')
-        </if>
         <if test="id != null">
             and id=#{id}
         </if>
         <if test="phone != null">
             and phone=#{phone}
+        </if>
+        <if test="name != null">
+            and `name` like concat('%',#{name},'%')
         </if>
     </select>
     <select id="selectByPhone" resultType="com.yugoo.gis.pojo.po.UserPO">
@@ -73,5 +73,35 @@
     </select>
     <select id="selectByNumber" resultType="com.yugoo.gis.pojo.po.UserPO">
         select * from tb_user where `number`=#{number}
+    </select>
+    <select id="selectSubordinates" resultType="com.yugoo.gis.pojo.po.UserPO">
+        select * from tb_user where role=3
+        <if test="groupId != null">
+            and groupId=#{groupId}
+        </if>
+        <if test="searchParam != null">
+            and (`number`=#{searchParam} or `name` like concat('%',#{searchParam},'%'))
+        </if>
+    </select>
+    <select id="selectByNameAndRole" resultType="com.yugoo.gis.pojo.po.UserPO">
+        select id,`name`,centerId from tb_user where 1=1
+        <if test="name != null">
+            and `name` like concat('%',#{name},'%')
+        </if>
+        <if test="role != null">
+            and role=#{role}
+        </if>
+    </select>
+    <select id="selectIdByCenterIdsAndRole" resultType="java.lang.Integer">
+        select id from tb_user where 1=1
+        <if test="centerIds != null">
+            and centerId in
+            <foreach collection="centerIds" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="role != null">
+            and role=#{role}
+        </if>
     </select>
 </mapper>

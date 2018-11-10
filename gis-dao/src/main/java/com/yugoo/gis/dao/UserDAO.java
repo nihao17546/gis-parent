@@ -27,4 +27,10 @@ public interface UserDAO {
     @MapKey("id")
     Map<Integer,UserPO> selectByIds(@Param("ids") List<Integer> ids);
     UserPO selectByNumber(@Param("number") String number);
+    List<UserPO> selectSubordinates(@Param("groupId") Integer groupId,
+                                    @Param("searchParam") String searchParam);
+    List<UserPO> selectByNameAndRole(@Param("name") String name,
+                                     @Param("role") Integer role);
+    List<Integer> selectIdByCenterIdsAndRole(@Param("centerIds") List<Integer> centerIds,
+                                             @Param("role") Integer role);
 }

@@ -160,4 +160,73 @@ public class CenterServiceImpl implements ICenterService {
         centerPO.setId(id);
         centerDAO.update(centerPO);
     }
+
+    @Override
+    public List<CenterVO> searchByName(String name) {
+        List<CenterPO> centerPOList = centerDAO.selectLikeName(name);
+        List<CenterVO> centerVOList = centerPOList.stream().map(po -> {
+            CenterVO vo = new CenterVO();
+            BeanUtils.copyProperties(po, vo);
+            if (vo.getRegion() != null && !vo.getRegion().equals("")) {
+                List<List<Double>> lists = JSON.parseObject(vo.getRegion(), new TypeReference<List<List<Double>>>(){});
+                List<PointVO> pointVOList = new ArrayList<>(lists.size());
+                for (List<Double> doubles : lists) {
+                    PointVO pointVO = new PointVO();
+                    pointVO.setLongitude(doubles.get(0));
+                    pointVO.setLatitude(doubles.get(1));
+                    pointVOList.add(pointVO);
+                }
+                vo.setPoints(pointVOList);
+            }
+            return vo;
+        }).collect(Collectors.toList());
+        return centerVOList;
+    }
+
+    @Override
+    public List<CenterVO> searchFromMap(String name, Double loMin, Double loMax, Double laMin, Double laMax, Integer groupId) {
+        List<CenterPO> centerPOList = centerDAO.selectFromMap(name, loMin, loMax, laMin, laMax, groupId);
+        List<CenterVO> centerVOList = centerPOList.stream().map(po -> {
+            CenterVO vo = new CenterVO();
+            BeanUtils.copyProperties(po, vo);
+            if (vo.getRegion() != null && !vo.getRegion().equals("")) {
+                List<List<Double>> lists = JSON.parseObject(vo.getRegion(), new TypeReference<List<List<Double>>>(){});
+                List<PointVO> pointVOList = new ArrayList<>(lists.size());
+                for (List<Double> doubles : lists) {
+                    PointVO pointVO = new PointVO();
+                    pointVO.setLongitude(doubles.get(0));
+                    pointVO.setLatitude(doubles.get(1));
+                    pointVOList.add(pointVO);
+                }
+                vo.setPoints(pointVOList);
+            }
+            return vo;
+        }).collect(Collectors.toList());
+        return centerVOList;
+    }
+
+    @Override
+    public CenterVO getById(Integer id) {
+        CenterPO centerPO = centerDAO.selectById(id);
+        CenterVO vo = new CenterVO();
+        BeanUtils.copyProperties(centerPO, vo);
+        if (vo.getRegion() != null && !vo.getRegion().equals("")) {
+            List<List<Double>> lists = JSON.parseObject(vo.getRegion(), new TypeReference<List<List<Double>>>(){});
+            List<PointVO> pointVOList = new ArrayList<>(lists.size());
+            for (List<Double> doubles : lists) {
+                PointVO pointVO = new PointVO();
+                pointVO.setLongitude(doubles.get(0));
+                pointVO.setLatitude(doubles.get(1));
+                pointVOList.add(pointVO);
+            }
+            vo.setPoints(pointVOList);
+        }
+        if (centerPO.getGroupId() != null && centerPO.getGroupId() != 0) {
+            GroupPO groupPO = groupDAO.selectById(centerPO.getGroupId());
+            if (groupPO != null) {
+                vo.setGroupName(groupPO.getName());
+            }
+        }
+        return vo;
+    }
 }

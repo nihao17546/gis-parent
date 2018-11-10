@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * Created by nihao on 18/5/8.
@@ -226,6 +227,13 @@ public class UserController extends BaseController {
         }
         userDAO.deleteById(id);
         return ok().json();
+    }
+
+    @RequestMapping("/searchSubordinates")
+    public String searchSubordinates(@Value("#{request.getAttribute('uid')}") Integer uid,
+                                     @RequestParam(required = false) String searchParam) {
+        List<UserListVO> listVOS = userService.getSubordinates(uid, searchParam);
+        return ok().pull("list", listVOS).json();
     }
 
 }

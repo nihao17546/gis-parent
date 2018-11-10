@@ -2,12 +2,14 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.yugoo.gis.pojo.po.UserPO;
 import com.yugoo.gis.pojo.vo.PointVO;
+import com.yugoo.gis.pojo.vo.ResourceVO;
 import com.yugoo.gis.user.service.util.MapUtil;
 import com.yugoo.gis.user.web.result.JsonResult;
 import org.junit.Test;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,11 +18,9 @@ import java.util.List;
 public class SimpleTest {
     @Test
     public void dasdas(){
-        UserPO userPO = new UserPO();
-        userPO.setName("dasda");
-        userPO.setPassword("123");
-        String s = JsonResult.success().pull("a",userPO).json();
-        System.out.println("---");
+        ResourceVO resourceVO = new ResourceVO();
+        resourceVO.setNumber("123");
+        System.out.println("--");
     }
 
     @Test

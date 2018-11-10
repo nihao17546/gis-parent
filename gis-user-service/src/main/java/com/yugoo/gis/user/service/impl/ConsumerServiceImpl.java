@@ -52,12 +52,26 @@ public class ConsumerServiceImpl implements IConsumerService {
                        String category, String nature, Integer peopleNum, String linkman, String phone, String operator,
                        BigDecimal expenses, Long expirationDate, String bandwidth, Integer serviceType, String status,
                        String legal, Integer lineNum, String lineType, Long lineOpenDate, String lineStatus, String groupCode,
-                       String groupGrade, UserPO currentUser, Integer bindUserId) {
+                       String groupGrade, UserPO currentUser, Integer bindUserId, Double longitude, Double latitude,
+                       String expensesName, Long orderTime, String memberRole, String memberRoleRealNum, String memberExpensesName) {
         ConsumerPO check = consumerDAO.selectByName(name);
         if (check != null) {
             throw new GisRuntimeException("该名称已经存在");
         }
+        buildingId = buildingId == null ? 0 : buildingId;
+        if (buildingId == 0) {
+            if (longitude == null || latitude == null) {
+                throw new GisRuntimeException("信息不完整，缺少经纬度坐标或未关联建筑");
+            }
+        }
+        else {
+            BuildingPO buildingPO = buildingDAO.selectById(buildingId);
+            longitude = buildingPO.getLongitude();
+            latitude = buildingPO.getLatitude();
+        }
         ConsumerPO consumerPO = new ConsumerPO();
+        consumerPO.setLongitude(longitude);
+        consumerPO.setLatitude(latitude);
         consumerPO.setName(name);
         consumerPO.setBuildingId(buildingId);
         consumerPO.setFloor(floor);
@@ -82,6 +96,11 @@ public class ConsumerServiceImpl implements IConsumerService {
         consumerPO.setLineStatus(lineStatus);
         consumerPO.setGroupCode(groupCode);
         consumerPO.setGroupGrade(groupGrade);
+        consumerPO.setExpensesName(expensesName);
+        consumerPO.setOrderTime(orderTime);
+        consumerPO.setMemberRole(memberRole);
+        consumerPO.setMemberRoleRealNum(memberRoleRealNum);
+        consumerPO.setMemberExpensesName(memberExpensesName);
 
         if (isComplete(consumerPO)) {
             consumerPO.setType(ConsumerType.有效建档.getValue());
@@ -115,11 +134,19 @@ public class ConsumerServiceImpl implements IConsumerService {
         consumerDAO.insert(consumerPO);
     }
 
-    @Override
-    public ListVO<ConsumerListVO> list(Integer curPage, Integer pageSize, String name, UserPO currentUser) {
-        List<Integer> buildingIdsParam = null;
-        if (currentUser.getRole() != Role.admin.getValue()) {
-            buildingIdsParam = new ArrayList<>();
+    private Map<String,List<Integer>> auth(Integer buildingId, UserPO currentUser) {
+        Map<String,List<Integer>> map = new HashMap<>();
+        List<Integer> buildingIdsParam = new ArrayList<>();
+        List<Integer> userIdsParam = new ArrayList<>();
+        if (currentUser.getRole() == Role.admin.getValue()) {
+            if (buildingId != null && buildingId != 0) {
+                buildingIdsParam.add(buildingId);
+            }
+            else {
+                buildingIdsParam = null;
+            }
+        }
+        else {
             currentUser = userDAO.selectById(currentUser.getId());
             if (currentUser.getRole() == Role.headman.getValue()) {
                 List<CenterPO> centerPOList = centerDAO.selectByGroupId(currentUser.getGroupId());
@@ -136,6 +163,8 @@ public class ConsumerServiceImpl implements IConsumerService {
                 }
             }
             else {
+                userIdsParam.add(0);
+                userIdsParam.add(currentUser.getId());
                 CenterPO centerPO = centerDAO.selectById(currentUser.getCenterId());
                 List<List<Double>> lists = JSON.parseObject(centerPO.getRegion(), new TypeReference<List<List<Double>>>(){});
                 List<BuildingPO> buildingPOList = buildingDAO.selectByLoAndLa(
@@ -147,12 +176,40 @@ public class ConsumerServiceImpl implements IConsumerService {
                     }
                 }
             }
+            if (buildingId != null && buildingId != 0) {
+                if (buildingIdsParam.contains(buildingId)) {
+                    buildingIdsParam = new ArrayList<>();
+                    buildingIdsParam.add(buildingId);
+                }
+                else {
+                    buildingIdsParam = new ArrayList<>();
+                }
+            }
+            else {
+                buildingIdsParam.add(0);
+            }
+        }
+        map.put("building", buildingIdsParam);
+        map.put("user", userIdsParam);
+        return map;
+    }
+
+    @Override
+    public ListVO<ConsumerListVO> list(Integer curPage, Integer pageSize, String name, UserPO currentUser, Integer buildingId) {
+        Map<String,List<Integer>> map = auth(buildingId, currentUser);
+        Object building = map.get("building");
+        Object user = map.get("user");
+        List<Integer> buildingIdsParam = building == null ? null : (List<Integer>) building;
+        List<Integer> userIdsParam = user == null ? null : (List<Integer>) user;
+
+        if (buildingIdsParam != null && buildingIdsParam.isEmpty()) {
+            return new ListVO<>(curPage, pageSize);
         }
 
-        long count = consumerDAO.selectCount(name, currentUser.getRole(), currentUser.getId(), buildingIdsParam);
+        long count = consumerDAO.selectCount(name, userIdsParam, buildingIdsParam);
         ListVO<ConsumerListVO> listVO = new ListVO<>(curPage, pageSize);
         if (count > 0) {
-            List<ConsumerPO> poList = consumerDAO.select(name, currentUser.getRole(), currentUser.getId(), buildingIdsParam,
+            List<ConsumerPO> poList = consumerDAO.select(name, userIdsParam, buildingIdsParam,
                     new RowBounds((curPage - 1) * pageSize, pageSize));
             List<Integer> buildingIds = new ArrayList<>();
             List<Integer> userIds = new ArrayList<>();
@@ -163,11 +220,14 @@ public class ConsumerServiceImpl implements IConsumerService {
                 if (po.getServiceType() != null) {
                     vo.setServiceTypeName(ServiceType.getByValue(po.getServiceType()).getName());
                 }
-                if (po.getExpirationDate() != null) {
+                if (po.getExpirationDate() != null && po.getExpirationDate() != 0) {
                     vo.setExpirationDateStr(SimpleDateUtil.shortFormat(new Date(po.getExpirationDate())));
                 }
-                if (po.getLineOpenDate() != null) {
+                if (po.getLineOpenDate() != null && po.getLineOpenDate() != 0) {
                     vo.setLineOpenDateStr(SimpleDateUtil.shortFormat(new Date(po.getLineOpenDate())));
+                }
+                if (po.getOrderTime() != null && po.getOrderTime() != 0) {
+                    vo.setOrderTimeStr(SimpleDateUtil.shortFormat(new Date(po.getOrderTime())));
                 }
                 if (po.getBuildingId() != null && !buildingIds.contains(po.getBuildingId())) {
                     buildingIds.add(po.getBuildingId());
@@ -187,7 +247,10 @@ public class ConsumerServiceImpl implements IConsumerService {
             }
             for (ConsumerListVO vo : voList) {
                 if (buildingPOMap.containsKey(vo.getBuildingId())) {
-                    vo.setBuildingName(buildingPOMap.get(vo.getBuildingId()).getName());
+                    BuildingPO buildingPO = buildingPOMap.get(vo.getBuildingId());
+                    vo.setBuildingName(buildingPO.getName());
+                    vo.setLongitude(buildingPO.getLongitude());
+                    vo.setLatitude(buildingPO.getLatitude());
                 }
                 if (userPOMap.containsKey(vo.getUserId())) {
                     vo.setUserName(userPOMap.get(vo.getUserId()).getName());
@@ -205,14 +268,20 @@ public class ConsumerServiceImpl implements IConsumerService {
                        String phone, String operator, BigDecimal expenses, Long expirationDate,
                        String bandwidth, Integer serviceType, String status, String legal, Integer lineNum,
                        String lineType, Long lineOpenDate, String lineStatus, String groupCode, String groupGrade,
-                       UserPO currentUser, Integer bindUserId, Integer id) {
+                       UserPO currentUser, Integer bindUserId, Integer id,
+                       String expensesName, Long orderTime, String memberRole, String memberRoleRealNum, String memberExpensesName) {
         ConsumerPO check = consumerDAO.selectByName(name);
         if (check != null && !check.getId().equals(id)) {
             throw new GisRuntimeException("该名称已经存在");
         }
-
+        if (buildingId == null || buildingId == 0) {
+            throw new GisRuntimeException("信息不完整，未关联建筑");
+        }
+        BuildingPO buildingPO = buildingDAO.selectById(buildingId);
         ConsumerPO old = consumerDAO.selectById(id);
         ConsumerPO consumerPO = new ConsumerPO();
+        consumerPO.setLongitude(buildingPO.getLongitude());
+        consumerPO.setLatitude(buildingPO.getLatitude());
         consumerPO.setId(id);
         consumerPO.setName(name);
         consumerPO.setBuildingId(buildingId);
@@ -238,6 +307,11 @@ public class ConsumerServiceImpl implements IConsumerService {
         consumerPO.setLineStatus(lineStatus);
         consumerPO.setGroupCode(groupCode);
         consumerPO.setGroupGrade(groupGrade);
+        consumerPO.setExpensesName(expensesName);
+        consumerPO.setOrderTime(orderTime);
+        consumerPO.setMemberRole(memberRole);
+        consumerPO.setMemberRoleRealNum(memberRoleRealNum);
+        consumerPO.setMemberExpensesName(memberExpensesName);
 
         consumerPO.setPic(pic == null ? old.getPic() : pic);
         if (isComplete(consumerPO)) {
@@ -274,20 +348,28 @@ public class ConsumerServiceImpl implements IConsumerService {
         ConsumerVO vo = new ConsumerVO();
         BeanUtils.copyProperties(consumerPO, vo);
         vo.setTypeName(ConsumerType.getByValue(vo.getType()).getName());
-        BuildingPO buildingPO = buildingDAO.selectById(vo.getBuildingId());
         if (vo.getServiceType() != null) {
             vo.setServiceTypeName(ServiceType.getByValue(vo.getServiceType()).getName());
         }
-        vo.setBuildingName(buildingPO.getName());
-        if (vo.getExpirationDate() != null) {
+        if (vo.getBuildingId() != null && vo.getBuildingId() != 0) {
+            BuildingPO buildingPO = buildingDAO.selectById(vo.getBuildingId());
+            vo.setBuildingName(buildingPO.getName());
+            vo.setLongitude(buildingPO.getLongitude());
+            vo.setLatitude(buildingPO.getLatitude());
+        }
+        if (vo.getExpirationDate() != null && vo.getExpirationDate() != 0) {
             vo.setExpirationDateStr(SimpleDateUtil.shortFormat(new Date(vo.getExpirationDate())));
         }
-        if (vo.getLineOpenDate() != null) {
+        if (vo.getLineOpenDate() != null && vo.getLineOpenDate() != 0) {
             vo.setLineOpenDateStr(SimpleDateUtil.shortFormat(new Date(vo.getLineOpenDate())));
+        }
+        if (vo.getOrderTime() != null && vo.getOrderTime() != 0) {
+            vo.setOrderTimeStr(SimpleDateUtil.shortFormat(new Date(vo.getOrderTime())));
         }
         if (vo.getUserId() != null && vo.getUserId() != 0) {
             UserPO userPO = userDAO.selectById(vo.getUserId());
             vo.setUserName(userPO.getName());
+            vo.setUserNumber(userPO.getNumber());
         }
         return vo;
     }
@@ -295,6 +377,23 @@ public class ConsumerServiceImpl implements IConsumerService {
     @Override
     public void delete(Integer id) {
         consumerDAO.deleteById(id);
+    }
+
+    @Override
+    public List<ConsumerVO> searchFromMap(String name, Double loMin, Double loMax, Double laMin, Double laMax, UserPO currentUser) {
+        Map<String,List<Integer>> map = auth(null, currentUser);
+        Object building = map.get("building");
+        Object user = map.get("user");
+        List<Integer> buildingIdsParam = building == null ? null : (List<Integer>) building;
+        List<Integer> userIdsParam = user == null ? null : (List<Integer>) user;
+
+        List<ConsumerPO> consumerPOList = consumerDAO.selectFromMap(name, userIdsParam, loMin, loMax, laMin, laMax, buildingIdsParam);
+        List<ConsumerVO> consumerVOList = consumerPOList.stream().map(po -> {
+            ConsumerVO vo = new ConsumerVO();
+            BeanUtils.copyProperties(po, vo);
+            return vo;
+        }).collect(Collectors.toList());
+        return consumerVOList;
     }
 
     /**
@@ -360,7 +459,7 @@ public class ConsumerServiceImpl implements IConsumerService {
         if (consumerPO.getExpenses() == null) {
             return false;
         }
-        if (consumerPO.getExpirationDate() == null) {
+        if (consumerPO.getExpirationDate() == null || consumerPO.getExpirationDate() == 0) {
             return false;
         }
         if (consumerPO.getBandwidth() == null) {
@@ -376,10 +475,27 @@ public class ConsumerServiceImpl implements IConsumerService {
             if (consumerPO.getLineType() == null) {
                 return false;
             }
-            if (consumerPO.getLineOpenDate() == null) {
+            if (consumerPO.getLineOpenDate() == null || consumerPO.getLineOpenDate() == 0) {
                 return false;
             }
             if (consumerPO.getLineStatus() == null) {
+                return false;
+            }
+        }
+        else {
+            if (consumerPO.getExpensesName() == null) {
+                return false;
+            }
+            if (consumerPO.getOrderTime() == null || consumerPO.getOrderTime() == 0) {
+                return false;
+            }
+            if (consumerPO.getMemberRole() == null) {
+                return false;
+            }
+            if (consumerPO.getMemberRoleRealNum() == null) {
+                return false;
+            }
+            if (consumerPO.getMemberExpensesName() == null) {
                 return false;
             }
         }

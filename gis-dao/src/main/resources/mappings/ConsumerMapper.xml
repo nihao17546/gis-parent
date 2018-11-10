@@ -5,10 +5,12 @@
             parameterType="com.yugoo.gis.pojo.po.ConsumerPO">
         insert into tb_consumer(`name`,buildingId,floor,`number`,`position`,pic,category,nature,peopleNum,linkman,
         phone,operator,expenses,expirationDate,bandwidth,serviceType,status,legal,lineNum,lineType,
-        lineOpenDate,lineStatus,groupCode,groupGrade,userId,`type`,ctime)
+        lineOpenDate,lineStatus,groupCode,groupGrade,userId,`type`,longitude,latitude,ctime,
+        expensesName,orderTime,memberRole,memberRoleRealNum,memberExpensesName)
         values(#{name},#{buildingId},#{floor},#{number},#{position},#{pic},#{category},#{nature},#{peopleNum},#{linkman},
         #{phone},#{operator},#{expenses},#{expirationDate},#{bandwidth},#{serviceType},#{status},#{legal},#{lineNum},#{lineType},
-        #{lineOpenDate},#{lineStatus},#{groupCode},#{groupGrade},#{userId},#{type},now())
+        #{lineOpenDate},#{lineStatus},#{groupCode},#{groupGrade},#{userId},#{type},#{longitude},#{latitude},now(),
+        #{expensesName},#{orderTime},#{memberRole},#{memberRoleRealNum},#{memberExpensesName})
     </insert>
     <select id="selectByName" resultType="com.yugoo.gis.pojo.po.ConsumerPO">
         select id,`name` from tb_consumer where `name`=#{name}
@@ -16,28 +18,21 @@
     <select id="select" resultType="com.yugoo.gis.pojo.po.ConsumerPO">
         select id,`name`,buildingId,floor,`number`,`position`,category,nature,peopleNum,linkman,
         phone,operator,expenses,expirationDate,bandwidth,serviceType,status,legal,lineNum,lineType,
-        lineOpenDate,lineStatus,groupCode,groupGrade,userId,`type`,ctime from tb_consumer
+        lineOpenDate,lineStatus,groupCode,groupGrade,userId,`type`,longitude,latitude,ctime,
+        expensesName,orderTime,memberRole,memberRoleRealNum,memberExpensesName from tb_consumer
         where 1=1
-        <choose>
-            <!-- 管理员 -->
-            <when test="roleId == 1">
-            </when>
-            <!-- 组长 -->
-            <when test="roleId == 2">
-                and buildingId in
-                <foreach item="item" index="index" collection="buildingIds" open="(" separator="," close=")">
-                    #{item}
-                </foreach>
-            </when>
-            <!-- 客户经理 -->
-            <otherwise>
-                and buildingId in
-                <foreach item="item" index="index" collection="buildingIds" open="(" separator="," close=")">
-                    #{item}
-                </foreach>
-                and userId in (#{userId},0)
-            </otherwise>
-        </choose>
+        <if test="buildingIds != null">
+            and buildingId in
+            <foreach item="item" index="index" collection="buildingIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="userIds != null and userIds.size() > 0">
+            and userId in
+            <foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
         <if test="name != null">
             and `name` like concat('%',#{name},'%')
         </if>
@@ -46,26 +41,18 @@
     <select id="selectCount" resultType="java.lang.Long">
         select count(1) from tb_consumer
         where 1=1
-        <choose>
-            <!-- 管理员 -->
-            <when test="roleId == 1">
-            </when>
-            <!-- 组长 -->
-            <when test="roleId == 2">
-                and buildingId in
-                <foreach item="item" index="index" collection="buildingIds" open="(" separator="," close=")">
-                    #{item}
-                </foreach>
-            </when>
-            <!-- 客户经理 -->
-            <otherwise>
-                and buildingId in
-                <foreach item="item" index="index" collection="buildingIds" open="(" separator="," close=")">
-                    #{item}
-                </foreach>
-                and userId in (#{userId},0)
-            </otherwise>
-        </choose>
+        <if test="buildingIds != null">
+            and buildingId in
+            <foreach item="item" index="index" collection="buildingIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="userIds != null and userIds.size() > 0">
+            and userId in
+            <foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
         <if test="name != null">
             and `name` like concat('%',#{name},'%')
         </if>
@@ -76,7 +63,8 @@
     <select id="selectExePicById" resultType="com.yugoo.gis.pojo.po.ConsumerPO">
         select `name`,buildingId,floor,`number`,`position`,category,nature,peopleNum,linkman,
         phone,operator,expenses,expirationDate,bandwidth,serviceType,status,legal,lineNum,lineType,
-        lineOpenDate,lineStatus,groupCode,groupGrade,userId,`type`,ctime from tb_consumer where id=#{id}
+        lineOpenDate,lineStatus,groupCode,groupGrade,userId,`type`,longitude,latitude,ctime,
+        expensesName,orderTime,memberRole,memberRoleRealNum,memberExpensesName from tb_consumer where id=#{id}
     </select>
     <update id="update" parameterType="com.yugoo.gis.pojo.po.ConsumerPO">
         update tb_consumer
@@ -107,10 +95,51 @@
             groupGrade=#{groupGrade},
             userId=#{userId},
             `type`=#{type},
+            longitude=#{longitude},
+            latitude=#{latitude},
+            expensesName=#{expensesName},
+            orderTime=#{orderTime},
+            memberRole=#{memberRole},
+            memberRoleRealNum=#{memberRoleRealNum},
+            memberExpensesName=#{memberExpensesName}
         </trim>
         where id=#{id}
     </update>
     <delete id="deleteById">
         delete from tb_consumer where id=#{id}
     </delete>
+    <select id="selectCountByBuildingId" resultType="java.lang.Long">
+        select count(1) from tb_consumer where buildingId=#{buildingId}
+    </select>
+    <update id="updateLoAndLaByBuildingId">
+        update tb_consumer set longitude=#{longitude},latitude=#{latitude} where buildingId=#{buildingId}
+    </update>
+    <select id="selectFromMap" resultType="com.yugoo.gis.pojo.po.ConsumerPO">
+        select id,`name`,buildingId,floor,`number`,`position`,category,nature,peopleNum,linkman,
+        phone,operator,expenses,expirationDate,bandwidth,serviceType,status,legal,lineNum,lineType,
+        lineOpenDate,lineStatus,groupCode,groupGrade,userId,`type`,longitude,latitude,ctime,
+        expensesName,orderTime,memberRole,memberRoleRealNum,memberExpensesName
+        from tb_consumer
+        where 1=1
+        <if test="buildingIds != null">
+            and buildingId in
+            <foreach item="item" index="index" collection="buildingIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        <if test="userIds != null and userIds.size() > 0">
+            and userId in
+            <foreach item="item" index="index" collection="userIds" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+        and longitude between #{loMin} and #{loMax}
+        and latitude between #{laMin} and #{laMax}
+        and `name` like concat('%',#{name},'%')
+    </select>
+    <select id="selectByCenter" resultType="com.yugoo.gis.pojo.po.ConsumerPO">
+        select id,`name`,`type`,serviceType,longitude,latitude from tb_consumer
+        where longitude between #{loMin} and #{loMax}
+        and latitude between #{laMin} and #{laMax}
+    </select>
 </mapper>

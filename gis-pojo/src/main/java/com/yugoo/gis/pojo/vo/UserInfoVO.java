@@ -1,5 +1,6 @@
 package com.yugoo.gis.pojo.vo;
 
+import com.yugoo.gis.pojo.po.UserPO;
 import lombok.Data;
 
 import java.util.List;
@@ -8,19 +9,9 @@ import java.util.List;
  * @author nihao 2018/9/20
  */
 @Data
-public class UserInfoVO {
-    private Integer id;
-    private String name;
-    private String phone;
-    private Integer role;
+public class UserInfoVO extends UserPO {
     private String roleName;
-    private String department;
-    private Integer groupId;
     private String groupName;
-    private Integer centerId;
     private String centerName;
-    private String key;
-    private String number;
-    private String post;
     private List<MenuVO> menus;
 }

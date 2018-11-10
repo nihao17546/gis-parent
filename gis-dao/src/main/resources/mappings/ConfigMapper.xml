@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yugoo.gis.dao.ConfigDAO">
+    <insert id="insert" parameterType="com.yugoo.gis.pojo.po.ConfigPO">
+        insert into tb_config(mapSearchRegion,expirationDateLimit)
+        values(#{mapSearchRegion},#{expirationDateLimit})
+    </insert>
+    <update id="update" parameterType="com.yugoo.gis.pojo.po.ConfigPO">
+        update tb_config set mapSearchRegion=#{mapSearchRegion},expirationDateLimit=#{expirationDateLimit}
+    </update>
+    <select id="select" resultType="com.yugoo.gis.pojo.po.ConfigPO">
+        select * from tb_config limit 1
+    </select>
+    <select id="selectCount" resultType="java.lang.Long">
+        select count(1) from tb_config
+    </select>
+    <delete id="delete">
+        delete from tb_config
+    </delete>
+</mapper>
