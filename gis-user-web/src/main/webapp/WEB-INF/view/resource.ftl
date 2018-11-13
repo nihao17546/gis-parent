@@ -223,7 +223,7 @@
                 addVisible: false,
                 addForm: {},
                 addRules: {
-                    buildingId: [{required : true, message: '请选择所属建筑', trigger: 'blur' }],
+                    buildingId: [{required : true, message: '请选择所属建筑', trigger: 'change' }],
                     idelPortCount: [{required : false, validator: validateNumber, trigger: 'blur'}],
                     allPortCount: [{required : false, validator: validateNumber, trigger: 'blur'}],
                     floor: [{required : true, message: '请输入楼层', trigger: 'blur' }],

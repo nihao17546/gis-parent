@@ -74,9 +74,24 @@ public class ExcelUtil {
         for(Cell cell : headRow) {
             Object obj = getValue(cell);
             if (obj != null) {
-                String headName = obj.toString();
-                if (headName.equals("区县")) {
+                String headName = obj.toString().trim();
+                if (headName.equals("地市名称")) {
+                    resourceExcel.setCityName(column);
+                }
+                else if (headName.equals("区县")) {
                     resourceExcel.setDistrict(column);
+                }
+                else if (headName.equals("街道")) {
+                    resourceExcel.setStreetName(column);
+                }
+                else if (headName.equals("乡镇")) {
+                    resourceExcel.setVillageName(column);
+                }
+                else if (headName.equals("道路/行政村")) {
+                    resourceExcel.setAdmStreetName(column);
+                }
+                else if (headName.equals("片区/学校")) {
+                    resourceExcel.setZoneName(column);
                 }
                 else if (headName.equals("楼层")) {
                     resourceExcel.setFloor(column);
@@ -99,21 +114,81 @@ public class ExcelUtil {
                 else if (headName.equals("覆盖场景")) {
                     resourceExcel.setOverlayScene(column);
                 }
+                else if (headName.equals("小区/自然村/弄")) {
+                    resourceExcel.setBuildingA(column);
+                }
+                else if (headName.equals("幢/号/楼")) {
+                    resourceExcel.setBuildingB(column);
+                }
+                else if (headName.equals("单元号")) {
+                    resourceExcel.setBuildingC(column);
+                }
+                else if (headName.equals("中心位置经度")) {
+                    resourceExcel.setLo(column);
+                }
+                else if (headName.equals("中心位置纬度")) {
+                    resourceExcel.setLa(column);
+                }
             }
             column ++;
         }
-
+// TODO: 2018/11/13  
         List<ResourcePO> resourcePOList = new ArrayList<>(rowCount - 1);
         for (int i = 1; i < rowCount; i ++) {
             try {
                 Row row = sheet.getRow(i);
                 ResourcePO resourcePO = new ResourcePO();
+                if (resourceExcel.getCityName() != null) {
+                    Cell cell = row.getCell(resourceExcel.getCityName());
+                    if (cell != null) {
+                        Object obj = getValue(cell);
+                        if (obj != null) {
+                            resourcePO.setCityName(obj.toString());
+                        }
+                    }
+                }
                 if (resourceExcel.getDistrict() != null) {
                     Cell cell = row.getCell(resourceExcel.getDistrict());
                     if (cell != null) {
                         Object obj = getValue(cell);
                         if (obj != null) {
                             resourcePO.setDistrict(obj.toString());
+                        }
+                    }
+                }
+                if (resourceExcel.getStreetName() != null) {
+                    Cell cell = row.getCell(resourceExcel.getStreetName());
+                    if (cell != null) {
+                        Object obj = getValue(cell);
+                        if (obj != null) {
+                            resourcePO.setStreetName(obj.toString());
+                        }
+                    }
+                }
+                if (resourceExcel.getVillageName() != null) {
+                    Cell cell = row.getCell(resourceExcel.getVillageName());
+                    if (cell != null) {
+                        Object obj = getValue(cell);
+                        if (obj != null) {
+                            resourcePO.setVillageName(obj.toString());
+                        }
+                    }
+                }
+                if (resourceExcel.getAdmStreetName() != null) {
+                    Cell cell = row.getCell(resourceExcel.getAdmStreetName());
+                    if (cell != null) {
+                        Object obj = getValue(cell);
+                        if (obj != null) {
+                            resourcePO.setAdmStreetName(obj.toString());
+                        }
+                    }
+                }
+                if (resourceExcel.getZoneName() != null) {
+                    Cell cell = row.getCell(resourceExcel.getZoneName());
+                    if (cell != null) {
+                        Object obj = getValue(cell);
+                        if (obj != null) {
+                            resourcePO.setZoneName(obj.toString());
                         }
                     }
                 }
@@ -295,6 +370,11 @@ public class ExcelUtil {
     @Data
     static class ResourceExcel {
         private Integer district;
+        private Integer cityName;
+        private Integer streetName;
+        private Integer villageName;
+        private Integer admStreetName;
+        private Integer zoneName;
         private Integer floor;
         private Integer number;
         private Integer allPortCount;
@@ -302,6 +382,11 @@ public class ExcelUtil {
         private Integer sceneA;
         private Integer sceneB;
         private Integer overlayScene;
+        private Integer buildingA;
+        private Integer buildingB;
+        private Integer buildingC;
+        private Integer lo;
+        private Integer la;
     }
 
     @Data
@@ -325,15 +410,21 @@ public class ExcelUtil {
     private static List<NeedList> consumerTitles = new ArrayList<>();
 
     static {
-        resourceTitles.add(new NeedList(100, "区县", 0, "@district"));
-        resourceTitles.add(new NeedList(100, "建筑", 1, "buildingName"));
-        resourceTitles.add(new NeedList(100, "楼层", 2, "@floor"));
-        resourceTitles.add(new NeedList(100, "户号", 3, "@number"));
-        resourceTitles.add(new NeedList(100, "空闲端口数", 4, "@idelPortCount"));
-        resourceTitles.add(new NeedList(100, "总端口数", 5, "@allPortCount"));
-        resourceTitles.add(new NeedList(100, "用户场景一类", 6, "@sceneA"));
-        resourceTitles.add(new NeedList(100, "用户场景二类", 7, "@sceneB"));
-        resourceTitles.add(new NeedList(100, "覆盖场景", 8, "@overlayScene"));
+        int resourceTitlesInt = 0;
+        resourceTitles.add(new NeedList(100, "地市名称", resourceTitlesInt++, "@cityName"));
+        resourceTitles.add(new NeedList(100, "区县", resourceTitlesInt++, "@district"));
+        resourceTitles.add(new NeedList(100, "街道", resourceTitlesInt++, "@streetName"));
+        resourceTitles.add(new NeedList(100, "乡镇", resourceTitlesInt++, "@villageName"));
+        resourceTitles.add(new NeedList(100, "道路/行政村", resourceTitlesInt++, "@admStreetName"));
+        resourceTitles.add(new NeedList(100, "片区/学校", resourceTitlesInt++, "@zoneName"));
+        resourceTitles.add(new NeedList(100, "建筑", resourceTitlesInt++, "buildingName"));
+        resourceTitles.add(new NeedList(100, "楼层", resourceTitlesInt++, "@floor"));
+        resourceTitles.add(new NeedList(100, "户号", resourceTitlesInt++, "@number"));
+        resourceTitles.add(new NeedList(100, "空闲端口数", resourceTitlesInt++, "@idelPortCount"));
+        resourceTitles.add(new NeedList(100, "总端口数", resourceTitlesInt++, "@allPortCount"));
+        resourceTitles.add(new NeedList(100, "用户场景一类", resourceTitlesInt++, "@sceneA"));
+        resourceTitles.add(new NeedList(100, "用户场景二类", resourceTitlesInt++, "@sceneB"));
+        resourceTitles.add(new NeedList(100, "覆盖场景", resourceTitlesInt++, "@overlayScene"));
 
         statisticTitles.add(new NeedList(100, "区县", 0, "district"));
         statisticTitles.add(new NeedList(100, "营销中心", 1, "centerName"));

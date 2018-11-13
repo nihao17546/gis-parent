@@ -397,7 +397,7 @@
                 addForm: {},
                 addRules: {
                     name: [{required : true, message: '请输入名称', trigger: 'blur' }],
-                    buildingId: [{required : true, message: '请选择所属建筑', trigger: 'blur' }],
+                    buildingId: [{required : true, message: '请选择所属建筑', trigger: 'change' }],
                     floor: [{required : false, validator: validateFloor, trigger: 'blur'}],
                     peopleNum: [{required : false, validator: validateNumber, trigger: 'blur'}],
                     lineNum: [{required : false, validator: validateNumber, trigger: 'blur'}],

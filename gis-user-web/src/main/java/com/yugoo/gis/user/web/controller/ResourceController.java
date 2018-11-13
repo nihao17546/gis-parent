@@ -81,7 +81,8 @@ public class ResourceController extends BaseController {
                          @RequestParam(required = false) Double latitude) {
         try {
             resourceService.create(buildingId, district, floor, number, allPortCount, idelPortCount,
-                    sceneA, sceneB, overlayScene, longitude, latitude);
+                    sceneA, sceneB, overlayScene, longitude, latitude, cityName, streetName,
+                    villageName, admStreetName, zoneName);
         } catch (GisRuntimeException e) {
             return fail(e.getMessage()).json();
         }
@@ -91,6 +92,11 @@ public class ResourceController extends BaseController {
     @RequestMapping("/edit")
     public String create(@RequestParam Integer buildingId,
                          @RequestParam(required = false) String district,
+                         @RequestParam(required = false) String cityName,
+                         @RequestParam(required = false) String streetName,
+                         @RequestParam(required = false) String villageName,
+                         @RequestParam(required = false) String admStreetName,
+                         @RequestParam(required = false) String zoneName,
                          @RequestParam String floor,
                          @RequestParam String number,
                          @RequestParam(required = false) Integer allPortCount,
@@ -100,7 +106,8 @@ public class ResourceController extends BaseController {
                          @RequestParam(required = false) String overlayScene,
                          @RequestParam Integer id) {
         try {
-            resourceService.update(id, buildingId, district, floor, number, allPortCount, idelPortCount, sceneA, sceneB, overlayScene);
+            resourceService.update(id, buildingId, district, floor, number, allPortCount, idelPortCount,
+                    sceneA, sceneB, overlayScene, cityName, streetName, villageName, admStreetName, zoneName);
         } catch (GisRuntimeException e) {
             return fail(e.getMessage()).json();
         }
