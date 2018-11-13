@@ -35,27 +35,37 @@ public class ResourceServiceImpl implements IResourceService {
     @Override
     public void create(Integer buildingId, String district, String floor, String number,
                        Integer allPortCount, Integer idelPortCount, String sceneA,
-                       String sceneB, String overlayScene, Double longitude, Double latitude) {
+                       String sceneB, String overlayScene, Double longitude, Double latitude,
+                       String cityName, String streetName, String villageName, String admStreetName,
+                       String zoneName) {
         if (allPortCount == null) allPortCount = 0;
         if (idelPortCount == null) idelPortCount = 0;
         if (idelPortCount > allPortCount) {
             throw new GisRuntimeException("空闲端口数不能大于总端口数");
         }
+        // 如果关联有建筑
         if (buildingId != null && buildingId != 0) {
-            checkUnique(null, buildingId, floor, number);
             BuildingPO buildingPO = buildingDAO.selectById(buildingId);
             longitude = buildingPO.getLongitude();
             latitude = buildingPO.getLatitude();
         }
+        // 如果没有关联建筑，且没有经纬度
         else if(longitude == null || latitude == null) {
             throw new GisRuntimeException("信息不完整，缺少经纬度坐标或未关联建筑");
         }
+        // 如果没有关联建筑，但有经纬度
         else {
             buildingId = 0;
         }
+        checkUnique(null, buildingId, floor, number, longitude, latitude);
         ResourcePO resourcePO = new ResourcePO();
         resourcePO.setBuildingId(buildingId);
         resourcePO.setDistrict(district);
+        resourcePO.setCityName(cityName);
+        resourcePO.setStreetName(streetName);
+        resourcePO.setVillageName(villageName);
+        resourcePO.setAdmStreetName(admStreetName);
+        resourcePO.setZoneName(zoneName);
         resourcePO.setFloor(floor);
         resourcePO.setNumber(number);
         resourcePO.setAllPortCount(allPortCount);
@@ -68,8 +78,8 @@ public class ResourceServiceImpl implements IResourceService {
         resourceDAO.insert(resourcePO);
     }
 
-    private void checkUnique(Integer id, Integer buildingId, String floor, String number) {
-        ResourcePO resourcePO = resourceDAO.selectByBuildingIdAndFloorAndNumber(buildingId, floor, number);
+    private void checkUnique(Integer id, Integer buildingId, String floor, String number, Double longitude, Double latitude) {
+        ResourcePO resourcePO = resourceDAO.selectByBuildingIdAndFloorAndNumber(buildingId, floor, number, longitude, latitude);
         if (resourcePO != null) {
             if (id == null || !id.equals(resourcePO.getId())) {
                 throw new GisRuntimeException("该建筑下已存在相同楼层和户号的网络资源");
@@ -80,7 +90,9 @@ public class ResourceServiceImpl implements IResourceService {
     @Override
     public void update(Integer id, Integer buildingId, String district, String floor, String number,
                        Integer allPortCount, Integer idelPortCount, String sceneA, String sceneB,
-                       String overlayScene) {
+                       String overlayScene,
+                       String cityName, String streetName, String villageName, String admStreetName,
+                       String zoneName) {
         if (allPortCount == null) allPortCount = 0;
         if (idelPortCount == null) idelPortCount = 0;
         if (idelPortCount > allPortCount) {
@@ -89,14 +101,22 @@ public class ResourceServiceImpl implements IResourceService {
         if (buildingId == null || buildingId == 0) {
             throw new GisRuntimeException("信息不完整，未关联建筑");
         }
-        checkUnique(id, buildingId, floor, number);
         BuildingPO buildingPO = buildingDAO.selectById(buildingId);
+        Double longitude = buildingPO.getLongitude();
+        Double latitude = buildingPO.getLatitude();
+        checkUnique(id, buildingId, floor, number, longitude, latitude);
+
         ResourcePO resourcePO = new ResourcePO();
-        resourcePO.setLongitude(buildingPO.getLongitude());
-        resourcePO.setLatitude(buildingPO.getLatitude());
+        resourcePO.setLongitude(longitude);
+        resourcePO.setLatitude(latitude);
         resourcePO.setId(id);
         resourcePO.setBuildingId(buildingId);
         resourcePO.setDistrict(district);
+        resourcePO.setCityName(cityName);
+        resourcePO.setStreetName(streetName);
+        resourcePO.setVillageName(villageName);
+        resourcePO.setAdmStreetName(admStreetName);
+        resourcePO.setZoneName(zoneName);
         resourcePO.setFloor(floor);
         resourcePO.setNumber(number);
         resourcePO.setAllPortCount(allPortCount);

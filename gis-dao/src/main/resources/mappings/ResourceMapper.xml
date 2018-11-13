@@ -47,6 +47,7 @@
     <select id="selectByBuildingIdAndFloorAndNumber" resultType="com.yugoo.gis.pojo.po.ResourcePO">
         select * from tb_resource where buildingId=#{buildingId}
         and `floor`=#{floor} and `number`=#{number}
+        and longitude=#{longitude} and latitude=#{latitude}
     </select>
     <delete id="delete">
         delete from tb_resource where id=#{id}

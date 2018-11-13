@@ -44,8 +44,28 @@
             border
             style="width: 100%; margin-top: 3px;">
         <el-table-column
+                prop="cityName"
+                label="地市名称">
+        </el-table-column>
+        <el-table-column
                 prop="district"
                 label="区县">
+        </el-table-column>
+        <el-table-column
+                prop="streetName"
+                label="街道">
+        </el-table-column>
+        <el-table-column
+                prop="villageName"
+                label="乡镇">
+        </el-table-column>
+        <el-table-column
+                prop="admStreetName"
+                label="道路/行政村">
+        </el-table-column>
+        <el-table-column
+                prop="zoneName"
+                label="片区/学校">
         </el-table-column>
         <el-table-column
                 prop="buildingName"
@@ -107,8 +127,23 @@
 
     <el-dialog :title="tt" :visible.sync="addVisible" :before-close="cancelAdd">
         <el-form :model="addForm" :rules="addRules" ref="addForm" size="small">
+            <el-form-item label="地市名称:" prop="cityName" :label-width="formLabelWidth">
+                <el-input v-model.trim="addForm.cityName" autocomplete="off" size="small" maxlength="50"></el-input>
+            </el-form-item>
             <el-form-item label="区县:" prop="district" :label-width="formLabelWidth">
                 <el-input v-model.trim="addForm.district" autocomplete="off" size="small" maxlength="50"></el-input>
+            </el-form-item>
+            <el-form-item label="街道:" prop="streetName" :label-width="formLabelWidth">
+                <el-input v-model.trim="addForm.streetName" autocomplete="off" size="small" maxlength="50"></el-input>
+            </el-form-item>
+            <el-form-item label="乡镇:" prop="villageName" :label-width="formLabelWidth">
+                <el-input v-model.trim="addForm.villageName" autocomplete="off" size="small" maxlength="50"></el-input>
+            </el-form-item>
+            <el-form-item label="道路/行政村:" prop="admStreetName" :label-width="formLabelWidth">
+                <el-input v-model.trim="addForm.admStreetName" autocomplete="off" size="small" maxlength="50"></el-input>
+            </el-form-item>
+            <el-form-item label="片区/学校:" prop="zoneName" :label-width="formLabelWidth">
+                <el-input v-model.trim="addForm.zoneName" autocomplete="off" size="small" maxlength="50"></el-input>
             </el-form-item>
             <el-form-item label="建筑:" prop="buildingId" :label-width="formLabelWidth">
                 <el-select
@@ -286,6 +321,21 @@
                         }
                         if (typeof(this.addForm.district) != "undefined" && this.addForm.district != null && this.addForm.district != '') {
                             fd.append('district', this.addForm.district)
+                        }
+                        if (typeof(this.addForm.cityName) != "undefined" && this.addForm.cityName != null && this.addForm.cityName != '') {
+                            fd.append('cityName', this.addForm.cityName)
+                        }
+                        if (typeof(this.addForm.streetName) != "undefined" && this.addForm.streetName != null && this.addForm.streetName != '') {
+                            fd.append('streetName', this.addForm.streetName)
+                        }
+                        if (typeof(this.addForm.villageName) != "undefined" && this.addForm.villageName != null && this.addForm.villageName != '') {
+                            fd.append('villageName', this.addForm.villageName)
+                        }
+                        if (typeof(this.addForm.admStreetName) != "undefined" && this.addForm.admStreetName != null && this.addForm.admStreetName != '') {
+                            fd.append('admStreetName', this.addForm.admStreetName)
+                        }
+                        if (typeof(this.addForm.zoneName) != "undefined" && this.addForm.zoneName != null && this.addForm.zoneName != '') {
+                            fd.append('zoneName', this.addForm.zoneName)
                         }
                         if (typeof(this.addForm.floor) != "undefined" && this.addForm.floor != null && this.addForm.floor != '') {
                             fd.append('floor', this.addForm.floor)

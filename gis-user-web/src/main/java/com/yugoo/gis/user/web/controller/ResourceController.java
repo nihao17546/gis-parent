@@ -65,6 +65,11 @@ public class ResourceController extends BaseController {
     @RequestMapping("/create")
     public String create(@RequestParam(required = false) Integer buildingId,
                          @RequestParam(required = false) String district,
+                         @RequestParam(required = false) String cityName,
+                         @RequestParam(required = false) String streetName,
+                         @RequestParam(required = false) String villageName,
+                         @RequestParam(required = false) String admStreetName,
+                         @RequestParam(required = false) String zoneName,
                          @RequestParam String floor,
                          @RequestParam String number,
                          @RequestParam(required = false) Integer allPortCount,

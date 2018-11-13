@@ -17,7 +17,9 @@ public interface ResourceDAO {
     Long selectCount(@Param("buildingId") Integer buildingId);
     ResourcePO selectByBuildingIdAndFloorAndNumber(@Param("buildingId") Integer buildingId,
                                                    @Param("floor") String floor,
-                                                   @Param("number") String number);
+                                                   @Param("number") String number,
+                                                   @Param("longitude") Double longitude,
+                                                   @Param("latitude") Double latitude);
     int delete(@Param("id") Integer id);
     Long selectCountByBuildingId(@Param("buildingId") Integer buildingId);
     int updateLoAndLaByBuildingId(@Param("buildingId") Integer buildingId,
