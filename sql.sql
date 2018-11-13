@@ -221,6 +221,40 @@ CREATE TABLE `tb_statistic_user` (
   PRIMARY KEY (`id`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8 COMMENT='客户经理业务统计'
 
+ALTER TABLE `tb_resource`
+ADD COLUMN `cityName` VARCHAR(100) NULL COMMENT '地市名称' AFTER `district`,
+ADD COLUMN `streetName` VARCHAR(100) NULL COMMENT '街道' AFTER `cityName`,
+ADD COLUMN `villageName` VARCHAR(100) NULL COMMENT '乡镇' AFTER `streetName`,
+ADD COLUMN `admStreetName` VARCHAR(100) NULL COMMENT '道路/行政村' AFTER `villageName`,
+ADD COLUMN `zoneName` VARCHAR(100) NULL COMMENT '片区/学校' AFTER `admStreetName`;
+
+ALTER TABLE `tb_resource`
+CHANGE COLUMN `district` `district` VARCHAR(256) NOT NULL COMMENT '区县' ,
+CHANGE COLUMN `cityName` `cityName` VARCHAR(100) NOT NULL COMMENT '地市名称' ,
+CHANGE COLUMN `streetName` `streetName` VARCHAR(100) NOT NULL COMMENT '街道' ,
+CHANGE COLUMN `villageName` `villageName` VARCHAR(100) NOT NULL COMMENT '乡镇' ,
+CHANGE COLUMN `admStreetName` `admStreetName` VARCHAR(100) NOT NULL COMMENT '道路/行政村' ,
+CHANGE COLUMN `zoneName` `zoneName` VARCHAR(100) NOT NULL COMMENT '片区/学校' ,
+CHANGE COLUMN `floor` `floor` VARCHAR(20) NOT NULL COMMENT '楼层' ,
+CHANGE COLUMN `number` `number` VARCHAR(50) NOT NULL COMMENT '户号' ,
+CHANGE COLUMN `sceneA` `sceneA` VARCHAR(256) NOT NULL COMMENT '用户场景一类' ,
+CHANGE COLUMN `sceneB` `sceneB` VARCHAR(256) NOT NULL COMMENT '用户场景二类' ,
+CHANGE COLUMN `overlayScene` `overlayScene` VARCHAR(256) NOT NULL COMMENT '覆盖场景' ;
+
+ALTER TABLE `tb_resource`
+CHANGE COLUMN `district` `district` VARCHAR(256) NULL COMMENT '区县' ,
+CHANGE COLUMN `cityName` `cityName` VARCHAR(100) NULL COMMENT '地市名称' ,
+CHANGE COLUMN `streetName` `streetName` VARCHAR(100) NULL COMMENT '街道' ,
+CHANGE COLUMN `villageName` `villageName` VARCHAR(100) NULL COMMENT '乡镇' ,
+CHANGE COLUMN `admStreetName` `admStreetName` VARCHAR(100) NULL COMMENT '道路/行政村' ,
+CHANGE COLUMN `zoneName` `zoneName` VARCHAR(100) NULL COMMENT '片区/学校' ,
+CHANGE COLUMN `sceneA` `sceneA` VARCHAR(256) NULL COMMENT '用户场景一类' ,
+CHANGE COLUMN `sceneB` `sceneB` VARCHAR(256) NULL COMMENT '用户场景二类' ,
+CHANGE COLUMN `overlayScene` `overlayScene` VARCHAR(256) NULL COMMENT '覆盖场景' ;
+
+
+
+
 
 
 

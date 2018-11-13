@@ -3,8 +3,10 @@
 <mapper namespace="com.yugoo.gis.dao.ResourceDAO">
     <insert id="insert" useGeneratedKeys="true" keyProperty="id"
             parameterType="com.yugoo.gis.pojo.po.ResourcePO">
-        insert into tb_resource(buildingId,district,floor,`number`,allPortCount,idelPortCount,sceneA,sceneB,overlayScene,longitude,latitude,ctime)
-        values(#{buildingId},#{district},#{floor},#{number},#{allPortCount},#{idelPortCount},
+        insert into tb_resource(buildingId,district,cityName,streetName,villageName,admStreetName,zoneName,floor,`number`,
+        allPortCount,idelPortCount,sceneA,sceneB,overlayScene,longitude,latitude,ctime)
+        values(#{buildingId},#{district},#{cityName},#{streetName},#{villageName},#{admStreetName},#{zoneName},
+        #{floor},#{number},#{allPortCount},#{idelPortCount},
         #{sceneA},#{sceneB},#{overlayScene},#{longitude},#{latitude},now())
     </insert>
     <update id="update" parameterType="com.yugoo.gis.pojo.po.ResourcePO">
@@ -12,6 +14,11 @@
         <trim prefix="set" suffixOverrides=",">
             `buildingId`=#{buildingId},
             `district`=#{district},
+            cityName=#{cityName},
+            streetName=#{streetName},
+            villageName=#{villageName},
+            admStreetName=#{admStreetName},
+            zoneName=#{zoneName},
             `floor`=#{floor},
             `number`=#{number},
             `allPortCount`=#{allPortCount},
@@ -51,10 +58,12 @@
         update tb_resource set longitude=#{longitude},latitude=#{latitude} where buildingId=#{buildingId}
     </update>
     <insert id="batchInsert">
-        insert into tb_resource (buildingId,district,floor,`number`,allPortCount,idelPortCount,sceneA,sceneB,overlayScene,longitude,latitude,ctime)
+        insert into tb_resource (buildingId,district,cityName,streetName,villageName,admStreetName,zoneName,
+        floor,`number`,allPortCount,idelPortCount,sceneA,sceneB,overlayScene,longitude,latitude,ctime)
         values
         <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.buildingId},#{item.district},#{item.floor},#{item.number},#{item.allPortCount},#{item.idelPortCount},
+            (#{item.buildingId},#{item.district},#{cityName},#{streetName},#{villageName},#{admStreetName},#{zoneName},
+            #{item.floor},#{item.number},#{item.allPortCount},#{item.idelPortCount},
             #{item.sceneA},#{item.sceneB},#{item.overlayScene},#{item.longitude},#{item.latitude},now())
         </foreach>
     </insert>

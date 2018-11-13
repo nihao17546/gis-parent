@@ -12,6 +12,11 @@ public class ResourcePO {
     private Integer id;
     private Integer buildingId;
     private String district;
+    private String cityName;
+    private String streetName;
+    private String villageName;
+    private String admStreetName;
+    private String zoneName;
     private String floor;
     private String number;
     private Integer allPortCount;
