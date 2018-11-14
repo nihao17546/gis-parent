@@ -299,7 +299,9 @@ public class ResourceServiceImpl implements IResourceService {
 
         List<ResourcePO> resourcePOList = convert(resourceImportList);
         int re = resourceDAO.batchInsert(resourcePOList);
-        return "总共导入网络资源" + re + "条数据,相关联物业街道新创建" + street + "条数据,相关联建筑新创建" + building + "条数据";
+        return "总共导入网络资源" + resourcePOList.size() + "条数据(新增" + (2 * resourcePOList.size() - re)
+                + " 条,更新" + (re - resourcePOList.size())
+                + "条),相关联物业街道新创建" + street + "条数据,相关联建筑新创建" + building + "条数据";
     }
 
     private List<ResourcePO> convert(List<ResourceImport> resourceImportList) {

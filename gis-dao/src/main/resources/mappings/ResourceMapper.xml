@@ -67,6 +67,21 @@
             #{item.floor},#{item.number},#{item.allPortCount},#{item.idelPortCount},
             #{item.sceneA},#{item.sceneB},#{item.overlayScene},#{item.longitude},#{item.latitude},now())
         </foreach>
+        ON DUPLICATE KEY UPDATE
+        <trim prefix="" suffixOverrides=",">
+            district = VALUES(district),
+            cityName = VALUES(cityName),
+            streetName = VALUES(streetName),
+            villageName = VALUES(villageName),
+            admStreetName = VALUES(admStreetName),
+            zoneName = VALUES(zoneName),
+            allPortCount = VALUES(allPortCount),
+            idelPortCount = VALUES(idelPortCount),
+            sceneA = VALUES(sceneA),
+            sceneB = VALUES(sceneB),
+            overlayScene = VALUES(overlayScene),
+            ctime = VALUES(now()),
+        </trim>
     </insert>
     <select id="selectByCenter" resultType="com.yugoo.gis.pojo.po.ResourcePO">
         select id,allPortCount,idelPortCount,longitude,latitude from tb_resource
