@@ -63,7 +63,7 @@
         floor,`number`,allPortCount,idelPortCount,sceneA,sceneB,overlayScene,longitude,latitude,ctime)
         values
         <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.buildingId},#{item.district},#{cityName},#{streetName},#{villageName},#{admStreetName},#{zoneName},
+            (#{item.buildingId},#{item.district},#{item.cityName},#{item.streetName},#{item.villageName},#{item.admStreetName},#{item.zoneName},
             #{item.floor},#{item.number},#{item.allPortCount},#{item.idelPortCount},
             #{item.sceneA},#{item.sceneB},#{item.overlayScene},#{item.longitude},#{item.latitude},now())
         </foreach>

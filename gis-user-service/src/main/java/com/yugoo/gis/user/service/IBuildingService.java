@@ -11,7 +11,7 @@ import java.util.List;
  **/
 public interface IBuildingService {
     ListVO<BuildingVO> list(Integer curPage, Integer pageSize, String name, Integer streetId);
-    void create(String name, Integer streetId, Double longitude, Double latitude);
+    Integer create(String name, Integer streetId, Double longitude, Double latitude);
     void update(Integer id, String name, Integer streetId, Double longitude, Double latitude);
     ListVO<BuildingVO> listByCenterId(Integer centerId);
     List<BuildingVO> listOwn(Integer userId, String name);

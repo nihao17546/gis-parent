@@ -276,7 +276,7 @@
                 }
                 else {
                     this.$message({
-                        message: '导入成功，总共导入' + response.count + '条数据',
+                        message: '导入成功,' + response.re,
                         type: 'success'
                     });
                     this.search();

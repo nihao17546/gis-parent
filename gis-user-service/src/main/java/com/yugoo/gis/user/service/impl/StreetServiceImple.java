@@ -84,7 +84,7 @@ public class StreetServiceImple implements IStreetService {
     }
 
     @Override
-    public void create(String name, String position, Integer type, String manager, String phone, byte[] pic, String remark, String competitor) {
+    public Integer create(String name, String position, Integer type, String manager, String phone, byte[] pic, String remark, String competitor) {
         StreetPO check = streetDAO.selectByName(name);
         if (check != null) {
             throw new GisRuntimeException("该名称已经存在");
@@ -99,6 +99,7 @@ public class StreetServiceImple implements IStreetService {
         streetPO.setRemark(remark);
         streetPO.setCompetitor(competitor);
         streetDAO.insert(streetPO);
+        return streetPO.getId();
     }
 
     @Override

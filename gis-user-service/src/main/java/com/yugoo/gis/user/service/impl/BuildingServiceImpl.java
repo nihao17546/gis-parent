@@ -83,7 +83,7 @@ public class BuildingServiceImpl implements IBuildingService {
 
     @Transactional
     @Override
-    public void create(String name, Integer streetId, Double longitude, Double latitude) {
+    public Integer create(String name, Integer streetId, Double longitude, Double latitude) {
         BuildingPO check = buildingDAO.selectByName(name);
         if (check != null) {
             throw new GisRuntimeException("该名称已经存在");
@@ -96,6 +96,7 @@ public class BuildingServiceImpl implements IBuildingService {
         buildingDAO.insert(buildingPO);
         BuildingPO avg = buildingDAO.selectAvgByStreetId(streetId);
         streetDAO.updateLoAndLa(streetId, avg.getLongitude(), avg.getLatitude());
+        return buildingPO.getId();
     }
 
     @Transactional

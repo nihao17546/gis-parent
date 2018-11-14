@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author nihao 2018/10/23
@@ -128,12 +129,16 @@ public class ResourceController extends BaseController {
     public String importData(@RequestParam(value = "file") MultipartFile multipartFile) throws IOException {
         String fileName = multipartFile.getOriginalFilename();
         InputStream in = multipartFile.getInputStream();
-        List<ResourcePO> list = ExcelUtil.readResourceData(in, fileName);
+        List<Map<String,String>> list = ExcelUtil.readResourceData(in, fileName);
         if (list.isEmpty()) {
-            return fail("未导入任何数据").json();
+            return fail("没有数据").json();
         }
-        int count = resourceDAO.batchInsert(list);
-        return ok().pull("count", count).json();
+        try {
+            String re = resourceService.importData(list);
+            return ok().pull("re", re).json();
+        } catch (GisRuntimeException e) {
+            return fail(e.getMessage()).json();
+        }
     }
 
     @RequestMapping(value = "/export",method = RequestMethod.POST)

@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface IStreetService {
     ListVO<StreetVO> list(Integer curPage, Integer pageSize, String name);
-    void create(String name, String position, Integer type, String manager,
+    Integer create(String name, String position, Integer type, String manager,
                 String phone, byte[] pic, String remark, String competitor);
     void update(Integer id, String name, String position, Integer type, String manager,
                 String phone, byte[] pic, String remark, String competitor);
