@@ -49,6 +49,8 @@ public class UserServiceImpl implements IUserService {
     private List<MenuVO> headmanMenus = new ArrayList<>();
     private List<MenuVO> memberMenus = new ArrayList<>();
 
+    private static final String DEFAULT_PASSWORD = "123456";
+
     @PostConstruct
     public void init() {
         MenuVO group = new MenuVO();
@@ -157,7 +159,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public void create(String name, String phone, String password, Integer role, String department,
+    public String create(String name, String phone, String password, Integer role, String department,
                        Integer groupId, Integer centerId, String key, String number, String post) {
         checkPhone(null, phone);
         checkNumber(null, number);
@@ -181,7 +183,7 @@ public class UserServiceImpl implements IUserService {
         userPO.setName(name);
         userPO.setPhone(phone);
         if (StringUtil.isEmpty(password)) {
-            password = "123456";
+            password = DEFAULT_PASSWORD;
         }
         userPO.setPassword(DesUtils.encrypt(password));
         userPO.setRole(role);
@@ -192,6 +194,7 @@ public class UserServiceImpl implements IUserService {
         userPO.setNumber(number);
         userPO.setPost(post);
         userDAO.insert(userPO);
+        return "创建成功，初始密码为：" + DEFAULT_PASSWORD;
     }
 
     @Override

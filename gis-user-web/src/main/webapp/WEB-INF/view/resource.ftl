@@ -100,6 +100,14 @@
                 label="覆盖场景">
         </el-table-column>
         <el-table-column
+                prop="longitude"
+                label="中心位置经度">
+        </el-table-column>
+        <el-table-column
+                prop="latitude"
+                label="中心位置纬度">
+        </el-table-column>
+        <el-table-column
                 label="操作"
                 width="280" fixed="right">
             <template slot-scope="props">
@@ -272,12 +280,19 @@
                 this.loading = false;
                 this.fileList = []
                 if (response.code == 1) {
-                    this.$message.error(response.message);
+                    this.$notify({
+                        title: '导入失败',
+                        message: response.message,
+                        type: 'warning',
+                        duration: 0
+                    });
                 }
                 else {
-                    this.$message({
-                        message: '导入成功,' + response.re,
-                        type: 'success'
+                    this.$notify({
+                        title: '导入成功',
+                        message: response.re,
+                        type: 'success',
+                        duration: 0
                     });
                     this.search();
                 }

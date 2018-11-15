@@ -6,6 +6,7 @@ import com.yugoo.gis.pojo.vo.ConsumerListVO;
 import com.yugoo.gis.pojo.vo.ListVO;
 import com.yugoo.gis.pojo.vo.ResourceVO;
 import com.yugoo.gis.pojo.vo.StatisticCenterVO;
+import com.yugoo.gis.pojo.vo.StatisticUserVO;
 import lombok.Data;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -461,9 +462,13 @@ public class ExcelUtil {
     private static List<NeedList> resourceTitles = new ArrayList<>();
     private static List<NeedList> statisticTitles = new ArrayList<>();
     private static List<NeedList> statisticConsumerTitles = new ArrayList<>();
+    private static List<NeedList> userTitles = new ArrayList<>();
     private static List<NeedList> consumerTitles = new ArrayList<>();
 
     static {
+        /**
+         * 网络资源导出
+         */
         int resourceTitlesInt = 0;
         resourceTitles.add(new NeedList(100, "地市名称", resourceTitlesInt++, "@cityName"));
         resourceTitles.add(new NeedList(100, "区县", resourceTitlesInt++, "@district"));
@@ -479,24 +484,45 @@ public class ExcelUtil {
         resourceTitles.add(new NeedList(100, "用户场景一类", resourceTitlesInt++, "@sceneA"));
         resourceTitles.add(new NeedList(100, "用户场景二类", resourceTitlesInt++, "@sceneB"));
         resourceTitles.add(new NeedList(100, "覆盖场景", resourceTitlesInt++, "@overlayScene"));
+        resourceTitles.add(new NeedList(100, "覆盖场景", resourceTitlesInt++, "@overlayScene"));
+        resourceTitles.add(new NeedList(100, "中心位置经度", resourceTitlesInt++, "@longitude"));
+        resourceTitles.add(new NeedList(100, "中心位置纬度", resourceTitlesInt++, "@latitude"));
 
-        statisticTitles.add(new NeedList(100, "区县", 0, "district"));
-        statisticTitles.add(new NeedList(100, "营销中心", 1, "centerName"));
-        statisticTitles.add(new NeedList(100, "未建档数量", 2, "@notArchiveCount"));
-        statisticTitles.add(new NeedList(100, "基础建档数量", 3, "@basicArchiveCount"));
-        statisticTitles.add(new NeedList(100, "有效建档数量", 4, "@effectiveArchiveCount"));
-        statisticTitles.add(new NeedList(100, "总端口数", 5, "@wholePortCount"));
-        statisticTitles.add(new NeedList(100, "已占用端口数", 6, "@usedPortCount"));
-        statisticTitles.add(new NeedList(100, "专线渗透率", 7, "specialLineRatioStr"));
-        statisticTitles.add(new NeedList(100, "酒店渗透率", 8, "hotelRatioStr"));
-        statisticTitles.add(new NeedList(100, "商务动力渗透率", 9, "businessRatioStr"));
+        /**
+         * 营销中心业务统计导出
+         */
+        int statisticTitlesInt = 0;
+        statisticTitles.add(new NeedList(100, "区县", statisticTitlesInt++, "district"));
+        statisticTitles.add(new NeedList(100, "营销中心", statisticTitlesInt++, "centerName"));
+        statisticTitles.add(new NeedList(100, "未建档数量", statisticTitlesInt++, "@notArchiveCount"));
+        statisticTitles.add(new NeedList(100, "基础建档数量", statisticTitlesInt++, "@basicArchiveCount"));
+        statisticTitles.add(new NeedList(100, "有效建档数量", statisticTitlesInt++, "@effectiveArchiveCount"));
+        statisticTitles.add(new NeedList(100, "总端口数", statisticTitlesInt++, "@wholePortCount"));
+        statisticTitles.add(new NeedList(100, "已占用端口数", statisticTitlesInt++, "@usedPortCount"));
+        statisticTitles.add(new NeedList(100, "专线渗透率", statisticTitlesInt++, "specialLineRatioStr"));
+        statisticTitles.add(new NeedList(100, "酒店渗透率", statisticTitlesInt++, "hotelRatioStr"));
+        statisticTitles.add(new NeedList(100, "商务动力渗透率", statisticTitlesInt++, "businessRatioStr"));
 
-        statisticConsumerTitles.add(new NeedList(100, "客户名称", 0, "@name"));
-        statisticConsumerTitles.add(new NeedList(100, "业务到期时间", 1, "expirationDateStr"));
-        statisticConsumerTitles.add(new NeedList(100, "现有业务运营商", 2, "@operator"));
-        statisticConsumerTitles.add(new NeedList(100, "联系人", 3, "@linkman"));
-        statisticConsumerTitles.add(new NeedList(100, "联系电话", 4, "@phone"));
-        statisticConsumerTitles.add(new NeedList(150, "地址", 5, "@position"));
+        /**
+         * 即将到期业务统计导出
+         */
+        int statisticConsumerTitlesInt = 0;
+        statisticConsumerTitles.add(new NeedList(100, "客户名称", statisticConsumerTitlesInt++, "@name"));
+        statisticConsumerTitles.add(new NeedList(100, "业务到期时间", statisticConsumerTitlesInt++, "expirationDateStr"));
+        statisticConsumerTitles.add(new NeedList(100, "现有业务运营商", statisticConsumerTitlesInt++, "@operator"));
+        statisticConsumerTitles.add(new NeedList(100, "联系人", statisticConsumerTitlesInt++, "@linkman"));
+        statisticConsumerTitles.add(new NeedList(100, "联系电话", statisticConsumerTitlesInt++, "@phone"));
+        statisticConsumerTitles.add(new NeedList(150, "地址", statisticConsumerTitlesInt++, "@position"));
+
+        /**
+         * 客户经理业务统计导出
+         */
+        int userTitlesInt = 0;
+        userTitles.add(new NeedList(100, "营销中心", userTitlesInt++, "centerName"));
+        userTitles.add(new NeedList(100, "客户经理", userTitlesInt++, "userName"));
+        userTitles.add(new NeedList(100, "基础建档数量", userTitlesInt++, "@basicArchiveCount"));
+        userTitles.add(new NeedList(100, "已建档数量", userTitlesInt++, "@effectiveArchiveCount"));
+        userTitles.add(new NeedList(100, "新建专线数量", userTitlesInt++, "@specialLineCount"));
 
 //        consumerTitles.add(new NeedList(100, "名称", 0));
 //        consumerTitles.add(new NeedList(100, "建筑", 1));
@@ -638,6 +664,21 @@ public class ExcelUtil {
                 Row row = preExport.getSheet().createRow(r++);
                 for (NeedList needList : statisticConsumerTitles) {
                     createCell(row, preExport.getStyleContent(), needList, consumerListVO);
+                }
+            }
+        }
+        return preExport.getWb();
+    }
+
+    public static Workbook exportStatisticUser(List<StatisticUserVO> list) throws NoSuchFieldException, IllegalAccessException {
+        PreExport preExport = get(userTitles);
+        int r = 1;
+        if (list != null && !list.isEmpty()) {
+            for(int i=0;i<list.size();i++){
+                StatisticUserVO statisticUserVO = list.get(i);
+                Row row = preExport.getSheet().createRow(r++);
+                for (NeedList needList : userTitles) {
+                    createCell(row, preExport.getStyleContent(), needList, statisticUserVO);
                 }
             }
         }

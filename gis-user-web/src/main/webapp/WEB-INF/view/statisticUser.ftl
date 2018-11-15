@@ -60,12 +60,47 @@
                 loading: false,
                 auth: ${auth},
                 searchCenterName: '',
+                sortColumn: 'effectiveArchiveCount',
                 list: []
             }
         },
         methods: {
             exportExcel() {
+                this.loading = true;
+                let $form=$("<form action='${contextPath}/statistic/export/user' method='post' style='display: none'></form>");
+                if (this.searchCenterName && this.searchCenterName != '') {
+                    let input1 = $("<input>");
+                    input1.attr("name", "centerName");
+                    input1.attr("value", this.searchCenterName);
+                    $form.append(input1);
+                }
 
+                if (this.sortColumn && this.sortColumn != '') {
+                    let input1 = $("<input>");
+                    input1.attr("name", "sortColumn");
+                    input1.attr("value", this.sortColumn);
+                    $form.append(input1);
+                }
+
+                let order = null;
+                if (this.order == 'descending') {
+                    let input1 = $("<input>");
+                    input1.attr("name", "order");
+                    input1.attr("value", "desc");
+                    $form.append(input1);
+                }
+                else if (this.order == 'ascending') {
+                    let input1 = $("<input>");
+                    input1.attr("name", "order");
+                    input1.attr("value", "asc");
+                    $form.append(input1);
+                }
+                $('body').append($form);
+                $form.submit();
+                setTimeout(() => {
+                    this.loading = false;
+                    $form.remove();
+                }, 5000)
             },
             search() {
                 this.getList()
@@ -91,6 +126,7 @@
                 axios.get('${contextPath}/statistic/user',{
                     params: {
                         centerName: centerName,
+                        sortColumn: this.sortColumn,
                         order: order
                     }
                 }).then(res => {

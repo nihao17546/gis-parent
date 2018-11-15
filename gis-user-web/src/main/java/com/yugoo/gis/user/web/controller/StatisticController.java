@@ -114,4 +114,15 @@ public class StatisticController extends BaseController {
         List<StatisticUserVO> list = statisticService.listUser(centerName, sortColumn, order, uid);
         return ok().pull("list", list).json();
     }
+
+    @RequestMapping("/export/user")
+    public void exportUser(HttpServletRequest request, HttpServletResponse response,
+                           @RequestParam(required = false) String centerName,
+                           @RequestParam(required = false) String sortColumn,
+                           @RequestParam(required = false) String order,
+                           @Value("#{request.getAttribute('uid')}") Integer uid) throws NoSuchFieldException, IllegalAccessException {
+        List<StatisticUserVO> list = statisticService.listUser(centerName, sortColumn, order, uid);
+        Workbook workbook = ExcelUtil.exportStatisticUser(list);
+        ExcelUtil.export(request, response, workbook, "客户经理业务统计");
+    }
 }

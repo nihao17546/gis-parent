@@ -337,6 +337,14 @@
                                 this.$refs.addForm.resetFields();
                                 this.addVisible = false
                                 this.loading = false;
+                                if ( this.tt == '新增') {
+                                    this.$notify({
+                                        title: '创建成功',
+                                        message: res.data.message,
+                                        type: 'success',
+                                        duration: 0
+                                    });
+                                }
                                 this.getList()
                             }
                         }).catch(res => {

@@ -51,11 +51,11 @@ public class UserController extends BaseController {
                            @RequestParam(required = false) String password,
                            @RequestParam String number, @RequestParam(required = false) String post) {
         try {
-            userService.create(name, phone, password, role, department, groupId, centerId, key, number, post);
+            String res = userService.create(name, phone, password, role, department, groupId, centerId, key, number, post);
+            return ok(res).json();
         } catch (GisRuntimeException e) {
             return fail(e.getMessage()).json();
         }
-        return ok().json();
     }
 
     /**

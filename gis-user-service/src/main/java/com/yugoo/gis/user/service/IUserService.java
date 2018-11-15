@@ -12,7 +12,7 @@ import java.util.List;
  * Created by nihao on 18/5/8.
  */
 public interface IUserService {
-    void create(String name, String phone, String password, Integer role, String department,
+    String create(String name, String phone, String password, Integer role, String department,
                 Integer groupId, Integer centerId, String key, String number, String post);
 
     /**

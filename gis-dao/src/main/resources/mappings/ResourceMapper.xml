@@ -80,7 +80,7 @@
             sceneA = VALUES(sceneA),
             sceneB = VALUES(sceneB),
             overlayScene = VALUES(overlayScene),
-            ctime = VALUES(now()),
+            ctime = now(),
         </trim>
     </insert>
     <select id="selectByCenter" resultType="com.yugoo.gis.pojo.po.ResourcePO">
