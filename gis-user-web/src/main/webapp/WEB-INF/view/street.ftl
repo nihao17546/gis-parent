@@ -319,6 +319,14 @@
                         else {
                             this.addForm.competitors = []
                         }
+                        if (this.addForm.type == 0) {
+                            this.$message({
+                                message: '类型未选择',
+                                type: 'warning'
+                            });
+                            this.loading = false;
+                            return false;
+                        }
                         let fd = new FormData();
                         fd.append("competitor", JSON.stringify(this.addForm.competitors))
                         if (typeof(this.addForm.id) != "undefined" && this.addForm.id != null) {

@@ -4,6 +4,7 @@ package com.yugoo.gis.common.constant;
  * @author nihao 2018/9/30
  */
 public enum StreetType {
+    未指定(0, "未知"),
     商务楼宇(1, "商务楼宇"),
     综合聚类(2, "综合聚类"),
     工业园区(3, "工业园区"),

@@ -42,10 +42,12 @@ public class StreetController extends BaseController {
     public String types() {
         List<StreetTypeVO> list = new ArrayList<>();
         for (StreetType streetType : StreetType.values()) {
-            StreetTypeVO streetTypeVO = new StreetTypeVO();
-            streetTypeVO.setId(streetType.getValue());
-            streetTypeVO.setName(streetType.getName());
-            list.add(streetTypeVO);
+            if (streetType.getValue() != StreetType.未指定.getValue()) {
+                StreetTypeVO streetTypeVO = new StreetTypeVO();
+                streetTypeVO.setId(streetType.getValue());
+                streetTypeVO.setName(streetType.getName());
+                list.add(streetTypeVO);
+            }
         }
         return ok().pull("list", list).json();
     }
