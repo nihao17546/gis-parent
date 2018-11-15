@@ -45,10 +45,10 @@
 <div id="app" v-loading="loading">
     <el-col :span="24">
         <el-col :span="18">
-            <el-form>
+            <el-form @submit.native.prevent>
                 <el-form-item style="margin-bottom: 0px;">
                     <el-input style="width: 220px;padding-left: 5px;padding-right: 5px;border-radius: 0px;float: right;"
-                              v-model.trim="selectCityName" :disabled="loading"
+                              v-model.trim="selectCityName" :disabled="loading" @keyup.enter.native="selectCity"
                               size="mini" placeholder="请输入城市名称" maxlength="30" clearable>
                         <el-button slot="append" :loading="loading" @click="selectCity" style="padding-left: 3px;padding-right: 3px;">定位城市</el-button>
                     </el-input>
@@ -59,9 +59,9 @@
         <el-col :span="6">
             <el-tabs type="border-card" @tab-click="searchTabClick">
                 <el-tab-pane label="搜索">
-                    <el-form label-position="top" :model="params" ref="params" size="small">
+                    <el-form label-position="top" :model="params" ref="params" size="small" @submit.native.prevent>
                         <el-form-item label="关键字:" prop="key" style="margin-bottom: 0px;">
-                            <el-input v-model.trim="params.key" autocomplete="off" clearable size="small" maxlength="15" :disabled="aDisabled"></el-input>
+                            <el-input v-model.trim="params.key" autocomplete="off" clearable size="small" maxlength="15" :disabled="aDisabled" @keyup.enter.native="search"></el-input>
                         </el-form-item>
                         <el-form-item style="text-align: right;margin-top: 10px;">
                             <el-button-group>
