@@ -142,4 +142,53 @@
         where longitude between #{loMin} and #{loMax}
         and latitude between #{laMin} and #{laMax}
     </select>
+    <insert id="batchInsert">
+        insert into tb_consumer (`name`,buildingId,floor,`number`,`position`,pic,category,nature,peopleNum,linkman,
+        phone,operator,expenses,expirationDate,bandwidth,serviceType,status,legal,lineNum,lineType,
+        lineOpenDate,lineStatus,groupCode,groupGrade,userId,`type`,longitude,latitude,ctime,
+        expensesName,orderTime,memberRole,memberRoleRealNum,memberExpensesName)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.name},#{item.buildingId},#{item.floor},#{item.number},#{item.position},#{item.pic},#{item.category},#{item.nature},#{item.peopleNum},#{item.linkman},
+            #{item.phone},#{item.operator},#{item.expenses},#{item.expirationDate},#{item.bandwidth},#{item.serviceType},#{item.status},#{item.legal},#{item.lineNum},#{item.lineType},
+            #{item.lineOpenDate},#{item.lineStatus},#{item.groupCode},#{item.groupGrade},#{item.userId},#{item.type},#{item.longitude},#{item.latitude},now(),
+            #{item.expensesName},#{item.orderTime},#{item.memberRole},#{item.memberRoleRealNum},#{item.memberExpensesName})
+        </foreach>
+        ON DUPLICATE KEY UPDATE
+        <trim prefix="" suffixOverrides=",">
+            buildingId = VALUES(buildingId),
+            floor = VALUES(floor),
+            `number` = VALUES(`number`),
+            `position` = VALUES(`position`),
+            pic = VALUES(pic),
+            category = VALUES(category),
+            nature = VALUES(nature),
+            peopleNum = VALUES(peopleNum),
+            linkman = VALUES(linkman),
+            phone = VALUES(phone),
+            operator = VALUES(operator),
+            expenses = VALUES(expenses),
+            expirationDate = VALUES(expirationDate),
+            bandwidth = VALUES(bandwidth),
+            serviceType = VALUES(serviceType),
+            status = VALUES(status),
+            legal = VALUES(legal),
+            lineNum = VALUES(lineNum),
+            lineType = VALUES(lineType),
+            lineOpenDate = VALUES(lineOpenDate),
+            lineStatus = VALUES(lineStatus),
+            groupCode = VALUES(groupCode),
+            groupGrade = VALUES(groupGrade),
+            userId = VALUES(userId),
+            `type` = VALUES(`type`),
+            longitude = VALUES(longitude),
+            latitude = VALUES(latitude),
+            expensesName = VALUES(expensesName),
+            orderTime = VALUES(orderTime),
+            memberRole = VALUES(memberRole),
+            memberRoleRealNum = VALUES(memberRoleRealNum),
+            memberExpensesName = VALUES(memberExpensesName),
+            ctime = now(),
+        </trim>
+    </insert>
 </mapper>

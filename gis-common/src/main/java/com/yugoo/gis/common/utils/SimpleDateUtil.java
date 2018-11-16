@@ -12,9 +12,11 @@ public class SimpleDateUtil {
     private static final String dateFormatString="yyyy-MM-dd HH:mm:ss";
     private static final String dateFormatShortString="yyyy-MM-dd";
     private static final String dateFormatCNString="yyyy年MM月dd日";
+    private static final String dateFormatShortStringSo="yyyyMMdd";
     private static ThreadLocal<DateFormat> threadLocal=new ThreadLocal<>();
     private static ThreadLocal<DateFormat> threadLocalShort=new ThreadLocal<>();
     private static ThreadLocal<DateFormat> threadLocalCN=new ThreadLocal<>();
+    private static ThreadLocal<DateFormat> threadLocalShortSo=new ThreadLocal<>();
 
     public static DateFormat getDateFormat(){
         DateFormat df=threadLocal.get();
@@ -37,6 +39,14 @@ public class SimpleDateUtil {
         if(df==null){
             df=new SimpleDateFormat(dateFormatCNString);
             threadLocalCN.set(df);
+        }
+        return df;
+    }
+    public static DateFormat getShortDateFormatSo(){
+        DateFormat df=threadLocalShortSo.get();
+        if(df==null){
+            df=new SimpleDateFormat(dateFormatShortStringSo);
+            threadLocalShortSo.set(df);
         }
         return df;
     }
@@ -80,6 +90,14 @@ public class SimpleDateUtil {
     public static Date shortParse(String strDate){
         try {
             return getShortDateFormat().parse(strDate);
+        } catch (ParseException e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public static Date shortParseSo(String strDate){
+        try {
+            return getShortDateFormatSo().parse(strDate);
         } catch (ParseException e) {
             throw new RuntimeException(e.getMessage());
         }

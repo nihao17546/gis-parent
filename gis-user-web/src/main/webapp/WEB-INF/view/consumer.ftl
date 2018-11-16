@@ -18,7 +18,15 @@
 <div id="app" v-loading="loading">
     <div style="padding-left: 5px;" v-if="ifFromIndex">
         <el-button type="primary" size="small" @click="showAdd" v-if="auth.indexOf('/consumer/create') != -1">新增</el-button>
-        <el-button type="primary" size="small" v-if="auth.indexOf('/consumer/import') != -1">导入</el-button>
+        <el-upload action="/gis/consumer/import" v-if="auth.indexOf('/consumer/import') != -1" style="float: left;margin-left: 6px;"
+                   :on-preview="handlePreview" :show-file-list="false"
+                   multiple accept=".xls,.xlsx,.XLS,.XLSX"
+                   :limit="1" :on-progress="onProgress" :file-list="fileList"
+                   :on-exceed="handleExceed"
+                   :on-success="handleSuccess"
+                   :on-error="handleError">
+            <el-button size="small" type="primary">导入</el-button>
+        </el-upload>
         <el-button type="primary" size="small" v-if="auth.indexOf('/consumer/export') != -1">导出</el-button>
         <el-input style="width: 260px;border-radius: 0px;" @keyup.enter.native="search" v-on:clear="search" v-if="auth.indexOf('/consumer/list') != -1"
                   v-model.trim="searchName" size="small" placeholder="请输入搜索名称" clearable>
@@ -411,10 +419,53 @@
                 subordinates: [],
                 ifFromIndex: true,
                 searchBuildingId: 0,
-                searchId: 0
+                searchId: 0,
+                fileList: []
             }
         },
         methods: {
+            handleExceed(files, fileList) {
+
+            },
+            handlePreview(file) {
+
+            },
+            onProgress(event, file, fileList) {
+                this.loading = true;
+            },
+            handleError(err, file, fileList) {
+                this.loading = false;
+                console.log(err)
+                this.fileList = []
+                this.$message.error("导入数据失败");
+            },
+            handleSuccess(response, file, fileList) {
+                this.loading = false;
+                this.fileList = []
+                if (response.code == 1) {
+                    this.$notify({
+                        title: '导入失败',
+                        message: response.message,
+                        type: 'warning',
+                        duration: 0
+                    });
+                }
+                else {
+                    this.$notify({
+                        title: '导入成功',
+                        message: response.re,
+                        type: 'success',
+                        duration: 0
+                    });
+                    this.search();
+                }
+            },
+            handleExceed(files, fileList) {
+
+            },
+            handlePreview(file) {
+
+            },
             searchSubordinates: function(selectKey) {
                 if (selectKey != '') {
                     axios.get('${contextPath}/user/searchSubordinates',{

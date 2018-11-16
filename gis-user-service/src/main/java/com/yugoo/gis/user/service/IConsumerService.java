@@ -1,5 +1,6 @@
 package com.yugoo.gis.user.service;
 
+import com.yugoo.gis.pojo.excel.ConsumerImport;
 import com.yugoo.gis.pojo.po.UserPO;
 import com.yugoo.gis.pojo.vo.ConsumerListVO;
 import com.yugoo.gis.pojo.vo.ConsumerVO;
@@ -30,4 +31,5 @@ public interface IConsumerService {
     ConsumerVO getById(Integer id);
     void delete(Integer id);
     List<ConsumerVO> searchFromMap(String name, Double loMin, Double loMax, Double laMin, Double laMax, UserPO currentUser);
+    String importData(List<ConsumerImport> list);
 }

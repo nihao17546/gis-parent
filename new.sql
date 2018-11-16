@@ -72,6 +72,7 @@ CREATE TABLE `tb_consumer` (
   `latitude` double(9,6) NOT NULL DEFAULT '-999.000000' COMMENT '纬度。如果关联了建筑、此时必须等于建筑的纬度，如果是通过地图抓取的、此时等于抓取的纬度，如果是通过excel导入创建的、此时等于-999、表示没有定位',
   `ctime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '操作时间',
   PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_name` (`name`),
   KEY `index_expiration` (`expirationDate`),
   KEY `index_buildingId` (`buildingId`),
   KEY `index_lo_la` (`longitude`,`latitude`),

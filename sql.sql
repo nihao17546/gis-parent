@@ -252,6 +252,9 @@ CHANGE COLUMN `sceneA` `sceneA` VARCHAR(256) NULL COMMENT '用户场景一类' ,
 CHANGE COLUMN `sceneB` `sceneB` VARCHAR(256) NULL COMMENT '用户场景二类' ,
 CHANGE COLUMN `overlayScene` `overlayScene` VARCHAR(256) NULL COMMENT '覆盖场景' ;
 
+ALTER TABLE `gis_new`.`tb_consumer`
+ADD UNIQUE INDEX `unique_name` (`name` ASC);
+
 
 
 

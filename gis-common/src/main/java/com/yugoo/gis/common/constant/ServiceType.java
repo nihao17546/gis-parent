@@ -40,4 +40,13 @@ public enum ServiceType {
         }
         throw new RuntimeException("业务类型未找到: " + value);
     }
+
+    public static ServiceType getByName(String name) {
+        for (ServiceType serviceType : ServiceType.values()) {
+            if (serviceType.getName().equals(name)) {
+                return serviceType;
+            }
+        }
+        throw new RuntimeException("业务类型不存在: " + name);
+    }
 }

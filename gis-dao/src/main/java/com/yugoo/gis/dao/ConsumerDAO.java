@@ -34,4 +34,5 @@ public interface ConsumerDAO {
                                    @Param("buildingIds") List<Integer> buildingIds);
     List<ConsumerPO> selectByCenter(@Param("loMin") Double loMin, @Param("loMax") Double loMax,
                                     @Param("laMin") Double laMin, @Param("laMax") Double laMax);
+    int batchInsert(@Param("list") List<ConsumerPO> list);
 }

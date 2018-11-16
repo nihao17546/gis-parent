@@ -11,6 +11,7 @@ import com.yugoo.gis.dao.BuildingDAO;
 import com.yugoo.gis.dao.CenterDAO;
 import com.yugoo.gis.dao.ConsumerDAO;
 import com.yugoo.gis.dao.UserDAO;
+import com.yugoo.gis.pojo.excel.ConsumerImport;
 import com.yugoo.gis.pojo.po.BuildingPO;
 import com.yugoo.gis.pojo.po.CenterPO;
 import com.yugoo.gis.pojo.po.ConsumerPO;
@@ -26,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -395,6 +397,84 @@ public class ConsumerServiceImpl implements IConsumerService {
         }).collect(Collectors.toList());
         return consumerVOList;
     }
+
+    @Transactional
+    @Override
+    public String importData(List<ConsumerImport> list) {
+        List<ConsumerPO> consumerPOList = new ArrayList<>();
+        for (ConsumerImport consumerImport : list) {
+            consumerImport.check();
+            complete(consumerImport);
+            ConsumerPO consumerPO = new ConsumerPO();
+            BeanUtils.copyProperties(consumerImport, consumerPO);
+            if (isComplete(consumerPO)) {
+                consumerPO.setType(ConsumerType.有效建档.getValue());
+            }
+            else if (isBasic(consumerPO)){
+                consumerPO.setType(ConsumerType.基础建档.getValue());
+            }
+            else {
+                consumerPO.setType(ConsumerType.未建档.getValue());
+            }
+            consumerPOList.add(consumerPO);
+        }
+        int re = consumerDAO.batchInsert(consumerPOList);
+        return "总共导入客户" + consumerPOList.size() + "条数据(新增" + (2 * consumerPOList.size() - re)
+                + " 条,更新" + (re - consumerPOList.size())+ "条)";
+    }
+
+    private void complete(ConsumerImport consumerImport) {
+        BuildingPO buildingPO = buildingDAO.selectByName(consumerImport.getBuildingName());
+        if (buildingPO == null) {
+            throw new RuntimeException(consumerImport.getR() + "建筑[" + consumerImport.getBuildingName() + "]不存在");
+        }
+        consumerImport.setBuildingId(buildingPO.getId());
+        consumerImport.setLongitude(buildingPO.getLongitude());
+        consumerImport.setLatitude(buildingPO.getLatitude());
+        consumerImport.setExpirationDate(getDate(consumerImport.getExpirationDateStr(),
+                consumerImport.getR() + "【业务到期时间】解析错误，格式要求yyyyMMdd或yyyy-MM-dd"));
+        consumerImport.setLineOpenDate(getDate(consumerImport.getLineOpenDateStr(),
+                consumerImport.getR() + "【专线开户时间】解析错误，格式要求yyyyMMdd或yyyy-MM-dd"));
+        consumerImport.setOrderTime(getDate(consumerImport.getOrderTimeStr(),
+                consumerImport.getR() + "【订购时间】解析错误，格式要求yyyyMMdd或yyyy-MM-dd"));
+        if (consumerImport.getServiceTypeStr() != null && !consumerImport.getServiceTypeStr().equals("")) {
+            try {
+                ServiceType serviceType = ServiceType.getByName(consumerImport.getServiceTypeStr());
+                consumerImport.setServiceType(serviceType.getValue());
+            } catch (RuntimeException e) {
+                throw new RuntimeException(consumerImport.getR() + "【业务类型】解析错误，仅支持'专线产品,酒店产品,商务动力'");
+            }
+        }
+        if (consumerImport.getUserNumber() != null && !consumerImport.getUserNumber().equals("")) {
+            UserPO userPO = userDAO.selectByNumber(consumerImport.getUserNumber());
+            if (userPO == null) {
+                throw new RuntimeException(consumerImport.getR() + "【客户经理工号】解析错误，不存在该客户经理");
+            }
+            else if (userPO.getRole() != Role.member.getValue()) {
+                throw new RuntimeException(consumerImport.getR() + "【客户经理工号】解析错误，不是客户经理");
+            }
+            consumerImport.setUserId(userPO.getId());
+        }
+        else {
+            consumerImport.setUserId(0);
+        }
+    }
+
+    private Long getDate(String str, String name) {
+        if (str != null && !str.equals("")) {
+            try {
+                return SimpleDateUtil.shortParseSo(str).getTime();
+            } catch (Exception e) {
+                try {
+                    return SimpleDateUtil.shortParse(str).getTime();
+                } catch (Exception e1) {
+                    throw new RuntimeException(name + "");
+                }
+            }
+        }
+        return 0L;
+    }
+
 
     /**
      * 是否是基础建档

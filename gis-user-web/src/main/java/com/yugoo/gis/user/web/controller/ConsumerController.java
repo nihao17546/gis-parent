@@ -3,12 +3,15 @@ package com.yugoo.gis.user.web.controller;
 import com.yugoo.gis.common.constant.ServiceType;
 import com.yugoo.gis.common.exception.GisRuntimeException;
 import com.yugoo.gis.common.utils.SimpleDateUtil;
+import com.yugoo.gis.pojo.excel.ConsumerImport;
 import com.yugoo.gis.pojo.po.UserPO;
 import com.yugoo.gis.pojo.vo.ConsumerListVO;
 import com.yugoo.gis.pojo.vo.ConsumerVO;
 import com.yugoo.gis.pojo.vo.ListVO;
 import com.yugoo.gis.pojo.vo.StreetTypeVO;
 import com.yugoo.gis.user.service.IConsumerService;
+import com.yugoo.gis.user.web.utils.ExcelUtil;
+import com.yugoo.gis.user.web.utils.ReadDataUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,9 +21,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author nihao 2018/10/9
@@ -218,4 +223,16 @@ public class ConsumerController extends BaseController {
         return ok().json();
     }
 
+    @RequestMapping("/import")
+    public String importData(@RequestParam(value = "file") MultipartFile multipartFile) throws IOException, IllegalAccessException, InstantiationException, ClassNotFoundException {
+        String fileName = multipartFile.getOriginalFilename();
+        InputStream in = multipartFile.getInputStream();
+        List<ConsumerImport> list = new ReadDataUtil<ConsumerImport>().readData(in, fileName, new ConsumerImport());
+        try {
+            String re = consumerService.importData(list);
+            return ok().pull("re", re).json();
+        } catch (RuntimeException e) {
+            return fail(e.getMessage()).json();
+        }
+    }
 }
