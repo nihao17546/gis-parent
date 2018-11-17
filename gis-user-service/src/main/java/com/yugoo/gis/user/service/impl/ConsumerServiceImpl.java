@@ -403,7 +403,6 @@ public class ConsumerServiceImpl implements IConsumerService {
     public String importData(List<ConsumerImport> list) {
         List<ConsumerPO> consumerPOList = new ArrayList<>();
         for (ConsumerImport consumerImport : list) {
-            consumerImport.check();
             complete(consumerImport);
             ConsumerPO consumerPO = new ConsumerPO();
             BeanUtils.copyProperties(consumerImport, consumerPO);
@@ -424,13 +423,21 @@ public class ConsumerServiceImpl implements IConsumerService {
     }
 
     private void complete(ConsumerImport consumerImport) {
-        BuildingPO buildingPO = buildingDAO.selectByName(consumerImport.getBuildingName());
-        if (buildingPO == null) {
-            throw new RuntimeException(consumerImport.getR() + "建筑[" + consumerImport.getBuildingName() + "]不存在");
+        if (consumerImport.getBuildingName() != null && !consumerImport.getBuildingName().equals("")) {
+            BuildingPO buildingPO = buildingDAO.selectByName(consumerImport.getBuildingName());
+            if (buildingPO == null) {
+                throw new GisRuntimeException(consumerImport.getR() + "【建筑】[" + consumerImport.getBuildingName() + "]不存在");
+            }
+            consumerImport.setBuildingId(buildingPO.getId());
+            consumerImport.setLongitude(buildingPO.getLongitude());
+            consumerImport.setLatitude(buildingPO.getLatitude());
         }
-        consumerImport.setBuildingId(buildingPO.getId());
-        consumerImport.setLongitude(buildingPO.getLongitude());
-        consumerImport.setLatitude(buildingPO.getLatitude());
+        else {
+            throw new GisRuntimeException(consumerImport.getR() + "【建筑】未填写");
+        }
+        if (consumerImport.getName() == null || consumerImport.getName().equals("")) {
+            throw new GisRuntimeException(consumerImport.getR() + "【集团名称】未填写");
+        }
         consumerImport.setExpirationDate(getDate(consumerImport.getExpirationDateStr(),
                 consumerImport.getR() + "【业务到期时间】解析错误，格式要求yyyyMMdd或yyyy-MM-dd"));
         consumerImport.setLineOpenDate(getDate(consumerImport.getLineOpenDateStr(),
@@ -442,16 +449,16 @@ public class ConsumerServiceImpl implements IConsumerService {
                 ServiceType serviceType = ServiceType.getByName(consumerImport.getServiceTypeStr());
                 consumerImport.setServiceType(serviceType.getValue());
             } catch (RuntimeException e) {
-                throw new RuntimeException(consumerImport.getR() + "【业务类型】解析错误，仅支持'专线产品,酒店产品,商务动力'");
+                throw new GisRuntimeException(consumerImport.getR() + "【业务类型】解析错误，仅支持'专线产品,酒店产品,商务动力'");
             }
         }
         if (consumerImport.getUserNumber() != null && !consumerImport.getUserNumber().equals("")) {
             UserPO userPO = userDAO.selectByNumber(consumerImport.getUserNumber());
             if (userPO == null) {
-                throw new RuntimeException(consumerImport.getR() + "【客户经理工号】解析错误，不存在该客户经理");
+                throw new GisRuntimeException(consumerImport.getR() + "【客户经理工号】解析错误，不存在该客户经理");
             }
             else if (userPO.getRole() != Role.member.getValue()) {
-                throw new RuntimeException(consumerImport.getR() + "【客户经理工号】解析错误，不是客户经理");
+                throw new GisRuntimeException(consumerImport.getR() + "【客户经理工号】解析错误，不是客户经理");
             }
             consumerImport.setUserId(userPO.getId());
         }
@@ -468,7 +475,7 @@ public class ConsumerServiceImpl implements IConsumerService {
                 try {
                     return SimpleDateUtil.shortParse(str).getTime();
                 } catch (Exception e1) {
-                    throw new RuntimeException(name + "");
+                    throw new GisRuntimeException(name + "");
                 }
             }
         }
@@ -506,9 +513,9 @@ public class ConsumerServiceImpl implements IConsumerService {
         if (consumerPO.getPeopleNum() == null) {
             return false;
         }
-        if (consumerPO.getPic() == null) {
-            return false;
-        }
+//        if (consumerPO.getPic() == null) {
+//            return false;
+//        }
         if (consumerPO.getStatus() == null) {
             return false;
         }

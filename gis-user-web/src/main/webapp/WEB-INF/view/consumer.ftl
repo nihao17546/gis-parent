@@ -17,7 +17,7 @@
 <body>
 <div id="app" v-loading="loading">
     <div style="padding-left: 5px;" v-if="ifFromIndex">
-        <el-button type="primary" size="small" @click="showAdd" v-if="auth.indexOf('/consumer/create') != -1">新增</el-button>
+        <el-button type="primary" size="small" @click="showAdd" v-if="auth.indexOf('/consumer/create') != -1" style="float: left">新增</el-button>
         <el-upload action="/gis/consumer/import" v-if="auth.indexOf('/consumer/import') != -1" style="float: left;margin-left: 6px;"
                    :on-preview="handlePreview" :show-file-list="false"
                    multiple accept=".xls,.xlsx,.XLS,.XLSX"
@@ -27,7 +27,7 @@
                    :on-error="handleError">
             <el-button size="small" type="primary">导入</el-button>
         </el-upload>
-        <el-button type="primary" size="small" v-if="auth.indexOf('/consumer/export') != -1">导出</el-button>
+        <el-button type="primary" size="small" v-if="auth.indexOf('/consumer/export') != -1" style="float: left;margin-left: 6px;">导出</el-button>
         <el-input style="width: 260px;border-radius: 0px;" @keyup.enter.native="search" v-on:clear="search" v-if="auth.indexOf('/consumer/list') != -1"
                   v-model.trim="searchName" size="small" placeholder="请输入搜索名称" clearable>
             <el-button slot="append" :loading="loading" icon="el-icon-search" @click="search">搜索</el-button>
@@ -261,6 +261,18 @@
             <el-form-item label="带宽:" prop="bandwidth" :label-width="formLabelWidth">
                 <el-input v-model.trim="addForm.bandwidth" autocomplete="off" size="small" maxlength="50"></el-input>
             </el-form-item>
+            <el-form-item label="公司状态:" prop="status" :label-width="formLabelWidth">
+                <el-input v-model.trim="addForm.status" autocomplete="off" size="small" maxlength="50"></el-input>
+            </el-form-item>
+            <el-form-item label="法人:" prop="legal" :label-width="formLabelWidth">
+                <el-input v-model.trim="addForm.legal" autocomplete="off" size="small" maxlength="50"></el-input>
+            </el-form-item>
+            <el-form-item label="集团代码:" prop="groupCode" :label-width="formLabelWidth">
+                <el-input v-model.trim="addForm.groupCode" autocomplete="off" size="small" maxlength="50"></el-input>
+            </el-form-item>
+            <el-form-item label="集团等级:" prop="groupGrade" :label-width="formLabelWidth">
+                <el-input v-model.trim="addForm.groupGrade" autocomplete="off" size="small" maxlength="50"></el-input>
+            </el-form-item>
             <el-form-item label="业务类型:" prop="serviceType" :label-width="formLabelWidth">
                 <el-select v-model="addForm.serviceType" placeholder="请选择" size="small"
                            style="width: 100%" @change="serviceTypeChange">
@@ -272,14 +284,6 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="公司状态:" prop="status" :label-width="formLabelWidth">
-                <el-input v-model.trim="addForm.status" autocomplete="off" size="small" maxlength="50"></el-input>
-            </el-form-item>
-            <el-form-item label="法人:" prop="legal" :label-width="formLabelWidth">
-                <el-input v-model.trim="addForm.legal" autocomplete="off" size="small" maxlength="50"></el-input>
-            </el-form-item>
-
-
             <el-form-item label="订购资费名称:" prop="expensesName" :label-width="formLabelWidth" v-if="addForm.serviceType == 2 || addForm.serviceType == 3">
                 <el-input v-model.trim="addForm.expensesName" autocomplete="off" size="small" maxlength="50"></el-input>
             </el-form-item>
@@ -300,7 +304,6 @@
             <el-form-item label="成员侧资费名称:" prop="memberExpensesName" :label-width="formLabelWidth" v-if="addForm.serviceType == 2 || addForm.serviceType == 3">
                 <el-input v-model.trim="addForm.memberExpensesName" autocomplete="off" size="small" maxlength="50"></el-input>
             </el-form-item>
-
             <el-form-item label="专线条数:" prop="lineNum" :label-width="formLabelWidth" v-if="addForm.serviceType == 1">
                 <el-input v-model.trim="addForm.lineNum" autocomplete="off" size="small" maxlength="50"></el-input>
             </el-form-item>
@@ -312,17 +315,11 @@
             </el-form-item>
             <el-form-item label="专线开户时间:" prop="lineOpenDateStr" :label-width="formLabelWidth" v-if="addForm.serviceType == 1">
                 <el-date-picker style="width: 100%"
-                        v-model="addForm.lineOpenDateStr"
-                        type="date"
-                        value-format="yyyy-MM-dd"
-                        placeholder="选择日期">
+                                v-model="addForm.lineOpenDateStr"
+                                type="date"
+                                value-format="yyyy-MM-dd"
+                                placeholder="选择日期">
                 </el-date-picker>
-            </el-form-item>
-            <el-form-item label="集团代码:" prop="groupCode" :label-width="formLabelWidth">
-                <el-input v-model.trim="addForm.groupCode" autocomplete="off" size="small" maxlength="50"></el-input>
-            </el-form-item>
-            <el-form-item label="集团等级:" prop="groupGrade" :label-width="formLabelWidth">
-                <el-input v-model.trim="addForm.groupGrade" autocomplete="off" size="small" maxlength="50"></el-input>
             </el-form-item>
             <el-form-item label="绑定客户经理:" prop="bindUserId" :label-width="formLabelWidth" v-if="auth.indexOf('/user/searchSubordinates') != -1">
                 <el-select

@@ -83,21 +83,64 @@ public class ReadDataUtil<T> {
                             if (cell != null) {
                                 Object obj = ExcelUtil.getValue(cell);
                                 if (obj != null) {
-                                    String value = obj.toString();
-                                    Object val = null;
-                                    if (field.getType().equals(Double.class)) {
-                                        val = Double.parseDouble(value);
+                                    Object realValue = null;
+                                    if (field.getType().equals(String.class)) {
+                                        if (obj instanceof Double) {
+                                            double value = (Double) obj;
+                                            if ((Math.round(value) - value) == 0) {
+                                                realValue = String.valueOf((long) value);
+                                            }
+                                            else {
+                                                realValue = String.valueOf(value);
+                                            }
+                                        }
+                                        else {
+                                            realValue = obj.toString().trim();
+                                        }
                                     }
                                     else if (field.getType().equals(Integer.class)) {
-                                        val = ((Double) Double.parseDouble(value)).intValue();
+                                        if (obj instanceof Double) {
+                                            Double value = (Double) obj;
+                                            realValue = value.intValue();
+                                        }
+                                        else {
+                                            String value = obj.toString().trim();
+                                            realValue = Integer.parseInt(value);
+                                        }
+                                    }
+                                    else if (field.getType().equals(Double.class)) {
+                                        if (obj instanceof Double) {
+                                            realValue = obj;
+                                        }
+                                        else {
+                                            String value = obj.toString().trim();
+                                            realValue = Double.parseDouble(value);
+                                        }
+                                    }
+                                    else if (field.getType().equals(Long.class)) {
+                                        if (obj instanceof Double) {
+                                            Double value = (Double) obj;
+                                            realValue = value.longValue();
+                                        }
+                                        else {
+                                            String value = obj.toString().trim();
+                                            realValue = Long.parseLong(value);
+                                        }
                                     }
                                     else if (field.getType().equals(BigDecimal.class)) {
-                                        val = new BigDecimal(value);
+                                        if (obj instanceof Double) {
+                                            Double value = (Double) obj;
+                                            realValue = new BigDecimal(value);
+                                        }
+                                        else {
+                                            String value = obj.toString().trim();
+                                            realValue = new BigDecimal(value);
+                                        }
                                     }
                                     else {
-                                        val = value.trim();
+                                        throw new Exception("未捕获的类型" + t.getClass().getName() + " --> " + field.getType().getName());
                                     }
-                                    field.set(object, val);
+                                    field.set(object, realValue);
                                 }
                             }
                         } catch (Exception e) {

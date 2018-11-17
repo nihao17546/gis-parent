@@ -12,14 +12,17 @@ public class ConsumerImport {
     @ExcelImport("集团名称")
     private String name;
 
+    @ExcelImport("地址")
+    private String position;
+
+    @ExcelImport("建筑")
+    private String buildingName;
+
     @ExcelImport("楼层")
     private String floor;
 
     @ExcelImport("户号")
     private String number;
-
-    @ExcelImport("地址")
-    private String position;
 
     @ExcelImport("行业类别")
     private String category;
@@ -93,9 +96,6 @@ public class ConsumerImport {
     @ExcelImport("客户经理工号")
     private String userNumber;
 
-    @ExcelImport("建筑")
-    private String buildingName;
-
 
     private Integer buildingId;
     private Long expirationDate;
@@ -108,15 +108,6 @@ public class ConsumerImport {
     private Double latitude;
 
     private Integer row;
-
-    public void check() {
-        if (name == null || "".equals(name)) {
-            throw new RuntimeException(getR() + "【集团名称】未填写");
-        }
-        if (buildingName == null || "".equals(buildingName)) {
-            throw new RuntimeException(getR() + "【建筑】未填写");
-        }
-    }
 
     public String getR() {
         return "第" + row + "行";

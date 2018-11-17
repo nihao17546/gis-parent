@@ -227,11 +227,11 @@ public class ConsumerController extends BaseController {
     public String importData(@RequestParam(value = "file") MultipartFile multipartFile) throws IOException, IllegalAccessException, InstantiationException, ClassNotFoundException {
         String fileName = multipartFile.getOriginalFilename();
         InputStream in = multipartFile.getInputStream();
-        List<ConsumerImport> list = new ReadDataUtil<ConsumerImport>().readData(in, fileName, new ConsumerImport());
         try {
+            List<ConsumerImport> list = new ReadDataUtil<ConsumerImport>().readData(in, fileName, new ConsumerImport());
             String re = consumerService.importData(list);
             return ok().pull("re", re).json();
-        } catch (RuntimeException e) {
+        } catch (GisRuntimeException e) {
             return fail(e.getMessage()).json();
         }
     }
