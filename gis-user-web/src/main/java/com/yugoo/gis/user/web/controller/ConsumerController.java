@@ -235,6 +235,9 @@ public class ConsumerController extends BaseController {
         InputStream in = multipartFile.getInputStream();
         try {
             List<ConsumerImport> list = new ReadDataUtil<ConsumerImport>().readData(in, fileName, new ConsumerImport());
+            if (list.isEmpty()) {
+                return fail("没有数据").json();
+            }
             String re = consumerService.importData(list);
             return ok().pull("re", re).json();
         } catch (GisRuntimeException e) {

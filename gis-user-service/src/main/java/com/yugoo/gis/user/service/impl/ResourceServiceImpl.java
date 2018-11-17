@@ -1,6 +1,5 @@
 package com.yugoo.gis.user.service.impl;
 
-import com.yugoo.gis.common.constant.ResourceImportConstant;
 import com.yugoo.gis.common.exception.GisRuntimeException;
 import com.yugoo.gis.dao.BuildingDAO;
 import com.yugoo.gis.dao.ResourceDAO;
@@ -22,8 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -183,133 +182,105 @@ public class ResourceServiceImpl implements IResourceService {
         resourceDAO.delete(id);
     }
 
-    @Transactional
-    @Override
-    public String importData(List<Map<String, String>> list) {
-        int street = 0;
-        int building = 0;
-        List<ResourceImport> resourceImportList = new ArrayList<>();
-        for (Map<String,String> map : list) {
-            ResourceImport resourceImport = new ResourceImport();
-            resourceImport.setRow(map.get("row"));
-            for (String name : map.keySet()) {
-                String value = map.get(name);
-                if (value != null && !value.equals("") && !value.equalsIgnoreCase("null")) {
-                    ResourceImportConstant resourceImportConstant = ResourceImportConstant.getByName(name.replaceAll("/", "_"));
-                    if (resourceImportConstant != null) {
-                        Field field = null;
-                        try {
-                            field = resourceImport.getClass().getDeclaredField(resourceImportConstant.getField());
-                        } catch (NoSuchFieldException e) {
-                            logger.error("导入网络资源，解析错误， 没有属性: {}, 第{}行",
-                                    resourceImportConstant.getField(), resourceImport.getRow(), e);
-                            throw new GisRuntimeException("解析错误,第" + resourceImport.getRow() + "行");
-                        }
-                        field.setAccessible(true);
-                        try {
-                            Object val = null;
-                            if (resourceImportConstant.getClazz().equals(Double.class)) {
-                                val = Double.parseDouble(value);
-                            }
-                            else if (resourceImportConstant.getClazz().equals(Integer.class)) {
-                                val = ((Double) Double.parseDouble(value)).intValue();
-                            }
-                            else {
-                                val = value;
-                            }
-                            field.set(resourceImport, val);
-                        } catch (IllegalAccessException e) {
-                            logger.error("导入网络资源，设置错误， 属性: {}，值：{}, 第{}行",
-                                    resourceImportConstant.getField(), value, resourceImport.getRow(), e);
-                            throw new GisRuntimeException("解析错误,第" + resourceImport.getRow() + "行");
-                        }
-                    }
-                }
-            }
-            resourceImportList.add(resourceImport);
+    private Map<String,Boolean> complete(ResourceImport resourceImport) {
+        boolean street = false;
+        boolean building = false;
+        StringBuilder buildingNameSb = new StringBuilder();
+        if (resourceImport.getStreetPOName() != null) {
+            buildingNameSb.append(resourceImport.getStreetPOName());
         }
-        for (ResourceImport resourceImport : resourceImportList) {
-            StringBuilder buildingNameSb = new StringBuilder();
-            if (resourceImport.getStreetPOName() != null) {
-                buildingNameSb.append(resourceImport.getStreetPOName());
-            }
-            if (resourceImport.getBuildingNameB() != null) {
-                buildingNameSb.append(resourceImport.getBuildingNameB());
-            }
-            if (resourceImport.getBuildingNameC() != null) {
-                buildingNameSb.append(resourceImport.getBuildingNameC());
-            }
-            String buildingName = buildingNameSb.toString();
-            if (buildingName != null || !buildingName.equals("")) {
-                resourceImport.setBuildingPOName(buildingName);
-            }
-
-            if (resourceImport.getBuildingPOName() == null) {
-                throw new GisRuntimeException("操作失败，第" + resourceImport.getRow() + "行未能确定所属建筑");
+        if (resourceImport.getBuildingNameB() != null) {
+            buildingNameSb.append(resourceImport.getBuildingNameB());
+        }
+        if (resourceImport.getBuildingNameC() != null) {
+            buildingNameSb.append(resourceImport.getBuildingNameC());
+        }
+        String buildingName = buildingNameSb.toString();
+        if (buildingName != null || !buildingName.equals("")) {
+            resourceImport.setBuildingPOName(buildingName);
+        }
+        if (resourceImport.getBuildingPOName() == null) {
+            throw new GisRuntimeException(resourceImport.getR() + "未能确定所属建筑（建筑由【小区/自然村/弄】【幢/号/楼】【单元号】三列确定）");
+        }
+        BuildingPO buildingPO = buildingDAO.selectByName(buildingName);
+        if (buildingPO != null) {
+            resourceImport.setBuildingId(buildingPO.getId());
+            resourceImport.setLongitude(buildingPO.getLongitude());
+            resourceImport.setLatitude(buildingPO.getLatitude());
+        }
+        else if (resourceImport.getStreetPOName() == null || resourceImport.getStreetPOName().equals("")){
+            throw new GisRuntimeException(resourceImport.getR() + "未能确定所属物业街道（物业街道由【小区/自然村/弄】列确定）");
+        }
+        else {
+            StreetPO streetPO = streetDAO.selectByName(resourceImport.getStreetPOName());
+            Integer streetId = null;
+            if (streetPO == null) {
+                // 创建物业街道
+                streetId = streetService.create(resourceImport.getStreetPOName(), "", 0,
+                                "", "", null, null, "[]");
+                street = true;
             }
             else {
-                BuildingPO buildingPO = buildingDAO.selectByName(buildingName);
-                if (buildingPO != null) {
-                    resourceImport.setBuildingId(buildingPO.getId());
-                    resourceImport.setLongitude(buildingPO.getLongitude());
-                    resourceImport.setLatitude(buildingPO.getLatitude());
-                }
-                else if (resourceImport.getStreetPOName() == null || resourceImport.getStreetPOName().equals("")){
-                    throw new GisRuntimeException("操作失败，第" + resourceImport.getRow() + "行未能确定所属物业街道");
-                }
-                else {
-                    StreetPO streetPO = streetDAO.selectByName(resourceImport.getStreetPOName());
-                    Integer streetId = null;
-                    if (streetPO == null) {
-                        // 创建物业街道
-                        streetId = streetService.create(resourceImport.getStreetPOName(), "", 0,
-                                "", "", null, null, "[]");
-                        street ++;
-                    }
-                    else {
-                        streetId = streetPO.getId();
-                    }
-                    // 创建建筑
-                    if (resourceImport.getLongitude() == null || resourceImport.getLatitude() == null) {
-                        throw new GisRuntimeException("操作失败，第" + resourceImport.getRow() + "行未能确定经纬度坐标");
-                    }
-                    Integer buildingId = buildingService.create(buildingName, streetId,
+                streetId = streetPO.getId();
+            }
+            // 创建建筑
+            if (resourceImport.getLongitude() == null || resourceImport.getLatitude() == null) {
+                throw new GisRuntimeException(resourceImport.getR() + "未能确定经纬度坐标（经纬度坐标由【中心位置经度】【中心位置纬度】两列确定）");
+            }
+            Integer buildingId = buildingService.create(buildingName, streetId,
                             resourceImport.getLongitude(), resourceImport.getLatitude());
-                    building ++;
-                    resourceImport.setBuildingId(buildingId);
-                }
-            }
-
-            if (resourceImport.getAllPortCount() == null) {
-                throw new GisRuntimeException("操作失败，第" + resourceImport.getRow() + "行未能确定端口总数");
-            }
-            if (resourceImport.getIdelPortCount() == null) {
-                throw new GisRuntimeException("操作失败，第" + resourceImport.getRow() + "行未能确定空余端口数");
-            }
-            if (resourceImport.getAllPortCount() < resourceImport.getIdelPortCount()) {
-                throw new GisRuntimeException("操作失败，第" + resourceImport.getRow() + "行空余端口数大于总端口数");
-            }
-            if(resourceImport.getFloor() == null) {
-                throw new GisRuntimeException("操作失败，第" + resourceImport.getRow() + "行未能确定楼层");
-            }
-            if(resourceImport.getNumber() == null) {
-                throw new GisRuntimeException("操作失败，第" + resourceImport.getRow() + "行未能确定户号");
-            }
+            building = true;
+            resourceImport.setBuildingId(buildingId);
         }
-
-        List<ResourcePO> resourcePOList = convert(resourceImportList);
-        int re = resourceDAO.batchInsert(resourcePOList);
-        return "总共导入网络资源" + resourcePOList.size() + "条数据(新增" + (2 * resourcePOList.size() - re)
-                + " 条,更新" + (re - resourcePOList.size())
-                + "条),相关联物业街道新创建" + street + "条数据,相关联建筑新创建" + building + "条数据";
+        if (resourceImport.getAllPortCount() == null) {
+            throw new GisRuntimeException(resourceImport.getR() + "未能确定端口总数");
+        }
+        if (resourceImport.getIdelPortCount() == null) {
+            throw new GisRuntimeException( resourceImport.getR() + "未能确定空余端口数");
+        }
+        if (resourceImport.getAllPortCount() < resourceImport.getIdelPortCount()) {
+            throw new GisRuntimeException(resourceImport.getR() + "空余端口数不能大于总端口数");
+        }
+        if(resourceImport.getFloor() == null) {
+            throw new GisRuntimeException(resourceImport.getR() + "未能确定楼层");
+        }
+        if(resourceImport.getNumber() == null) {
+            throw new GisRuntimeException(resourceImport.getR() + "未能确定户号");
+        }
+        Map<String,Boolean> map = new HashMap<>();
+        map.put("street", street);
+        map.put("building", building);
+        return map;
     }
 
-    private List<ResourcePO> convert(List<ResourceImport> resourceImportList) {
-        List<ResourcePO> list = resourceImportList.stream().map(resourceImport -> {
+    @Transactional
+    @Override
+    public String importData(List<ResourceImport> list) {
+        int street = 0;
+        int building = 0;
+        List<ResourcePO> resourcePOList = new ArrayList<>();
+        for (ResourceImport resourceImport : list) {
+            Map<String,Boolean> map = complete(resourceImport);
+            if (map.get("street")) {
+                street ++;
+            }
+            if (map.get("building")) {
+                building ++;
+            }
             ResourcePO resourcePO = new ResourcePO();
             BeanUtils.copyProperties(resourceImport, resourcePO);
-            return resourcePO;
-        }).collect(Collectors.toList());
-        return list;
+            resourcePOList.add(resourcePO);
+        }
+        int re = resourceDAO.batchInsert(resourcePOList);
+        String ex = "";
+        if (street > 0) {
+            ex = ex + ",相关联物业街道新创建" + street + "条数据";
+        }
+        if (building > 0) {
+            ex = ex + ",相关联建筑新创建" + building + "条数据";
+        }
+        return "总共导入网络资源" + resourcePOList.size() + "条数据(新增" + (2 * resourcePOList.size() - re)
+                + "条,更新" + (re - resourcePOList.size()) + "条)" + ex;
     }
+
 }

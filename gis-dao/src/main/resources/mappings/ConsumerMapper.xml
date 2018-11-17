@@ -179,7 +179,6 @@
             lineStatus = VALUES(lineStatus),
             groupCode = VALUES(groupCode),
             groupGrade = VALUES(groupGrade),
-            userId = VALUES(userId),
             `type` = VALUES(`type`),
             longitude = VALUES(longitude),
             latitude = VALUES(latitude),

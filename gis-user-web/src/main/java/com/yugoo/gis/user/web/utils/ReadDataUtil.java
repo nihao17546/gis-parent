@@ -140,6 +140,9 @@ public class ReadDataUtil<T> {
                                     else {
                                         throw new Exception("未捕获的类型" + t.getClass().getName() + " --> " + field.getType().getName());
                                     }
+                                    if (realValue instanceof String && ((String)realValue).equalsIgnoreCase("null")) {
+                                        continue;
+                                    }
                                     field.set(object, realValue);
                                 }
                             }

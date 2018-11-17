@@ -1,10 +1,10 @@
 package com.yugoo.gis.user.service;
 
+import com.yugoo.gis.pojo.excel.ResourceImport;
 import com.yugoo.gis.pojo.vo.ListVO;
 import com.yugoo.gis.pojo.vo.ResourceVO;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author nihao 2018/10/23
@@ -22,5 +22,5 @@ public interface IResourceService {
                 String zoneName);
     ListVO<ResourceVO> list(Integer curPage, Integer pageSize, Integer buildingId);
     void delete(Integer id);
-    String importData(List<Map<String,String>> list);
+    String importData(List<ResourceImport> list);
 }

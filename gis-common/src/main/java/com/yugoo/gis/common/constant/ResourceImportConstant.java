@@ -3,6 +3,7 @@ package com.yugoo.gis.common.constant;
 /**
  * @author nihao 2018/11/14
  */
+@Deprecated
 public enum ResourceImportConstant {
     地市名称("cityName", String.class),
     区县("district", String.class),

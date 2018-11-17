@@ -3,12 +3,14 @@ package com.yugoo.gis.user.web.controller;
 import com.yugoo.gis.common.exception.GisRuntimeException;
 import com.yugoo.gis.dao.BuildingDAO;
 import com.yugoo.gis.dao.ResourceDAO;
+import com.yugoo.gis.pojo.excel.ResourceImport;
 import com.yugoo.gis.pojo.po.BuildingPO;
 import com.yugoo.gis.pojo.po.ResourcePO;
 import com.yugoo.gis.pojo.vo.ListVO;
 import com.yugoo.gis.pojo.vo.ResourceVO;
 import com.yugoo.gis.user.service.IResourceService;
 import com.yugoo.gis.user.web.utils.ExcelUtil;
+import com.yugoo.gis.user.web.utils.ReadDataUtil;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -128,14 +130,14 @@ public class ResourceController extends BaseController {
     }
 
     @RequestMapping("/import")
-    public String importData(@RequestParam(value = "file") MultipartFile multipartFile) throws IOException {
+    public String importData(@RequestParam(value = "file") MultipartFile multipartFile) throws IOException, IllegalAccessException, InstantiationException, ClassNotFoundException {
         String fileName = multipartFile.getOriginalFilename();
         InputStream in = multipartFile.getInputStream();
-        List<Map<String,String>> list = ExcelUtil.readResourceData(in, fileName);
-        if (list.isEmpty()) {
-            return fail("没有数据").json();
-        }
         try {
+            List<ResourceImport> list = new ReadDataUtil<ResourceImport>().readData(in, fileName, new ResourceImport());
+            if (list.isEmpty()) {
+                return fail("没有数据").json();
+            }
             String re = resourceService.importData(list);
             return ok().pull("re", re).json();
         } catch (GisRuntimeException e) {
