@@ -151,13 +151,49 @@ public class ExcelUtil {
         }
     }
 
-    private static List<NeedList> resourceTitles = new ArrayList<>();
-    private static List<NeedList> statisticTitles = new ArrayList<>();
-    private static List<NeedList> statisticConsumerTitles = new ArrayList<>();
-    private static List<NeedList> userTitles = new ArrayList<>();
-    private static List<NeedList> consumerTitles = new ArrayList<>();
+    public static final List<NeedList> consumerTitles = new ArrayList<>();
+    public static final List<NeedList> resourceTitles = new ArrayList<>();
+    public static final List<NeedList> statisticTitles = new ArrayList<>();
+    public static final List<NeedList> statisticConsumerTitles = new ArrayList<>();
+    public static final List<NeedList> userTitles = new ArrayList<>();
 
     static {
+        /**
+         * 客户信息导出
+         */
+        int consumerTitlesInt = 0;
+        consumerTitles.add(new NeedList(100, "名称", consumerTitlesInt++, "@name"));
+        consumerTitles.add(new NeedList(100, "建筑", consumerTitlesInt++, "buildingName"));
+        consumerTitles.add(new NeedList(100, "楼层", consumerTitlesInt++, "@floor"));
+        consumerTitles.add(new NeedList(100, "门牌号", consumerTitlesInt++, "@number"));
+        consumerTitles.add(new NeedList(100, "地址", consumerTitlesInt++, "@position"));
+        consumerTitles.add(new NeedList(100, "行业类别", consumerTitlesInt++, "@category"));
+        consumerTitles.add(new NeedList(100, "公司性质", consumerTitlesInt++, "@nature"));
+        consumerTitles.add(new NeedList(100, "公司人数", consumerTitlesInt++, "@peopleNum"));
+        consumerTitles.add(new NeedList(100, "联系人", consumerTitlesInt++, "@linkman"));
+        consumerTitles.add(new NeedList(100, "联系电话", consumerTitlesInt++, "@phone"));
+        consumerTitles.add(new NeedList(100, "现有业务运营商", consumerTitlesInt++, "@operator"));
+        consumerTitles.add(new NeedList(100, "现有业务资费", consumerTitlesInt++, "@expenses"));
+        consumerTitles.add(new NeedList(100, "业务到期时间", consumerTitlesInt++, "expirationDateStr"));
+        consumerTitles.add(new NeedList(100, "带宽", consumerTitlesInt++, "@bandwidth"));
+        consumerTitles.add(new NeedList(100, "公司状态", consumerTitlesInt++, "@status"));
+        consumerTitles.add(new NeedList(100, "法人", consumerTitlesInt++, "@legal"));
+        consumerTitles.add(new NeedList(100, "集团代码", consumerTitlesInt++, "@groupCode"));
+        consumerTitles.add(new NeedList(100, "集团等级", consumerTitlesInt++, "@groupGrade"));
+        consumerTitles.add(new NeedList(100, "业务类型", consumerTitlesInt++, "serviceTypeName"));
+        consumerTitles.add(new NeedList(100, "专线条数", consumerTitlesInt++, "@lineNum"));
+        consumerTitles.add(new NeedList(100, "专线类型", consumerTitlesInt++, "@lineType"));
+        consumerTitles.add(new NeedList(100, "专线开户时间", consumerTitlesInt++, "lineOpenDateStr"));
+        consumerTitles.add(new NeedList(100, "专线状态", consumerTitlesInt++, "@lineStatus"));
+        consumerTitles.add(new NeedList(100, "订购资费名称", consumerTitlesInt++, "@expensesName"));
+        consumerTitles.add(new NeedList(100, "订购时间", consumerTitlesInt++, "orderTimeStr"));
+        consumerTitles.add(new NeedList(100, "成员角色", consumerTitlesInt++, "@memberRole"));
+        consumerTitles.add(new NeedList(100, "成员真实号码", consumerTitlesInt++, "@memberRoleRealNum"));
+        consumerTitles.add(new NeedList(100, "成员侧资费名称", consumerTitlesInt++, "@memberExpensesName"));
+        consumerTitles.add(new NeedList(100, "建档类型", consumerTitlesInt++, "typeName"));
+        consumerTitles.add(new NeedList(100, "客户经理", consumerTitlesInt++, "userName"));
+        consumerTitles.add(new NeedList(100, "客户经理工号", consumerTitlesInt++, "userNumber"));
+
         /**
          * 网络资源导出
          */
@@ -284,61 +320,15 @@ public class ExcelUtil {
         return preExport;
     }
 
-    public static Workbook exportStatisticCenter(List<StatisticCenterVO> list) throws NoSuchFieldException, IllegalAccessException {
-        PreExport preExport = get(statisticTitles);
+    public static Workbook prepareExport(List list, List<NeedList> needListList) throws NoSuchFieldException, IllegalAccessException {
+        PreExport preExport = get(needListList);
         int r = 1;
         if (list != null && !list.isEmpty()) {
             for(int i=0;i<list.size();i++){
-                StatisticCenterVO statisticCenterVO = list.get(i);
+                Object object = list.get(i);
                 Row row = preExport.getSheet().createRow(r++);
-                for (NeedList needList : statisticTitles) {
-                    createCell(row, preExport.getStyleContent(), needList, statisticCenterVO);
-                }
-            }
-        }
-        return preExport.getWb();
-    }
-
-    public static Workbook exportResource(ListVO<ResourceVO> resourceVOListVO) throws NoSuchFieldException, IllegalAccessException {
-        PreExport preExport = get(resourceTitles);
-        int r = 1;
-        if (resourceVOListVO != null) {
-            for(int i=0;i<resourceVOListVO.getTotalCount();i++){
-                ResourceVO resourceVO = resourceVOListVO.getList().get(i);
-                Row row = preExport.getSheet().createRow(r++);
-                for (NeedList needList : resourceTitles) {
-                    createCell(row, preExport.getStyleContent(), needList, resourceVO);
-                }
-            }
-        }
-
-        return preExport.getWb();
-    }
-
-    public static Workbook exportStatisticConsumer(ListVO<ConsumerListVO> listVO) throws NoSuchFieldException, IllegalAccessException {
-        PreExport preExport = get(statisticConsumerTitles);
-        int r = 1;
-        if (listVO != null) {
-            for(int i=0;i<listVO.getTotalCount();i++){
-                ConsumerListVO consumerListVO = listVO.getList().get(i);
-                Row row = preExport.getSheet().createRow(r++);
-                for (NeedList needList : statisticConsumerTitles) {
-                    createCell(row, preExport.getStyleContent(), needList, consumerListVO);
-                }
-            }
-        }
-        return preExport.getWb();
-    }
-
-    public static Workbook exportStatisticUser(List<StatisticUserVO> list) throws NoSuchFieldException, IllegalAccessException {
-        PreExport preExport = get(userTitles);
-        int r = 1;
-        if (list != null && !list.isEmpty()) {
-            for(int i=0;i<list.size();i++){
-                StatisticUserVO statisticUserVO = list.get(i);
-                Row row = preExport.getSheet().createRow(r++);
-                for (NeedList needList : userTitles) {
-                    createCell(row, preExport.getStyleContent(), needList, statisticUserVO);
+                for (NeedList needList : needListList) {
+                    createCell(row, preExport.getStyleContent(), needList, object);
                 }
             }
         }

@@ -25,6 +25,8 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
+import static com.yugoo.gis.user.web.utils.ExcelUtil.resourceTitles;
+
 /**
  * @author nihao 2018/10/23
  */
@@ -152,13 +154,13 @@ public class ResourceController extends BaseController {
                 buildingId = buildingPO.getId();
             }
             else {
-                Workbook workbook = ExcelUtil.exportResource(null);
+                Workbook workbook = ExcelUtil.prepareExport(null, resourceTitles);
                 ExcelUtil.export(request, response, workbook, "网络资源");
                 return;
             }
         }
         ListVO<ResourceVO> listVO = resourceService.list(1, 5000, buildingId);
-        Workbook workbook = ExcelUtil.exportResource(listVO);
+        Workbook workbook = ExcelUtil.prepareExport(listVO.getList(), resourceTitles);
         ExcelUtil.export(request, response, workbook, "网络资源");
     }
 

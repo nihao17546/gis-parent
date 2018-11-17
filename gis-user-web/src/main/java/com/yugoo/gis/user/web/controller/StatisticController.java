@@ -18,6 +18,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
+import static com.yugoo.gis.user.web.utils.ExcelUtil.statisticConsumerTitles;
+import static com.yugoo.gis.user.web.utils.ExcelUtil.statisticTitles;
+import static com.yugoo.gis.user.web.utils.ExcelUtil.userTitles;
+
 /**
  * @author nihao 2018/11/5
  */
@@ -92,7 +96,7 @@ public class StatisticController extends BaseController {
             order = null;
         }
         List<StatisticCenterVO> list = statisticService.listCenter(1, 5000, centerName, sortColumn, order, uid);
-        Workbook workbook = ExcelUtil.exportStatisticCenter(list);
+        Workbook workbook = ExcelUtil.prepareExport(list, statisticTitles);
         ExcelUtil.export(request, response, workbook, "营销中心业务统计");
     }
 
@@ -102,7 +106,7 @@ public class StatisticController extends BaseController {
                                @RequestParam(required = false) String order,
                                @Value("#{request.getAttribute('uid')}") Integer uid) throws NoSuchFieldException, IllegalAccessException {
         ListVO<ConsumerListVO> listVO = statisticService.listConsumer(1, 5000, consumerName, order, uid);
-        Workbook workbook = ExcelUtil.exportStatisticConsumer(listVO);
+        Workbook workbook = ExcelUtil.prepareExport(listVO.getList(), statisticConsumerTitles);
         ExcelUtil.export(request, response, workbook, "即将到期业务汇总");
     }
 
@@ -122,7 +126,7 @@ public class StatisticController extends BaseController {
                            @RequestParam(required = false) String order,
                            @Value("#{request.getAttribute('uid')}") Integer uid) throws NoSuchFieldException, IllegalAccessException {
         List<StatisticUserVO> list = statisticService.listUser(centerName, sortColumn, order, uid);
-        Workbook workbook = ExcelUtil.exportStatisticUser(list);
+        Workbook workbook = ExcelUtil.prepareExport(list, userTitles);
         ExcelUtil.export(request, response, workbook, "客户经理业务统计");
     }
 }

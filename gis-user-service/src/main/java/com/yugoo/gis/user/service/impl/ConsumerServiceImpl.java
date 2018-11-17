@@ -256,6 +256,7 @@ public class ConsumerServiceImpl implements IConsumerService {
                 }
                 if (userPOMap.containsKey(vo.getUserId())) {
                     vo.setUserName(userPOMap.get(vo.getUserId()).getName());
+                    vo.setUserNumber(userPOMap.get(vo.getUserId()).getNumber());
                 }
             }
             listVO.setList(voList);

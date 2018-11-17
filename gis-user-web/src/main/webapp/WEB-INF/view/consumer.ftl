@@ -27,7 +27,7 @@
                    :on-error="handleError">
             <el-button size="small" type="primary">导入</el-button>
         </el-upload>
-        <el-button type="primary" size="small" v-if="auth.indexOf('/consumer/export') != -1" style="float: left;margin-left: 6px;">导出</el-button>
+        <el-button type="primary" size="small" v-if="auth.indexOf('/consumer/export') != -1" @click="exportExcel" style="float: left;margin-left: 6px;">导出</el-button>
         <el-input style="width: 260px;border-radius: 0px;" @keyup.enter.native="search" v-on:clear="search" v-if="auth.indexOf('/consumer/list') != -1"
                   v-model.trim="searchName" size="small" placeholder="请输入搜索名称" clearable>
             <el-button slot="append" :loading="loading" icon="el-icon-search" @click="search">搜索</el-button>
@@ -55,16 +55,16 @@
                 label="门牌号">
         </el-table-column>
         <el-table-column
+                prop="position"
+                label="地址">
+        </el-table-column>
+        <el-table-column
                 prop="category"
                 label="行业类别">
         </el-table-column>
         <el-table-column
                 prop="nature"
                 label="公司性质">
-        </el-table-column>
-        <el-table-column
-                prop="position"
-                label="地址">
         </el-table-column>
         <el-table-column
                 prop="peopleNum"
@@ -95,16 +95,24 @@
                 label="带宽">
         </el-table-column>
         <el-table-column
-                prop="serviceTypeName"
-                label="业务类型">
-        </el-table-column>
-        <el-table-column
                 prop="status"
                 label="公司状态">
         </el-table-column>
         <el-table-column
                 prop="legal"
                 label="法人">
+        </el-table-column>
+        <el-table-column
+                prop="groupCode"
+                label="集团代码">
+        </el-table-column>
+        <el-table-column
+                prop="groupGrade"
+                label="集团等级">
+        </el-table-column>
+        <el-table-column
+                prop="serviceTypeName"
+                label="业务类型">
         </el-table-column>
         <el-table-column
                 prop="lineNum"
@@ -142,15 +150,6 @@
         <el-table-column
                 prop="memberExpensesName"
                 label="成员侧资费名称">
-        </el-table-column>
-
-        <el-table-column
-                prop="groupCode"
-                label="集团代码">
-        </el-table-column>
-        <el-table-column
-                prop="groupGrade"
-                label="集团等级">
         </el-table-column>
         <el-table-column
                 prop="typeName"
@@ -421,6 +420,33 @@
             }
         },
         methods: {
+            exportExcel() {
+                this.loading = true;
+                let $form=$("<form action='${contextPath}/consumer/export' method='post' style='display: none'></form>");
+                if (this.searchName && this.searchName != '') {
+                    let input1 = $("<input>");
+                    input1.attr("name", "name");
+                    input1.attr("value", this.searchName);
+                    $form.append(input1);
+                }
+
+                let input1 = $("<input>");
+                input1.attr("name", "buildingId");
+                input1.attr("value", this.searchBuildingId);
+                $form.append(input1);
+
+                let input2 = $("<input>");
+                input2.attr("name", "id");
+                input2.attr("value", this.searchId);
+                $form.append(input2);
+
+                $('body').append($form);
+                $form.submit();
+                setTimeout(() => {
+                    this.loading = false;
+                    $form.remove();
+                }, 5000)
+            },
             handleExceed(files, fileList) {
 
             },
@@ -463,7 +489,7 @@
             handlePreview(file) {
 
             },
-            searchSubordinates: function(selectKey) {
+            searchSubordinates(selectKey) {
                 if (selectKey != '') {
                     axios.get('${contextPath}/user/searchSubordinates',{
                         params: {

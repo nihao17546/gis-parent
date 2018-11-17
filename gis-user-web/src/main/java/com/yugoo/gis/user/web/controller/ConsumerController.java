@@ -12,6 +12,7 @@ import com.yugoo.gis.pojo.vo.StreetTypeVO;
 import com.yugoo.gis.user.service.IConsumerService;
 import com.yugoo.gis.user.web.utils.ExcelUtil;
 import com.yugoo.gis.user.web.utils.ReadDataUtil;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,12 +21,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
+import static com.yugoo.gis.user.web.utils.ExcelUtil.consumerTitles;
 
 /**
  * @author nihao 2018/10/9
@@ -170,11 +174,12 @@ public class ConsumerController extends BaseController {
     }
 
     @RequestMapping("/export")
-    public void export(@RequestParam(required = false) String name,
+    public void export(HttpServletRequest request, HttpServletResponse response,
+                       @RequestParam(required = false) String name,
                        @Value("#{request.getAttribute('uid')}") Integer uid,
                        @Value("#{request.getAttribute('role')}") Integer role,
                        @RequestParam(required = false) Integer buildingId,
-                       @RequestParam(required = false) Integer id) {
+                       @RequestParam(required = false) Integer id) throws NoSuchFieldException, IllegalAccessException {
         ListVO<ConsumerListVO> listVO = null;
         if (id == null || id == 0) {
             listVO = consumerService.list(1, 5000, name, new UserPO(uid, role), buildingId);
@@ -192,7 +197,8 @@ public class ConsumerController extends BaseController {
             list.add(vo);
             listVO.setList(list);
         }
-
+        Workbook workbook = ExcelUtil.prepareExport(listVO.getList(), consumerTitles);
+        ExcelUtil.export(request, response, workbook, "客户信息");
     }
 
     @RequestMapping("/serviceTypes")

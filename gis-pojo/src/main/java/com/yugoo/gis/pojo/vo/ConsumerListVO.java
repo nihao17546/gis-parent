@@ -16,4 +16,5 @@ public class ConsumerListVO extends ConsumerPO {
     private String lineOpenDateStr;
     private String userName;
     private String orderTimeStr;
+    private String userNumber;
 }

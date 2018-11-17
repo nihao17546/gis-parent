@@ -254,12 +254,12 @@
                     input1.attr("value", this.searchBuildingName);
                     $form.append(input1);
                 }
-                if (this.searchBuildingId && this.searchBuildingId != '') {
-                    let input1 = $("<input>");
-                    input1.attr("name", "buildingId");
-                    input1.attr("value", this.searchBuildingId);
-                    $form.append(input1);
-                }
+
+                let input1 = $("<input>");
+                input1.attr("name", "buildingId");
+                input1.attr("value", this.searchBuildingId);
+                $form.append(input1);
+
                 $('body').append($form);
                 $form.submit();
                 setTimeout(() => {

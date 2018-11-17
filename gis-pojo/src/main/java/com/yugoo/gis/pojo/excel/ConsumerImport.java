@@ -9,7 +9,7 @@ import java.math.BigDecimal;
  */
 @Data
 public class ConsumerImport {
-    @ExcelImport("集团名称")
+    @ExcelImport({"名称", "集团名称"})
     private String name;
 
     @ExcelImport("地址")
