@@ -51,7 +51,7 @@
         </div>
     </el-card>
 
-    <el-dialog title="修改密码" :visible.sync="dialogVisible" :before-close="cancel">
+    <el-dialog title="修改系统配置" :visible.sync="dialogVisible" :before-close="cancel">
         <el-form :model="form" :rules="formRules" ref="form" size="small" :disabled="editFormDisabled">
             <el-form-item label="地图搜索半径:" prop="mapSearchRegion" :label-width="formLabelWidth">
                 <el-input v-model.trim="form.mapSearchRegion" autocomplete="off" size="small" maxlength="10">
