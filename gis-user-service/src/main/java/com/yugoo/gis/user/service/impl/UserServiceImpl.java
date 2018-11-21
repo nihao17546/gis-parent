@@ -97,7 +97,7 @@ public class UserServiceImpl implements IUserService {
         memberMenus.add(consumer);
 
         MenuVO resource = new MenuVO();
-        resource.setName("网路资源");
+        resource.setName("网络资源");
         resource.setPath("resource.html");
         resource.setIndex(6);
         resource.setIcon("fa-support");
