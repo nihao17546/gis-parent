@@ -13,7 +13,7 @@ public class ConsumerPO {
     private Integer id;
     private String name;
     private Integer buildingId;
-    private String floor;
+    private Integer floor;
     private String number;
     private String position;
     private byte[] pic;

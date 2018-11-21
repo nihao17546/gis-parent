@@ -33,7 +33,7 @@ public class ResourceImport {
     private Double latitude;
 
     @ExcelImport("楼层")
-    private String floor;
+    private Integer floor;
 
     @ExcelImport("户号")
     private String number;

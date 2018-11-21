@@ -50,7 +50,7 @@ public class ConsumerServiceImpl implements IConsumerService {
     private CenterDAO centerDAO;
 
     @Override
-    public void create(String name, Integer buildingId, String floor, String number, String position, byte[] pic,
+    public void create(String name, Integer buildingId, Integer floor, String number, String position, byte[] pic,
                        String category, String nature, Integer peopleNum, String linkman, String phone, String operator,
                        BigDecimal expenses, Long expirationDate, String bandwidth, Integer serviceType, String status,
                        String legal, Integer lineNum, String lineType, Long lineOpenDate, String lineStatus, String groupCode,
@@ -266,7 +266,7 @@ public class ConsumerServiceImpl implements IConsumerService {
     }
 
     @Override
-    public void update(String name, Integer buildingId, String floor, String number, String position,
+    public void update(String name, Integer buildingId, Integer floor, String number, String position,
                        byte[] pic, String category, String nature, Integer peopleNum, String linkman,
                        String phone, String operator, BigDecimal expenses, Long expirationDate,
                        String bandwidth, Integer serviceType, String status, String legal, Integer lineNum,

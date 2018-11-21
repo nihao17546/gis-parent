@@ -13,7 +13,7 @@ import java.util.List;
  * @author nihao 2018/10/9
  */
 public interface IConsumerService {
-    void create(String name, Integer buildingId, String floor, String number, String position,
+    void create(String name, Integer buildingId, Integer floor, String number, String position,
                 byte[] pic, String category, String nature, Integer peopleNum, String linkman,
                 String phone, String operator, BigDecimal expenses, Long expirationDate, String bandwidth,
                 Integer serviceType, String status, String legal, Integer lineNum, String lineType,
@@ -21,7 +21,7 @@ public interface IConsumerService {
                 UserPO currentUser, Integer bindUserId, Double longitude, Double latitude,
                 String expensesName, Long orderTime, String memberRole, String memberRoleRealNum, String memberExpensesName);
     ListVO<ConsumerListVO> list(Integer curPage, Integer pageSize, String name, UserPO currentUser, Integer buildingId);
-    void update(String name, Integer buildingId, String floor, String number, String position,
+    void update(String name, Integer buildingId, Integer floor, String number, String position,
                 byte[] pic, String category, String nature, Integer peopleNum, String linkman,
                 String phone, String operator, BigDecimal expenses, Long expirationDate, String bandwidth,
                 Integer serviceType, String status, String legal, Integer lineNum, String lineType,

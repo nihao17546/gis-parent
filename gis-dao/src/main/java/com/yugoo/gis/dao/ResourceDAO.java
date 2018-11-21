@@ -16,7 +16,7 @@ public interface ResourceDAO {
                             RowBounds rowBounds);
     Long selectCount(@Param("buildingId") Integer buildingId);
     ResourcePO selectByBuildingIdAndFloorAndNumber(@Param("buildingId") Integer buildingId,
-                                                   @Param("floor") String floor,
+                                                   @Param("floor") Integer floor,
                                                    @Param("number") String number,
                                                    @Param("longitude") Double longitude,
                                                    @Param("latitude") Double latitude);

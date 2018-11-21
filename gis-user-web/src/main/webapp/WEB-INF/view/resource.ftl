@@ -217,6 +217,18 @@
                     }
                 }, 100)
             }
+            var validateFloor = (rule, value, callback) => {
+                if (!value) {
+                    return callback(new Error('请输入楼层'))
+                }
+                setTimeout(() => {
+                    if ((!/^-?[0-9]*[1-9][0-9]*$/.test(value)) && value != '0') {
+                        callback(new Error('请输入数字'))
+                    } else {
+                        callback()
+                    }
+                }, 100)
+            }
             return {
                 loading: false,
                 ifFromIndex: true,
@@ -234,7 +246,7 @@
                     buildingId: [{required : true, message: '请选择所属建筑', trigger: 'change' }],
                     idelPortCount: [{required : false, validator: validateNumber, trigger: 'blur'}],
                     allPortCount: [{required : false, validator: validateNumber, trigger: 'blur'}],
-                    floor: [{required : true, message: '请输入楼层', trigger: 'blur' }],
+                    floor: [{required : true, validator: validateFloor, trigger: 'blur'}],
                     number: [{required : true, message: '请输入户号', trigger: 'blur' }],
                 },
                 buildings: [],

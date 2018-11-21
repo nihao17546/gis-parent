@@ -17,7 +17,7 @@ public class ResourcePO {
     private String villageName;
     private String admStreetName;
     private String zoneName;
-    private String floor;
+    private Integer floor;
     private String number;
     private Integer allPortCount;
     private Integer idelPortCount;

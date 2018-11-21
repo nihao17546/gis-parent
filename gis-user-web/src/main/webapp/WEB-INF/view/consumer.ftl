@@ -356,7 +356,7 @@
                     return callback()
                 }
                 setTimeout(() => {
-                    if (!/^-?[0-9]*[1-9][0-9]*$/.test(value)) {
+                    if ((!/^-?[0-9]*[1-9][0-9]*$/.test(value)) && value != '0') {
                         callback(new Error('请输入数字'))
                     } else {
                         callback()

@@ -46,7 +46,7 @@ public class ResourceServiceImpl implements IResourceService {
     private IBuildingService buildingService;
 
     @Override
-    public void create(Integer buildingId, String district, String floor, String number,
+    public void create(Integer buildingId, String district, Integer floor, String number,
                        Integer allPortCount, Integer idelPortCount, String sceneA,
                        String sceneB, String overlayScene, Double longitude, Double latitude,
                        String cityName, String streetName, String villageName, String admStreetName,
@@ -91,7 +91,7 @@ public class ResourceServiceImpl implements IResourceService {
         resourceDAO.insert(resourcePO);
     }
 
-    private void checkUnique(Integer id, Integer buildingId, String floor, String number, Double longitude, Double latitude) {
+    private void checkUnique(Integer id, Integer buildingId, Integer floor, String number, Double longitude, Double latitude) {
         ResourcePO resourcePO = resourceDAO.selectByBuildingIdAndFloorAndNumber(buildingId, floor, number, longitude, latitude);
         if (resourcePO != null) {
             if (id == null || !id.equals(resourcePO.getId())) {
@@ -101,7 +101,7 @@ public class ResourceServiceImpl implements IResourceService {
     }
 
     @Override
-    public void update(Integer id, Integer buildingId, String district, String floor, String number,
+    public void update(Integer id, Integer buildingId, String district, Integer floor, String number,
                        Integer allPortCount, Integer idelPortCount, String sceneA, String sceneB,
                        String overlayScene,
                        String cityName, String streetName, String villageName, String admStreetName,
