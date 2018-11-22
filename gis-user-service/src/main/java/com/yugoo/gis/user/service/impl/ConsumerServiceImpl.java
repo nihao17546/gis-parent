@@ -466,6 +466,9 @@ public class ConsumerServiceImpl implements IConsumerService {
         else {
             consumerImport.setUserId(0);
         }
+        if (consumerImport.getFloor() == null) {
+            consumerImport.setFloor(1);
+        }
     }
 
     private Long getDate(String str, String name) {

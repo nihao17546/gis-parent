@@ -43,7 +43,7 @@ public class ConsumerController extends BaseController {
 
     @RequestMapping("/create")
     public String create(@RequestParam String name, @RequestParam(required = false) Integer buildingId,
-                         @RequestParam(required = false) Integer floor, @RequestParam(required = false) String number,
+                         @RequestParam(required = false, defaultValue = "1") Integer floor, @RequestParam(required = false) String number,
                          @RequestParam(required = false) String position, @RequestParam(required = false) String category,
                          @RequestParam(required = false) String nature, @RequestParam(required = false) Integer peopleNum,
                          @RequestParam(required = false) String linkman, @RequestParam(required = false) String phone,
@@ -96,7 +96,7 @@ public class ConsumerController extends BaseController {
 
     @RequestMapping("/edit")
     public String edit(@RequestParam Integer id, @RequestParam String name, @RequestParam Integer buildingId,
-                       @RequestParam(required = false) Integer floor, @RequestParam(required = false) String number,
+                       @RequestParam(required = false, defaultValue = "1") Integer floor, @RequestParam(required = false) String number,
                        @RequestParam(required = false) String position, @RequestParam(required = false) String category,
                        @RequestParam(required = false) String nature, @RequestParam(required = false) Integer peopleNum,
                        @RequestParam(required = false) String linkman, @RequestParam(required = false) String phone,
