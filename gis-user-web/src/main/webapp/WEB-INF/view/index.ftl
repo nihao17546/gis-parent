@@ -316,6 +316,17 @@
                 $(o).attr('param', '');
                 $(o).attr('name', '');
             }
+            else if ($(o).attr('resourceId') != '') {
+                let href = $('#resourceMenu').attr('href');
+                let html = $('#resourceMenuLabel').html();
+                $('#resourceMenu').attr('href', href + '?id=' + $(o).attr('resourceId'));
+                $('#resourceMenuLabel').html($(o).attr('name'));
+                $('#resourceMenu').click();
+                $('#resourceMenu').attr('href', href);
+                $('#resourceMenuLabel').html(html);
+                $(o).attr('resourceId', '');
+                $(o).attr('name', '');
+            }
         }
     }
 

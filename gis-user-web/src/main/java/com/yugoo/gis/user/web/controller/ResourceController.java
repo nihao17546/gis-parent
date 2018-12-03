@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -52,19 +53,39 @@ public class ResourceController extends BaseController {
     public String list(@RequestParam(required = false) String buildingName,
                        @RequestParam(required = false, defaultValue = "1") Integer curPage,
                        @RequestParam(required = false, defaultValue = "10") Integer pageSize,
-                       @RequestParam(required = false) Integer buildingId) {
-        if (buildingName != null) {
-            buildingName = buildingName.trim();
-            BuildingPO buildingPO = buildingDAO.selectByName(buildingName);
-            if (buildingPO != null) {
-                buildingId = buildingPO.getId();
+                       @RequestParam(required = false) Integer buildingId,
+                       @RequestParam(required = false) Integer id) {
+        if (id == null || id == 0) {
+            if (buildingName != null) {
+                buildingName = buildingName.trim();
+                BuildingPO buildingPO = buildingDAO.selectByName(buildingName);
+                if (buildingPO != null) {
+                    buildingId = buildingPO.getId();
+                }
+                else {
+                    return ok().pull("data", new ListVO<>(curPage, pageSize)).json();
+                }
+            }
+            ListVO<ResourceVO> listVO = resourceService.list(curPage, pageSize, buildingId);
+            return ok().pull("data", listVO).json();
+        }
+        else {
+            ResourceVO resourceVO = resourceService.getById(id);
+            ListVO<ResourceVO> listVO = new ListVO<>();
+            listVO.setCurPage(1);
+            listVO.setPageSize(10);
+            listVO.setTotalPage(1);
+            listVO.setTotalCount(1);
+            List<ResourceVO> list = new ArrayList<>();
+            if (resourceVO != null) {
+                list.add(resourceVO);
             }
             else {
-                return ok().pull("data", new ListVO<>(curPage, pageSize)).json();
+                listVO.setTotalCount(0);
             }
+            listVO.setList(list);
+            return ok().pull("data", listVO).json();
         }
-        ListVO<ResourceVO> listVO = resourceService.list(curPage, pageSize, buildingId);
-        return ok().pull("data", listVO).json();
     }
 
     @RequestMapping("/create")

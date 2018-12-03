@@ -283,4 +283,69 @@ public class ResourceServiceImpl implements IResourceService {
                 + "条,更新" + (re - resourcePOList.size()) + "条)" + ex;
     }
 
+    @Override
+    public List<ResourceVO> searchFromMap(String streetName, Double loMin, Double loMax, Double laMin, Double laMax) {
+        List<StreetPO> streetPOList = streetDAO.selectFromMap(streetName, loMin, loMax, laMin, laMax);
+        if (streetPOList.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<Integer> streetIds = new ArrayList<>();
+        // key:建筑id
+        Map<Integer,String> streetNameMap = new HashMap<>();
+        for (StreetPO streetPO : streetPOList) {
+            streetIds.add(streetPO.getId());
+            streetNameMap.put(streetPO.getId(), streetPO.getName());
+        }
+        List<BuildingPO> buildingPOList = buildingDAO.selectByStreetIds(streetIds);
+        if (buildingPOList.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<Integer> buildingIds = new ArrayList<>();
+        // key:建筑id
+        Map<Integer,String> buildingNameMap = new HashMap<>();
+        for (BuildingPO buildingPO : buildingPOList) {
+            buildingIds.add(buildingPO.getId());
+            buildingNameMap.put(buildingPO.getId(), buildingPO.getName());
+            String sName = streetNameMap.get(buildingPO.getStreetId());
+            if (sName != null) {
+                streetNameMap.put(buildingPO.getId(), sName);
+            }
+        }
+        List<ResourcePO> resourcePOList = resourceDAO.selectByBuildingIds(buildingIds);
+        if (resourcePOList.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<ResourceVO> resourceVOList = resourcePOList.stream().map(po -> {
+            ResourceVO vo = new ResourceVO();
+            BeanUtils.copyProperties(po, vo);
+            String sName = streetNameMap.get(po.getBuildingId());
+            String buildingName = buildingNameMap.get(po.getBuildingId());
+            if (sName != null) {
+                vo.setStreetName(sName);
+            }
+            if (buildingName != null) {
+                vo.setBuildingName(buildingName);
+            }
+            return vo;
+        }).collect(Collectors.toList());
+        return resourceVOList;
+    }
+
+    @Override
+    public ResourceVO getById(Integer id) {
+        ResourcePO resourcePO = resourceDAO.selectById(id);
+        if (resourcePO == null) {
+            return null;
+        }
+        ResourceVO resourceVO = new ResourceVO();
+        BeanUtils.copyProperties(resourcePO, resourceVO);
+        if (resourcePO.getBuildingId() != null && resourcePO.getBuildingId() != 0) {
+            BuildingPO buildingPO = buildingDAO.selectById(resourcePO.getBuildingId());
+            if (buildingPO != null) {
+                resourceVO.setBuildingName(buildingPO.getName());
+            }
+        }
+        return resourceVO;
+    }
+
 }

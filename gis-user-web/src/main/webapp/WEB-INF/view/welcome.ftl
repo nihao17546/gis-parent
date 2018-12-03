@@ -83,6 +83,9 @@
                         <el-checkbox v-model="params.consumer" label="客户" :disabled="aDisabled"></el-checkbox>
                     </div>
                     <div>
+                        <el-checkbox v-model="params.resource" label="网路资源" :disabled="aDisabled"></el-checkbox>
+                    </div>
+                    <div>
                         <el-checkbox v-model="params.baidu" label="百度地图搜索" :disabled="aDisabled"></el-checkbox>
                     </div>
                 </el-tab-pane>
@@ -289,6 +292,7 @@
                     center: false,
                     building: false,
                     consumer: false,
+                    resource: false,
                     baidu: false
                 },
                 selectCityName: '',
@@ -495,6 +499,18 @@
                         }
                     }
                 }
+                else if (row.type == '网路资源') {
+                    if ($('#resource', parent.document).length == 1) {
+                        if ($('#resourceMenu', parent.document).length == 1) {
+                            $('#resource', parent.document).attr('resourceId', row.id);
+                            $('#resource', parent.document).attr('name', '网路资源[' + row.name + ']');
+                            $('#resource', parent.document).click()
+                        }
+                        else {
+                            this.$message.warning('没有权限');
+                        }
+                    }
+                }
             },
             clear() {
                 this.params.key = '';
@@ -530,7 +546,7 @@
                     this.$message.warning('请选择地图区域');
                     return;
                 }
-                if (!this.params.center && !this.params.building
+                if (!this.params.center && !this.params.building && !this.params.resource
                         && !this.params.consumer && !this.params.baidu) {
                     this.$message.warning('请至少选择一个图层');
                     return;
@@ -547,6 +563,7 @@
                         center: this.params.center,
                         building: this.params.building,
                         consumer: this.params.consumer,
+                        resource: this.params.resource,
                         baidu: this.params.baidu
                     }
                 }).then(res => {
@@ -559,6 +576,7 @@
                         let centers = res.data.center;
                         let buildings = res.data.building;
                         let consumers = res.data.consumer;
+                        let resources = res.data.resource;
                         let baidus = res.data.baidu;
                         centers.forEach(center => {
                             this.result.push({
@@ -644,6 +662,45 @@
                             let infoWindow = new BMap.InfoWindow(showDiv, {
                                 width : 100,
                                 height: 120
+                            });
+                            let that = this;
+                            marker.addEventListener("click", function(){
+                                that.currentMap.openInfoWindow(infoWindow, point); //开启信息窗口
+                            });
+                            this.infoWindows.push({
+                                a: infoWindow,
+                                b: point
+                            })
+                        })
+                        resources.forEach(resource => {
+                            this.result.push({
+                                id: resource.id,
+                                name: '楼层:' + resource.floor + ' 户号:' + resource.number,
+                                streetName: resource.streetName,
+                                buildingName: resource.buildingName,
+                                type: '网路资源',
+                                floor: resource.floor,
+                                number: resource.number,
+                                allPortCount: resource.allPortCount,
+                                idelPortCount: resource.idelPortCount,
+                                sceneA: resource.sceneA,
+                                sceneB: resource.sceneB,
+                                overlayScene: resource.overlayScene,
+                                longitude: resource.longitude,
+                                latitude: resource.latitude,
+                                index: index ++
+                            })
+                            let point = new BMap.Point(resource.longitude, resource.latitude);
+                            let marker = new BMap.Marker(point);
+                            this.currentMap.addOverlay(marker);
+                            let showDiv = '<p>网路资源</p>' +
+                                    '<p>所属物业街道：' + resource.streetName + '</p>' +
+                                    '<p>所在建筑：' + resource.buildingName + '</p>' +
+                                    '<p>楼层：' + resource.floor + '</p>' +
+                                    '<p>户号：' + resource.number + '</p>'
+                            let infoWindow = new BMap.InfoWindow(showDiv, {
+                                width : 100,
+                                height: 150
                             });
                             let that = this;
                             marker.addEventListener("click", function(){

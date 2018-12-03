@@ -88,4 +88,15 @@
         where longitude between #{loMin} and #{loMax}
         and latitude between #{laMin} and #{laMax}
     </select>
+    <select id="selectByBuildingIds" resultType="com.yugoo.gis.pojo.po.ResourcePO">
+        select id,buildingId,floor,`number`,
+        allPortCount,idelPortCount,sceneA,sceneB,overlayScene,longitude,latitude
+        from tb_resource where buildingId in
+        <foreach collection="buildingIds" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+    <select id="selectById" resultType="com.yugoo.gis.pojo.po.ResourcePO">
+        select * from tb_resource where id=#{id}
+    </select>
 </mapper>

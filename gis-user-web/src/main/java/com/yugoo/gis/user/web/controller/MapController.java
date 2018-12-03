@@ -6,9 +6,11 @@ import com.yugoo.gis.pojo.po.UserPO;
 import com.yugoo.gis.pojo.vo.BuildingVO;
 import com.yugoo.gis.pojo.vo.CenterVO;
 import com.yugoo.gis.pojo.vo.ConsumerVO;
+import com.yugoo.gis.pojo.vo.ResourceVO;
 import com.yugoo.gis.user.service.IBuildingService;
 import com.yugoo.gis.user.service.ICenterService;
 import com.yugoo.gis.user.service.IConsumerService;
+import com.yugoo.gis.user.service.IResourceService;
 import com.yugoo.gis.user.web.map.MapSearchResult;
 import com.yugoo.gis.user.web.map.MapService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,8 @@ public class MapController extends BaseController {
     @Autowired
     private IConsumerService consumerService;
     @Autowired
+    private IResourceService resourceService;
+    @Autowired
     private UserDAO userDAO;
 
     @RequestMapping("/search")
@@ -49,10 +53,12 @@ public class MapController extends BaseController {
                          @RequestParam(required = false, defaultValue = "false") Boolean center,
                          @RequestParam(required = false, defaultValue = "false") Boolean building,
                          @RequestParam(required = false, defaultValue = "false") Boolean consumer,
+                         @RequestParam(required = false, defaultValue = "false") Boolean resource,
                          @RequestParam(required = false, defaultValue = "false") Boolean baidu) {
         List<CenterVO> centerVOList = new ArrayList<>();
         List<BuildingVO> buildingVOList = new ArrayList<>();
         List<ConsumerVO> consumerVOList = new ArrayList<>();
+        List<ResourceVO> resourceVOList = new ArrayList<>();
         List<MapSearchResult> mapSearchResultList = new ArrayList<>();
         UserPO currentUser = userDAO.selectById(uid);
         if (center) {
@@ -68,6 +74,9 @@ public class MapController extends BaseController {
         if (consumer) {
             consumerVOList = consumerService.searchFromMap(query, minLongitude, maxLongitude, minLatitude, maxLatitude, currentUser);
         }
+        if (resource) {
+            resourceVOList = resourceService.searchFromMap(query, minLongitude, maxLongitude, minLatitude, maxLatitude);
+        }
         if (baidu) {
             mapSearchResultList = mapService.search(query, minLatitude, minLongitude, maxLatitude, maxLongitude);
         }
@@ -75,6 +84,7 @@ public class MapController extends BaseController {
                 .pull("building", buildingVOList)
                 .pull("baidu", mapSearchResultList)
                 .pull("consumer", consumerVOList)
+                .pull("resource", resourceVOList)
                 .json();
     }
 }

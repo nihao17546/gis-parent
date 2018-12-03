@@ -10,4 +10,5 @@ import lombok.Data;
 @Data
 public class ResourceVO extends ResourcePO {
     private String buildingName;
+    private String streetName;
 }

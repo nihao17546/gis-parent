@@ -56,4 +56,10 @@
     <delete id="deleteById">
         delete from tb_street where id=#{id}
     </delete>
+    <select id="selectFromMap" resultType="com.yugoo.gis.pojo.po.StreetPO">
+        select id,`name` from tb_street
+        where longitude between #{loMin} and #{loMax}
+        and latitude between #{laMin} and #{laMax}
+        and `name` like concat('%',#{name},'%')
+    </select>
 </mapper>

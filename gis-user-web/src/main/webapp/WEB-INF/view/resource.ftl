@@ -253,7 +253,8 @@
                 allBuildings: [],
                 positionVisible: false,
                 searchBuildingId: 0,
-                fileList: []
+                fileList: [],
+                searchId: 0
             }
         },
         methods: {
@@ -413,6 +414,7 @@
             search() {
                 this.curPage = 1;
                 this.searchBuildingId = 0;
+                this.searchId = 0;
                 this.getList()
             },
             showAdd() {
@@ -513,7 +515,8 @@
                         curPage: this.curPage,
                         pageSize: this.pageSize,
                         buildingName: buildingName,
-                        buildingId: this.searchBuildingId
+                        buildingId: this.searchBuildingId,
+                        id: this.searchId
                     }
                 }).then(res => {
                     if (res.data.code == 1) {
@@ -546,7 +549,11 @@
                 this.searchBuildingId = buildingId;
                 this.ifFromIndex = false;
             }
-
+            let id = this.getQueryString('id');
+            if (id) {
+                this.searchId = id;
+                this.ifFromIndex = false;
+            }
             axios.get('${contextPath}/building/listOwn',{
                 params: {
                 }

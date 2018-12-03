@@ -28,4 +28,6 @@ public interface ResourceDAO {
     int batchInsert(@Param("list") List<ResourcePO> list);
     List<ResourcePO> selectByCenter(@Param("loMin") Double loMin, @Param("loMax") Double loMax,
                                     @Param("laMin") Double laMin, @Param("laMax") Double laMax);
+    List<ResourcePO> selectByBuildingIds(@Param("buildingIds") List<Integer> buildingIds);
+    ResourcePO selectById(@Param("id") Integer id);
 }
