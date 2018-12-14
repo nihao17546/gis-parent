@@ -232,6 +232,18 @@ public class ResourceServiceImpl implements IResourceService {
             building = true;
             resourceImport.setBuildingId(buildingId);
         }
+
+        if (resourceImport.getFloorStr() != null && !"".equals(resourceImport.getFloorStr())) {
+            StringBuilder sb = new StringBuilder();
+            char[] chars = resourceImport.getFloorStr().toCharArray();
+            for (char c : chars) {
+                if (Character.isDigit(c)) {
+                    sb.append(c);
+                }
+            }
+            resourceImport.setFloor(Integer.parseInt(sb.toString()));
+        }
+
         if (resourceImport.getAllPortCount() == null) {
             throw new GisRuntimeException(resourceImport.getR() + "未能确定端口总数");
         }
