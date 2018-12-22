@@ -1,6 +1,7 @@
 package com.yugoo.gis.user.service.impl;
 
 import com.yugoo.gis.common.exception.GisRuntimeException;
+import com.yugoo.gis.common.utils.StaticUtils;
 import com.yugoo.gis.dao.BuildingDAO;
 import com.yugoo.gis.dao.ResourceDAO;
 import com.yugoo.gis.dao.StreetDAO;
@@ -289,7 +290,17 @@ public class ResourceServiceImpl implements IResourceService {
             BeanUtils.copyProperties(resourceImport, resourcePO);
             resourcePOList.add(resourcePO);
         }
-        int re = resourceDAO.batchInsert(resourcePOList);
+        int re = 0;
+        if (resourcePOList.size() <= 100) {
+            re = resourceDAO.batchInsert(resourcePOList);
+        }
+        else {
+            List<List<ResourcePO>> lists = StaticUtils.split(resourcePOList, 100);
+            for (List<ResourcePO> resourcePOS : lists) {
+                int r = resourceDAO.batchInsert(resourcePOS);
+                re += r;
+            }
+        }
         String ex = "";
         if (street > 0) {
             ex = ex + ",相关联物业街道新创建" + street + "条数据";
