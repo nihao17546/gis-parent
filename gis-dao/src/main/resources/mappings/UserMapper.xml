@@ -16,7 +16,7 @@
             <if test="department!=null">department=#{department},</if>
             <if test="groupId!=null">groupId=#{groupId},</if>
             <if test="centerId!=null">centerId=#{centerId},</if>
-            <if test="key!=null">`key`=#{key},</if>
+            `key`=#{key},
             <if test="number!=null">`number`=#{number},</if>
             <if test="post!=null">`post`=#{post},</if>
         </trim>
