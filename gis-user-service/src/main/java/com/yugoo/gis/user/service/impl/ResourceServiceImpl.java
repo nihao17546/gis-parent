@@ -241,7 +241,13 @@ public class ResourceServiceImpl implements IResourceService {
                     sb.append(c);
                 }
             }
-            resourceImport.setFloor(Integer.parseInt(sb.toString()));
+            if (!"".equals(sb.toString())) {
+                try {
+                    resourceImport.setFloor(Integer.parseInt(sb.toString()));
+                } catch (NumberFormatException e) {
+                    throw new GisRuntimeException(resourceImport.getR() + "楼层解析错误");
+                }
+            }
         }
 
         if (resourceImport.getAllPortCount() == null) {
