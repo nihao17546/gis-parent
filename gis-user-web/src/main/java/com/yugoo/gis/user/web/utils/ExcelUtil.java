@@ -200,7 +200,7 @@ public class ExcelUtil {
         int resourceTitlesInt = 0;
         resourceTitles.add(new NeedList(100, "地市名称", resourceTitlesInt++, "@cityName"));
         resourceTitles.add(new NeedList(100, "区县", resourceTitlesInt++, "@district"));
-        resourceTitles.add(new NeedList(100, "街道", resourceTitlesInt++, "@streetName"));
+        resourceTitles.add(new NeedList(100, "街道", resourceTitlesInt++, "streetName"));
         resourceTitles.add(new NeedList(100, "乡镇", resourceTitlesInt++, "@villageName"));
         resourceTitles.add(new NeedList(100, "道路/行政村", resourceTitlesInt++, "@admStreetName"));
         resourceTitles.add(new NeedList(100, "片区/学校", resourceTitlesInt++, "@zoneName"));
