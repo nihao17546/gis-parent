@@ -48,10 +48,10 @@ public class ResourceImport {
     @ExcelImport("覆盖场景")
     private String overlayScene;
 
-    @ExcelImport({"空闲端口数","设备空余端口数"})
+    @ExcelImport({"总端口数","端口总数"})
     private Integer allPortCount;
 
-    @ExcelImport({"总端口数","端口总数"})
+    @ExcelImport({"空闲端口数","设备空余端口数"})
     private Integer idelPortCount;
 
     @ExcelImport("小区/自然村/弄")
