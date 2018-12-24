@@ -96,19 +96,20 @@ public class ResourceController extends BaseController {
                          @RequestParam(required = false) String villageName,
                          @RequestParam(required = false) String admStreetName,
                          @RequestParam(required = false) String zoneName,
-                         @RequestParam Integer floor,
-                         @RequestParam String number,
+                         @RequestParam(required = false) Integer floor,
+                         @RequestParam(required = false) String number,
                          @RequestParam(required = false) Integer allPortCount,
                          @RequestParam(required = false) Integer idelPortCount,
                          @RequestParam(required = false) String sceneA,
                          @RequestParam(required = false) String sceneB,
                          @RequestParam(required = false) String overlayScene,
                          @RequestParam(required = false) Double longitude,
-                         @RequestParam(required = false) Double latitude) {
+                         @RequestParam(required = false) Double latitude,
+                         @RequestParam String primaryId) {
         try {
             resourceService.create(buildingId, district, floor, number, allPortCount, idelPortCount,
                     sceneA, sceneB, overlayScene, longitude, latitude, cityName, streetName,
-                    villageName, admStreetName, zoneName);
+                    villageName, admStreetName, zoneName, primaryId);
         } catch (GisRuntimeException e) {
             return fail(e.getMessage()).json();
         }
@@ -123,17 +124,18 @@ public class ResourceController extends BaseController {
                          @RequestParam(required = false) String villageName,
                          @RequestParam(required = false) String admStreetName,
                          @RequestParam(required = false) String zoneName,
-                         @RequestParam Integer floor,
-                         @RequestParam String number,
+                         @RequestParam(required = false) Integer floor,
+                         @RequestParam(required = false) String number,
                          @RequestParam(required = false) Integer allPortCount,
                          @RequestParam(required = false) Integer idelPortCount,
                          @RequestParam(required = false) String sceneA,
                          @RequestParam(required = false) String sceneB,
                          @RequestParam(required = false) String overlayScene,
-                         @RequestParam Integer id) {
+                         @RequestParam Integer id,
+                         @RequestParam String primaryId) {
         try {
             resourceService.update(id, buildingId, district, floor, number, allPortCount, idelPortCount,
-                    sceneA, sceneB, overlayScene, cityName, streetName, villageName, admStreetName, zoneName);
+                    sceneA, sceneB, overlayScene, cityName, streetName, villageName, admStreetName, zoneName, primaryId);
         } catch (GisRuntimeException e) {
             return fail(e.getMessage()).json();
         }

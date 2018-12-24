@@ -63,6 +63,9 @@ public class ResourceImport {
     @ExcelImport("单元号")
     private String buildingNameC;
 
+    @ExcelImport("外线ID")
+    private String primaryId;
+
     private Integer buildingId;
     private String buildingPOName;
     private Integer row;

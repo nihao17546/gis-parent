@@ -198,6 +198,7 @@ public class ExcelUtil {
          * 网络资源导出
          */
         int resourceTitlesInt = 0;
+        resourceTitles.add(new NeedList(100, "外线ID", resourceTitlesInt++, "@primaryId"));
         resourceTitles.add(new NeedList(100, "地市名称", resourceTitlesInt++, "@cityName"));
         resourceTitles.add(new NeedList(100, "区县", resourceTitlesInt++, "@district"));
         resourceTitles.add(new NeedList(100, "街道", resourceTitlesInt++, "streetName"));

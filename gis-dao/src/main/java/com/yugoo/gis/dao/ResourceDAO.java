@@ -11,6 +11,7 @@ import java.util.List;
  */
 public interface ResourceDAO {
     int insert(ResourcePO resourcePO);
+    ResourcePO selectByPrimaryId(@Param("primaryId") String primaryId);
     int update(ResourcePO resourcePO);
     List<ResourcePO> select(@Param("buildingId") Integer buildingId,
                             RowBounds rowBounds);

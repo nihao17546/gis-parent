@@ -4,11 +4,14 @@
     <insert id="insert" useGeneratedKeys="true" keyProperty="id"
             parameterType="com.yugoo.gis.pojo.po.ResourcePO">
         insert into tb_resource(buildingId,district,cityName,streetName,villageName,admStreetName,zoneName,floor,`number`,
-        allPortCount,idelPortCount,sceneA,sceneB,overlayScene,longitude,latitude,ctime)
+        allPortCount,idelPortCount,sceneA,sceneB,overlayScene,longitude,latitude,ctime,primaryId)
         values(#{buildingId},#{district},#{cityName},#{streetName},#{villageName},#{admStreetName},#{zoneName},
         #{floor},#{number},#{allPortCount},#{idelPortCount},
-        #{sceneA},#{sceneB},#{overlayScene},#{longitude},#{latitude},now())
+        #{sceneA},#{sceneB},#{overlayScene},#{longitude},#{latitude},now(),#{primaryId})
     </insert>
+    <select id="selectByPrimaryId" resultType="com.yugoo.gis.pojo.po.ResourcePO">
+        select * from tb_resource where primaryId=#{primaryId}
+    </select>
     <update id="update" parameterType="com.yugoo.gis.pojo.po.ResourcePO">
         update tb_resource
         <trim prefix="set" suffixOverrides=",">
@@ -28,6 +31,7 @@
             `overlayScene`=#{overlayScene},
             longitude=#{longitude},
             latitude=#{latitude},
+            primaryId=#{primaryId}
         </trim>
         where id=#{id}
     </update>
@@ -60,12 +64,12 @@
     </update>
     <insert id="batchInsert">
         insert into tb_resource (buildingId,district,cityName,streetName,villageName,admStreetName,zoneName,
-        floor,`number`,allPortCount,idelPortCount,sceneA,sceneB,overlayScene,longitude,latitude,ctime)
+        floor,`number`,allPortCount,idelPortCount,sceneA,sceneB,overlayScene,longitude,latitude,ctime,primaryId)
         values
         <foreach collection="list" item="item" index="index" separator=",">
             (#{item.buildingId},#{item.district},#{item.cityName},#{item.streetName},#{item.villageName},#{item.admStreetName},#{item.zoneName},
             #{item.floor},#{item.number},#{item.allPortCount},#{item.idelPortCount},
-            #{item.sceneA},#{item.sceneB},#{item.overlayScene},#{item.longitude},#{item.latitude},now())
+            #{item.sceneA},#{item.sceneB},#{item.overlayScene},#{item.longitude},#{item.latitude},now(),#{item.primaryId})
         </foreach>
         ON DUPLICATE KEY UPDATE
         <trim prefix="" suffixOverrides=",">
@@ -81,6 +85,8 @@
             sceneB = VALUES(sceneB),
             overlayScene = VALUES(overlayScene),
             ctime = now(),
+            floor = VALUES(floor),
+            `number` = VALUES(`number`),
         </trim>
     </insert>
     <select id="selectByCenter" resultType="com.yugoo.gis.pojo.po.ResourcePO">

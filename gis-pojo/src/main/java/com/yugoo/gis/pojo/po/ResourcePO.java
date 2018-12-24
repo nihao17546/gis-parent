@@ -27,4 +27,5 @@ public class ResourcePO {
     private Double longitude;
     private Double latitude;
     private Date ctime;
+    private String primaryId;
 }
