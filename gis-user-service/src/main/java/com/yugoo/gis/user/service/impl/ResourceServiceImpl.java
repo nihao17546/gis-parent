@@ -267,6 +267,10 @@ public class ResourceServiceImpl implements IResourceService {
         if(resourceImport.getPrimaryId() == null) {
             throw new GisRuntimeException(resourceImport.getR() + "未能确定外线ID");
         }
+        if(resourceImport.getFloor() == null) {
+            resourceImport.setFloor(1);
+//            throw new GisRuntimeException(resourceImport.getR() + "未能确定楼层");
+        }
         Map<String,Boolean> map = new HashMap<>();
         map.put("street", street);
         map.put("building", building);
