@@ -1,5 +1,6 @@
 package com.yugoo.gis.user.service.impl;
 
+import com.yugoo.gis.common.constant.StreetType;
 import com.yugoo.gis.common.exception.GisRuntimeException;
 import com.yugoo.gis.common.utils.StaticUtils;
 import com.yugoo.gis.dao.BuildingDAO;
@@ -219,7 +220,7 @@ public class ResourceServiceImpl implements IResourceService {
             Integer streetId = null;
             if (streetPO == null) {
                 // 创建物业街道
-                streetId = streetService.create(resourceImport.getStreetPOName(), "", 0,
+                streetId = streetService.create(resourceImport.getStreetPOName(), resourceImport.getStreetName(), StreetType.商务楼宇.getValue(),
                                 "", "", null, null, "[]");
                 street = true;
             }
