@@ -51,7 +51,7 @@ public class ResourceServiceImpl implements IResourceService {
                        Integer allPortCount, Integer idelPortCount, String sceneA,
                        String sceneB, String overlayScene, Double longitude, Double latitude,
                        String cityName, String streetName, String villageName, String admStreetName,
-                       String zoneName) {
+                       String zoneName, String primaryId) {
         if (allPortCount == null) allPortCount = 0;
         if (idelPortCount == null) idelPortCount = 0;
         if (idelPortCount > allPortCount) {
@@ -71,7 +71,7 @@ public class ResourceServiceImpl implements IResourceService {
         else {
             buildingId = 0;
         }
-        checkUnique(null, buildingId, floor, number, longitude, latitude);
+        checkUnique(null, primaryId);
         ResourcePO resourcePO = new ResourcePO();
         resourcePO.setBuildingId(buildingId);
         resourcePO.setDistrict(district);
@@ -89,14 +89,15 @@ public class ResourceServiceImpl implements IResourceService {
         resourcePO.setOverlayScene(overlayScene);
         resourcePO.setLongitude(longitude);
         resourcePO.setLatitude(latitude);
+        resourcePO.setPrimaryId(primaryId);
         resourceDAO.insert(resourcePO);
     }
 
-    private void checkUnique(Integer id, Integer buildingId, Integer floor, String number, Double longitude, Double latitude) {
-        ResourcePO resourcePO = resourceDAO.selectByBuildingIdAndFloorAndNumber(buildingId, floor, number, longitude, latitude);
+    private void checkUnique(Integer id, String primaryId) {
+        ResourcePO resourcePO = resourceDAO.selectByPrimaryId(primaryId);
         if (resourcePO != null) {
             if (id == null || !id.equals(resourcePO.getId())) {
-                throw new GisRuntimeException("该建筑下已存在相同楼层和户号的网络资源");
+                throw new GisRuntimeException("该外线ID的网络资源已存在");
             }
         }
     }
@@ -106,7 +107,7 @@ public class ResourceServiceImpl implements IResourceService {
                        Integer allPortCount, Integer idelPortCount, String sceneA, String sceneB,
                        String overlayScene,
                        String cityName, String streetName, String villageName, String admStreetName,
-                       String zoneName) {
+                       String zoneName, String primaryId) {
         if (allPortCount == null) allPortCount = 0;
         if (idelPortCount == null) idelPortCount = 0;
         if (idelPortCount > allPortCount) {
@@ -118,7 +119,7 @@ public class ResourceServiceImpl implements IResourceService {
         BuildingPO buildingPO = buildingDAO.selectById(buildingId);
         Double longitude = buildingPO.getLongitude();
         Double latitude = buildingPO.getLatitude();
-        checkUnique(id, buildingId, floor, number, longitude, latitude);
+        checkUnique(id, primaryId);
 
         ResourcePO resourcePO = new ResourcePO();
         resourcePO.setLongitude(longitude);
@@ -138,6 +139,7 @@ public class ResourceServiceImpl implements IResourceService {
         resourcePO.setSceneA(sceneA);
         resourcePO.setSceneB(sceneB);
         resourcePO.setOverlayScene(overlayScene);
+        resourcePO.setPrimaryId(primaryId);
         resourceDAO.update(resourcePO);
     }
 
@@ -252,19 +254,22 @@ public class ResourceServiceImpl implements IResourceService {
         }
 
         if (resourceImport.getAllPortCount() == null) {
-            throw new GisRuntimeException(resourceImport.getR() + "未能确定端口总数");
+//            throw new GisRuntimeException(resourceImport.getR() + "未能确定端口总数");
+            resourceImport.setAllPortCount(0);
         }
         if (resourceImport.getIdelPortCount() == null) {
-            throw new GisRuntimeException( resourceImport.getR() + "未能确定空余端口数");
+//            throw new GisRuntimeException( resourceImport.getR() + "未能确定空余端口数");
+            resourceImport.setIdelPortCount(0);
         }
         if (resourceImport.getAllPortCount() < resourceImport.getIdelPortCount()) {
             throw new GisRuntimeException(resourceImport.getR() + "空余端口数不能大于总端口数");
         }
-        if(resourceImport.getFloor() == null) {
-            throw new GisRuntimeException(resourceImport.getR() + "未能确定楼层");
+        if(resourceImport.getPrimaryId() == null) {
+            throw new GisRuntimeException(resourceImport.getR() + "未能确定外线ID");
         }
-        if(resourceImport.getNumber() == null) {
-            throw new GisRuntimeException(resourceImport.getR() + "未能确定户号");
+        if(resourceImport.getFloor() == null) {
+            resourceImport.setFloor(1);
+//            throw new GisRuntimeException(resourceImport.getR() + "未能确定楼层");
         }
         Map<String,Boolean> map = new HashMap<>();
         map.put("street", street);

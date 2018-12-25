@@ -44,6 +44,10 @@
             border
             style="width: 100%; margin-top: 3px;">
         <el-table-column
+                prop="primaryId"
+                label="外线ID">
+        </el-table-column>
+        <el-table-column
                 prop="cityName"
                 label="地市名称">
         </el-table-column>
@@ -135,6 +139,9 @@
 
     <el-dialog :title="tt" :visible.sync="addVisible" :before-close="cancelAdd">
         <el-form :model="addForm" :rules="addRules" ref="addForm" size="small">
+            <el-form-item label="外线ID:" prop="primaryId" :label-width="formLabelWidth">
+                <el-input v-model.trim="addForm.primaryId" autocomplete="off" size="small" maxlength="50"></el-input>
+            </el-form-item>
             <el-form-item label="地市名称:" prop="cityName" :label-width="formLabelWidth">
                 <el-input v-model.trim="addForm.cityName" autocomplete="off" size="small" maxlength="50"></el-input>
             </el-form-item>
@@ -243,6 +250,7 @@
                 addVisible: false,
                 addForm: {},
                 addRules: {
+                    primaryId: [{required : true, message: '请输入外线ID', trigger: 'change' }],
                     buildingId: [{required : true, message: '请选择所属建筑', trigger: 'change' }],
                     idelPortCount: [{required : false, validator: validateNumber, trigger: 'blur'}],
                     allPortCount: [{required : false, validator: validateNumber, trigger: 'blur'}],
@@ -343,6 +351,9 @@
                         let fd = new FormData();
                         if (typeof(this.addForm.id) != "undefined" && this.addForm.id != null) {
                             fd.append('id', this.addForm.id)
+                        }
+                        if (typeof(this.addForm.primaryId) != "undefined" && this.addForm.primaryId != null && this.addForm.primaryId != '') {
+                            fd.append('primaryId', this.addForm.primaryId)
                         }
                         if (typeof(this.addForm.buildingId) != "undefined" && this.addForm.buildingId != null) {
                             fd.append('buildingId', this.addForm.buildingId)
@@ -470,6 +481,7 @@
                 this.addForm = {
                     id: row.id,
                     buildingId: row.buildingId,
+                    primaryId: row.primaryId,
                     district: row.district,
                     cityName: row.cityName,
                     streetName: row.streetName,
