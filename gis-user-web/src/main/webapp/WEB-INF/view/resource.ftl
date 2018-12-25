@@ -255,7 +255,7 @@
                     idelPortCount: [{required : false, validator: validateNumber, trigger: 'blur'}],
                     allPortCount: [{required : false, validator: validateNumber, trigger: 'blur'}],
                     floor: [{required : true, validator: validateFloor, trigger: 'blur'}],
-                    number: [{required : true, message: '请输入户号', trigger: 'blur' }],
+                    // number: [{required : true, message: '请输入户号', trigger: 'blur' }],
                 },
                 buildings: [],
                 allBuildings: [],
