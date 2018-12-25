@@ -35,6 +35,9 @@ public class StreetController extends BaseController {
                        @RequestParam(required = false, defaultValue = "1") Integer curPage,
                        @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
         ListVO<StreetVO> listVO = streetService.list(curPage, pageSize, name);
+        if (listVO.getList().isEmpty() && listVO.getTotalCount() > 0L && curPage > 1) {
+            listVO = streetService.list(curPage - 1, pageSize, name);
+        }
         return ok().pull("data", listVO).json();
     }
 

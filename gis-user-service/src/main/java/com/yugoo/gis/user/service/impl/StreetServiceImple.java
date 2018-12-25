@@ -62,20 +62,22 @@ public class StreetServiceImple implements IStreetService {
                 }
                 return vo;
             }).collect(Collectors.toList());
-            List<BuildingPO> buildingPOList = buildingDAO.selectByStreetIds(streetIds);
-            for (StreetVO vo : streetVOList) {
-                List<PointVO> pointVOS = new ArrayList<>();
-                for (int i = buildingPOList.size() - 1; i >= 0; i --) {
-                    if (buildingPOList.get(i).getStreetId().equals(vo.getId())) {
-                        PointVO pointVO = new PointVO();
-                        pointVO.setName(buildingPOList.get(i).getName());
-                        pointVO.setLongitude(buildingPOList.get(i).getLongitude());
-                        pointVO.setLatitude(buildingPOList.get(i).getLatitude());
-                        pointVOS.add(pointVO);
-                        buildingPOList.remove(i);
+            if (!streetIds.isEmpty()) {
+                List<BuildingPO> buildingPOList = buildingDAO.selectByStreetIds(streetIds);
+                for (StreetVO vo : streetVOList) {
+                    List<PointVO> pointVOS = new ArrayList<>();
+                    for (int i = buildingPOList.size() - 1; i >= 0; i --) {
+                        if (buildingPOList.get(i).getStreetId().equals(vo.getId())) {
+                            PointVO pointVO = new PointVO();
+                            pointVO.setName(buildingPOList.get(i).getName());
+                            pointVO.setLongitude(buildingPOList.get(i).getLongitude());
+                            pointVO.setLatitude(buildingPOList.get(i).getLatitude());
+                            pointVOS.add(pointVO);
+                            buildingPOList.remove(i);
+                        }
                     }
+                    vo.setBuildingPoints(pointVOS);
                 }
-                vo.setBuildingPoints(pointVOS);
             }
             listVO.setList(streetVOList);
             listVO.setTotalCount(count);
