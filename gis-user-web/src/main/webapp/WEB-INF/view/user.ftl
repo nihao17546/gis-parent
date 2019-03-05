@@ -25,6 +25,7 @@
     <el-table
             :data="list"
             border
+            :height="tableHeight"
             style="width: 100%; margin-top: 3px;">
         <el-table-column
                 prop="name"
@@ -165,6 +166,7 @@
                 callback()
             }
             return {
+                tableHeight: window.innerHeight - 70,
                 tt: '',
                 roles: [],
                 groups: [],

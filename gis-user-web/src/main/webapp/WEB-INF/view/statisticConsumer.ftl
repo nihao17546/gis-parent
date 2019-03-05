@@ -26,6 +26,7 @@
     </div>
     <el-table
             :data="list"
+            :height="tableHeight"
             border @sort-change='sortChange'
             style="width: 100%; margin-top: 3px;">
         <el-table-column
@@ -67,6 +68,7 @@
         el: '#app',
         data() {
             return {
+                tableHeight: window.innerHeight - 70,
                 loading: false,
                 auth: ${auth},
                 searchConsumerName: '',

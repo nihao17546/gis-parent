@@ -36,6 +36,7 @@
     <el-table
             :data="list"
             border
+            :height="tableHeight"
             style="width: 100%; margin-top: 3px;">
         <el-table-column
                 prop="name"
@@ -388,6 +389,7 @@
                 }, 100)
             }
             return {
+                tableHeight: window.innerHeight - 70,
                 formLabelWidth: '120px',
                 loading: false,
                 auth: ${auth},
