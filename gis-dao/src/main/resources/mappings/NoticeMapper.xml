@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yugoo.gis.dao.NoticeDAO">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.yugoo.gis.pojo.po.NoticePO">
+        insert into tb_notice(`title`,`content`,`sorting`,ctime)
+        values(#{title},#{content},#{sorting},now())
+    </insert>
+    <update id="update" parameterType="com.yugoo.gis.pojo.po.NoticePO">
+        update tb_notice set `title`=#{title},`content`=#{content},
+        `sorting`=#{sorting},ctime=now() where id=#{id}
+    </update>
+    <select id="selectById" resultType="com.yugoo.gis.pojo.po.NoticePO">
+        select * from tb_notice where id=#{id}
+    </select>
+    <select id="selectCount" resultType="java.lang.Long">
+        select count(1) from tb_notice where 1=1
+        <if test="title != null">
+            and `title` like concat('%',#{title},'%')
+        </if>
+    </select>
+    <select id="select" resultType="com.yugoo.gis.pojo.po.NoticePO">
+        select id,title,sorting,ctime from tb_notice where 1=1
+        <if test="title != null">
+            and `title` like concat('%',#{title},'%')
+        </if>
+        order by sorting
+    </select>
+    <delete id="deleteById">
+        delete from tb_notice where id=#{id}
+    </delete>
+</mapper>

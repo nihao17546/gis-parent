@@ -156,6 +156,13 @@ public class UserServiceImpl implements IUserService {
         config.setIndex(7);
         config.setIcon("fa-wrench");
         adminMenus.add(config);
+
+        MenuVO notice = new MenuVO();
+        notice.setName("公告管理");
+        notice.setPath("notice.html");
+        notice.setIndex(8);
+        notice.setIcon("fa-sticky-note-o");
+        adminMenus.add(notice);
     }
 
     @Override
