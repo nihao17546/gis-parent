@@ -49,4 +49,10 @@ public class NoticeController extends BaseController {
         return ok().json();
     }
 
+    @RequestMapping("/delete")
+    public String delete(@RequestParam Integer id) {
+        noticeService.delete(id);
+        return ok().json();
+    }
+
 }

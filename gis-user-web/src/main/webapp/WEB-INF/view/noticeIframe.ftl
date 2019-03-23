@@ -148,7 +148,6 @@
         }
         time = window.setInterval(function () {
             let h = document.body.scrollHeight
-            console.log(h)
             $('#content-iframe', window.parent.document).height(h)
         }, 100)
     })
