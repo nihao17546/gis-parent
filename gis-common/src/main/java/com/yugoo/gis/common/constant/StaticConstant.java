@@ -98,7 +98,14 @@ public class StaticConstant {
             "/notice/edit",
             "/notice/delete",
             "/notice/list",
-            "/notice/info");
+            "/notice/info",
+            "/learn.html",
+            "/learnIframe.html",
+            "/learn/create",
+            "/learn/edit",
+            "/learn/delete",
+            "/learn/list",
+            "/learn/info");
     public static List<String> getPathByRole(Integer roleId) {
         Role role = Role.getByValue(roleId);
         List<String> list = Lists.newArrayList(JUST_NEED_LOGIN_PATH);

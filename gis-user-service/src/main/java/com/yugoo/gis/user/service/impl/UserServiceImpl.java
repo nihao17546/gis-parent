@@ -163,6 +163,13 @@ public class UserServiceImpl implements IUserService {
         notice.setIndex(8);
         notice.setIcon("fa-sticky-note-o");
         adminMenus.add(notice);
+
+        MenuVO learn = new MenuVO();
+        learn.setName("业务学习");
+        learn.setPath("learn.html");
+        learn.setIndex(9);
+        learn.setIcon("fa-sticky-note-o");
+        adminMenus.add(learn);
     }
 
     @Override

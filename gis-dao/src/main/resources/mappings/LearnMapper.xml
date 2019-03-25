@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yugoo.gis.dao.LearnDAO">
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.yugoo.gis.pojo.po.LearnPO">
+        insert into tb_learn(`title`,`content`,`sorting`,ctime)
+        values(#{title},#{content},#{sorting},now())
+    </insert>
+    <update id="update" parameterType="com.yugoo.gis.pojo.po.LearnPO">
+        update tb_learn set `title`=#{title},`content`=#{content},
+        `sorting`=#{sorting},ctime=now() where id=#{id}
+    </update>
+    <select id="selectById" resultType="com.yugoo.gis.pojo.po.LearnPO">
+        select * from tb_learn where id=#{id}
+    </select>
+    <select id="selectCount" resultType="java.lang.Long">
+        select count(1) from tb_learn where 1=1
+        <if test="title != null">
+            and `title` like concat('%',#{title},'%')
+        </if>
+    </select>
+    <select id="select" resultType="com.yugoo.gis.pojo.po.LearnPO">
+        select id,title,sorting,ctime from tb_learn where 1=1
+        <if test="title != null">
+            and `title` like concat('%',#{title},'%')
+        </if>
+        order by sorting
+    </select>
+    <delete id="deleteById">
+        delete from tb_learn where id=#{id}
+    </delete>
+</mapper>
