@@ -2,7 +2,6 @@ package com.yugoo.gis.dao;
 
 import com.yugoo.gis.pojo.po.ResourcePO;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
 
@@ -14,7 +13,8 @@ public interface ResourceDAO {
     ResourcePO selectByPrimaryId(@Param("primaryId") String primaryId);
     int update(ResourcePO resourcePO);
     List<ResourcePO> select(@Param("buildingId") Integer buildingId,
-                            RowBounds rowBounds);
+                            @Param("offset") Integer offset,
+                            @Param("rows") Integer rows);
     Long selectCount(@Param("buildingId") Integer buildingId);
     ResourcePO selectByBuildingIdAndFloorAndNumber(@Param("buildingId") Integer buildingId,
                                                    @Param("floor") Integer floor,

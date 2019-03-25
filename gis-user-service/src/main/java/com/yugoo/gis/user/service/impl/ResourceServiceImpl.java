@@ -149,7 +149,7 @@ public class ResourceServiceImpl implements IResourceService {
         long count = resourceDAO.selectCount(buildingId);
         ListVO<ResourceVO> listVO = new ListVO<>(curPage, pageSize);
         if (count > 0) {
-            List<ResourcePO> resourcePOList = resourceDAO.select(buildingId, new RowBounds((curPage - 1) * pageSize, pageSize));
+            List<ResourcePO> resourcePOList = resourceDAO.select(buildingId, (curPage - 1) * pageSize, pageSize);
             List<Integer> buildingIds = new ArrayList<>();
             List<ResourceVO> list = resourcePOList.stream().map(po -> {
                 ResourceVO vo = new ResourceVO();
