@@ -56,7 +56,9 @@ public class StaticConstant {
             "/config/info",
             "/statistic/consumer",
             "/statistic/export/consumer",
-            "/statisticConsumer.html"
+            "/statisticConsumer.html",
+            "/consumerInfo.html",
+            "/consumerInfo/list"
     );
     public static final List<String> HEADMAN_PATH = Arrays.asList(
             "/group.html",
@@ -105,7 +107,8 @@ public class StaticConstant {
             "/learn/edit",
             "/learn/delete",
             "/learn/list",
-            "/learn/info");
+            "/learn/info",
+            "/consumerInfo/delete");
     public static List<String> getPathByRole(Integer roleId) {
         Role role = Role.getByValue(roleId);
         List<String> list = Lists.newArrayList(JUST_NEED_LOGIN_PATH);

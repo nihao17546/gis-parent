@@ -12,6 +12,9 @@
     <script src="${contextPath}/static/lightbox-dialog/dist/js/lobibox.min.js"></script>
     <script src="${contextPath}/static/js/common.js"></script>
     <style>
+        body .el-table th.gutter{
+            display: table-cell!important;
+        }
     </style>
 </head>
 <body>
@@ -68,7 +71,7 @@
         el: '#app',
         data() {
             return {
-                tableHeight: window.innerHeight - 70,
+                tableHeight: window.innerHeight - 78,
                 loading: false,
                 auth: ${auth},
                 searchConsumerName: '',

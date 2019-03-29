@@ -15,6 +15,9 @@
         .el-dialog__body {
             padding-top: 5px;
         }
+        body .el-table th.gutter{
+            display: table-cell!important;
+        }
     </style>
 </head>
 <body>
@@ -166,7 +169,7 @@
                 callback()
             }
             return {
-                tableHeight: window.innerHeight - 70,
+                tableHeight: window.innerHeight - 78,
                 tt: '',
                 roles: [],
                 groups: [],

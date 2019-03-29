@@ -17,6 +17,9 @@
             height: 270px;
             overflow: hidden;
         }
+        body .el-table th.gutter{
+            display: table-cell!important;
+        }
     </style>
 </head>
 <body>
@@ -238,7 +241,7 @@
                 }, 100)
             }
             return {
-                tableHeight: window.innerHeight - 70,
+                tableHeight: window.innerHeight - 78,
                 loading: false,
                 ifFromIndex: true,
                 searchBuildingName: '',

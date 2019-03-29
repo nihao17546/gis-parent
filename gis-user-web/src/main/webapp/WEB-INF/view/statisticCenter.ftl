@@ -13,6 +13,9 @@
     <script src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
     <script src="${contextPath}/static/js/common.js"></script>
     <style>
+        body .el-table th.gutter{
+            display: table-cell!important;
+        }
     </style>
 </head>
 <body>

@@ -34,6 +34,9 @@
         .el-dialog__headerbtn {
             top: 10px;
         }
+        body .el-table th.gutter{
+            display: table-cell!important;
+        }
     </style>
 </head>
 <body>
@@ -135,7 +138,7 @@
         el: '#app',
         data() {
             return {
-                tableHeight: window.innerHeight - 70,
+                tableHeight: window.innerHeight - 78,
                 formLabelWidth: '100px',
                 loading: false,
                 searchName: '',

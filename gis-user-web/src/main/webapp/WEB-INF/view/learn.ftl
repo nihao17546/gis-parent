@@ -61,6 +61,9 @@
         .el-dialog__headerbtn {
             top: 10px;
         }
+        body .el-table th.gutter{
+            display: table-cell!important;
+        }
     </style>
 </head>
 <body>
@@ -119,7 +122,7 @@
             loading: false,
             auth: ${auth},
             searchTitle: '',
-            tableHeight: window.innerHeight - 70,
+            tableHeight: window.innerHeight - 78,
             list: [],
             totalCount: 0,
             pageSize: 10,

@@ -12,6 +12,9 @@
     <script src="${contextPath}/static/lightbox-dialog/dist/js/lobibox.min.js"></script>
     <script src="${contextPath}/static/js/common.js"></script>
     <style>
+        body .el-table th.gutter{
+            display: table-cell!important;
+        }
     </style>
 </head>
 <body>
