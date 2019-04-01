@@ -1,6 +1,7 @@
 package com.yugoo.gis.user.web.utils;
 
 import com.yugoo.gis.common.exception.GisRuntimeException;
+import com.yugoo.gis.common.utils.SimpleDateUtil;
 import com.yugoo.gis.pojo.po.ResourcePO;
 import com.yugoo.gis.pojo.vo.ConsumerListVO;
 import com.yugoo.gis.pojo.vo.ListVO;
@@ -156,6 +157,7 @@ public class ExcelUtil {
     public static final List<NeedList> statisticTitles = new ArrayList<>();
     public static final List<NeedList> statisticConsumerTitles = new ArrayList<>();
     public static final List<NeedList> userTitles = new ArrayList<>();
+    public static final List<NeedList> customerInfoTitles = new ArrayList<>();
 
     static {
         /**
@@ -252,6 +254,24 @@ public class ExcelUtil {
         userTitles.add(new NeedList(100, "基础建档数量", userTitlesInt++, "@basicArchiveCount"));
         userTitles.add(new NeedList(100, "已建档数量", userTitlesInt++, "@effectiveArchiveCount"));
         userTitles.add(new NeedList(100, "新建专线数量", userTitlesInt++, "@specialLineCount"));
+
+        /**
+         * 扫街扫铺统计导出
+         */
+        int customerInfoTitlesInt = 0;
+        customerInfoTitles.add(new NeedList(100, "客户经理", customerInfoTitlesInt++, "userName"));
+        customerInfoTitles.add(new NeedList(100, "要客组", customerInfoTitlesInt++, "groupName"));
+        customerInfoTitles.add(new NeedList(100, "客户名称", customerInfoTitlesInt++, "@customerName"));
+        customerInfoTitles.add(new NeedList(150, "地址", customerInfoTitlesInt++, "@address"));
+        customerInfoTitles.add(new NeedList(100, "电话", customerInfoTitlesInt++, "@phone"));
+        customerInfoTitles.add(new NeedList(80, "状态", customerInfoTitlesInt++, "statusStr"));
+        customerInfoTitles.add(new NeedList(120, "办理业务", customerInfoTitlesInt++, "@transactedService"));
+        customerInfoTitles.add(new NeedList(120, "办理业务子项", customerInfoTitlesInt++, "@transactedServiceSub"));
+        customerInfoTitles.add(new NeedList(120, "预约业务", customerInfoTitlesInt++, "@bookedService"));
+        customerInfoTitles.add(new NeedList(120, "预约业务子项", customerInfoTitlesInt++, "@bookedServiceSub"));
+        customerInfoTitles.add(new NeedList(100, "随行人员", customerInfoTitlesInt++, "@partner"));
+        customerInfoTitles.add(new NeedList(200, "备注", customerInfoTitlesInt++, "@remark"));
+        customerInfoTitles.add(new NeedList(100, "创建时间", customerInfoTitlesInt++, "@ctime"));
     }
 
     private static String base64EncodeFileName(String fileName) {
@@ -394,7 +414,7 @@ public class ExcelUtil {
                 cell.setCellValue((Double) value);
             }
             else if (value instanceof Date) {
-                cell.setCellValue((Date) value);
+                cell.setCellValue(SimpleDateUtil.format((Date) value));
             }
             else {
                 cell.setCellValue(String.valueOf(value));

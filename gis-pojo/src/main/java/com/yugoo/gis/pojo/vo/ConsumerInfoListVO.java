@@ -7,4 +7,5 @@ import lombok.Data;
 public class ConsumerInfoListVO extends ConsumerInfoPO {
     private String groupName;
     private String userName;
+    private String statusStr;
 }

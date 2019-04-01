@@ -20,6 +20,7 @@
 <body>
 <div id="app" v-loading="loading">
     <div style="padding-left: 5px;">
+        <el-button type="primary" size="small" v-if="auth.indexOf('/consumerInfo/export') != -1" @click="exportExcel" style="float: left;margin-left: 6px;">导出</el-button>
         <el-date-picker
                 size="small"
                 clearable
@@ -60,6 +61,10 @@
                 label="电话">
         </el-table-column>
         <el-table-column
+                prop="statusStr"
+                label="状态">
+        </el-table-column>
+        <el-table-column
                 prop="transactedService"
                 label="办理业务">
         </el-table-column>
@@ -83,7 +88,7 @@
                         v-if="props.row.picBase64"
                         placement="left"
                         trigger="click">
-                    <img :src="props.row.picBase64"/>
+                    <img :src="props.row.picBase64" style="max-width: 400px"/>
                     <el-button slot="reference" size="mini">查看</el-button>
                 </el-popover>
             </template>
@@ -139,6 +144,36 @@
             }
         },
         methods: {
+            exportExcel() {
+                this.loading = true;
+                let $form=$("<form action='${contextPath}/consumerInfo/export' method='post' style='display: none'></form>");
+                let startTime = null;
+                let endTime = null;
+                if (this.searchDate != null && this.searchDate.length > 0) {
+                    startTime = this.searchDate[0]
+                    if (this.searchDate.length == 2) {
+                        endTime = this.searchDate[1]
+                    }
+                }
+                if (startTime != null) {
+                    let input1 = $("<input>");
+                    input1.attr("name", "startTime");
+                    input1.attr("value", startTime);
+                    $form.append(input1);
+                }
+                if (endTime != null) {
+                    let input1 = $("<input>");
+                    input1.attr("name", "endTime");
+                    input1.attr("value", endTime);
+                    $form.append(input1);
+                }
+                $('body').append($form);
+                $form.submit();
+                setTimeout(() => {
+                    this.loading = false;
+                    $form.remove();
+                }, 5000)
+            },
             currentChange(currentPage) {
                 this.curPage = currentPage;
                 this.getList()

@@ -42,6 +42,11 @@ public class ConsumerInfoServiceImpl implements IConsumerInfoService {
             List<ConsumerInfoListVO> voList = poList.stream().map(po -> {
                 ConsumerInfoListVO vo = new ConsumerInfoListVO();
                 BeanUtils.copyProperties(po, vo);
+                if (po.getStatus() == 1) {
+                    vo.setStatusStr("预约");
+                } else if (po.getStatus() == 2) {
+                    vo.setStatusStr("已签约");
+                }
                 if (po.getUserId() != null && !userIds.contains(po.getUserId())) {
                     userIds.add(po.getUserId());
                 }
