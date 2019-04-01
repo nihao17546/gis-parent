@@ -33,4 +33,5 @@ public interface UserDAO {
                                      @Param("role") Integer role);
     List<Integer> selectIdByCenterIdsAndRole(@Param("centerIds") List<Integer> centerIds,
                                              @Param("role") Integer role);
+    List<UserPO> selectAll();
 }

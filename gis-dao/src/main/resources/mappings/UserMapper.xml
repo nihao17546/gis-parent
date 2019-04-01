@@ -104,4 +104,7 @@
             and role=#{role}
         </if>
     </select>
+    <select id="selectAll" resultType="com.yugoo.gis.pojo.po.UserPO">
+        select * from tb_user
+    </select>
 </mapper>

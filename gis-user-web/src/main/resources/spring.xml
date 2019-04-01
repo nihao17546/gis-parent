@@ -38,6 +38,7 @@
     <task:scheduled-tasks>
         <!-- 0 */1 * * * ?  0 0 1 * * ? -->
         <task:scheduled ref="task" method="center" cron="#{configProperties['cron']}" />
+        <task:scheduled ref="task" method="w" cron="#{configProperties['cron']}" />
     </task:scheduled-tasks>
 
 </beans>
