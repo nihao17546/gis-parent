@@ -47,6 +47,12 @@ public class ConsumerInfoServiceImpl implements IConsumerInfoService {
                 } else if (po.getStatus() == 2) {
                     vo.setStatusStr("已签约");
                 }
+                if (po.getBookedTime() != null && po.getBookedTime() > 0L) {
+                    vo.setBookedTimeDate(new Date(po.getBookedTime()));
+                }
+                if (po.getTransactedTime() != null && po.getTransactedTime() > 0L) {
+                    vo.setTransactedTimeDate(new Date(po.getTransactedTime()));
+                }
                 if (po.getUserId() != null && !userIds.contains(po.getUserId())) {
                     userIds.add(po.getUserId());
                 }
