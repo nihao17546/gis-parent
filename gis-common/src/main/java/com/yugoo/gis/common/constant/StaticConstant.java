@@ -76,7 +76,10 @@ public class StaticConstant {
             "/statisticCenter.html",
             "/statistic/user",
             "/statistic/export/user",
-            "/statisticUser.html"
+            "/statisticUser.html",
+            "/statistic/customerInfo",
+            "/statistic/export/customerInfo",
+            "/statisticCustomerInfo.html"
     );
     public static final List<String> ADMIN_PATH = Arrays.asList(
             "/user/edit",

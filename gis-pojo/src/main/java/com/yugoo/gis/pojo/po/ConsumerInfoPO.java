@@ -19,7 +19,7 @@ public class ConsumerInfoPO {
     private byte[] photo;
     private String partner;
     private String remark;
-    private Date transactedTime;
-    private Date bookedTime;
+    private Long transactedTime;
+    private Long bookedTime;
     private Date ctime;
 }
