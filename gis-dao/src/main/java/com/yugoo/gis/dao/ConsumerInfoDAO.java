@@ -31,4 +31,6 @@ public interface ConsumerInfoDAO {
     @MapKey("userId")
     Map<Integer,StatisticCustomerPO>  selectByTransactedTime(@Param("start") Long start,
                                                      @Param("end") Long end);
+
+    List<ConsumerInfoPO> selectByIds(@Param("ids") List<Integer> ids);
 }

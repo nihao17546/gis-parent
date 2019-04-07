@@ -39,4 +39,11 @@
         where transactedTime between #{start} and #{end}
         group by userId
     </select>
+    <select id="selectByIds" resultType="com.yugoo.gis.pojo.po.ConsumerInfoPO">
+        select id,userId,photo,ctime from tb_customer_info
+        where id in
+        <foreach collection="ids" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
 </mapper>

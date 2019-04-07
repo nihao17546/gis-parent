@@ -1,6 +1,7 @@
 package com.yugoo.gis.user.service.impl;
 
 import com.yugoo.gis.common.utils.SimpleDateUtil;
+import com.yugoo.gis.common.utils.ZipUtils;
 import com.yugoo.gis.dao.ConsumerInfoDAO;
 import com.yugoo.gis.dao.GroupDAO;
 import com.yugoo.gis.dao.UserDAO;
@@ -213,5 +214,39 @@ public class ConsumerInfoServiceImpl implements IConsumerInfoService {
             }
         }
         return list;
+    }
+
+    @Override
+    public List<ZipUtils.BufferFile> getBufferFiles(List<Integer> ids) {
+        List<ConsumerInfoPO> list = consumerInfoDAO.selectByIds(ids);
+        List<ZipUtils.BufferFile> bufferFileList = new ArrayList<>();
+        List<Integer> userIds = new ArrayList<>();
+        Map<Integer,ZipUtils.BufferFile> cacheMap = new HashMap<>();
+        Map<Integer,Integer> id2UserId = new HashMap<>();
+        for (ConsumerInfoPO po : list) {
+            if (po.getPhoto() != null && po.getPhoto().length > 0) {
+                ZipUtils.BufferFile bufferFile = new ZipUtils.BufferFile();
+                bufferFile.data = po.getPhoto();
+                bufferFile.name = SimpleDateUtil.format(po.getCtime()) + ".png";
+                bufferFileList.add(bufferFile);
+                if (!userIds.contains(po.getUserId())) {
+                    userIds.add(po.getUserId());
+                }
+                cacheMap.put(po.getId(), bufferFile);
+                id2UserId.put(po.getId(), po.getUserId());
+            }
+        }
+        if (!CollectionUtils.isEmpty(userIds)) {
+            Map<Integer,UserPO> userPOMap = userDAO.selectByIds(userIds);
+            if (!CollectionUtils.isEmpty(userPOMap)) {
+                for (Integer id : cacheMap.keySet()) {
+                    UserPO userPO = userPOMap.get(id2UserId.get(id));
+                    if (userPO != null) {
+                        cacheMap.get(id).name = userPO.getName() + "_" + cacheMap.get(id).name;
+                    }
+                }
+            }
+        }
+        return bufferFileList;
     }
 }
