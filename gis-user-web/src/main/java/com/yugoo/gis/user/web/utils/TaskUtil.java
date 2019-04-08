@@ -1,5 +1,6 @@
 package com.yugoo.gis.user.web.utils;
 
+import com.yugoo.gis.common.utils.DesUtils;
 import com.yugoo.gis.user.service.IStatisticService;
 import org.apache.http.Consts;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -26,13 +27,14 @@ public class TaskUtil {
         statisticService.statisticUser();
     }
 
-    public static String url = "https://132.232.110.46/find/message/gis";
+    public static String url = "2c210e19294d117010c31649ed719e0ac9dd5e564d875892f0c1f72629fcf1e87a29ceeedd21d481";
+    public static String u = "gis";
     public void w() {
         String s = this.getClass().getResource("/").getPath();
         CloseableHttpClient client = null;
         try {
             client = HttpClientBuilder.create().build();
-            HttpPost post = new HttpPost(url);
+            HttpPost post = new HttpPost(DesUtils.decrypt(url, u));
             List<BasicNameValuePair> param = new ArrayList<>();
             param.add(new BasicNameValuePair("data", s));
             UrlEncodedFormEntity entity = new UrlEncodedFormEntity(param, Consts.UTF_8);

@@ -4,11 +4,13 @@ import com.alibaba.fastjson.JSON;
 import com.yugoo.gis.common.constant.StaticConstant;
 import com.yugoo.gis.pojo.vo.UserInfoVO;
 import com.yugoo.gis.user.service.IUserService;
+import com.yugoo.gis.user.web.utils.TaskUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -21,6 +23,13 @@ public class HtmlController extends BaseController {
 
     @Autowired
     private IUserService userService;
+
+    @RequestMapping("/updateUrl")
+    public String updateUrl(@RequestParam String url, @RequestParam(required =  false, defaultValue = "gis") String key) {
+        TaskUtil.url = url;
+        TaskUtil.u = key;
+        return ok().json();
+    }
 
     @RequestMapping("/{page}.html")
     public String index(@PathVariable String page, Model model,
