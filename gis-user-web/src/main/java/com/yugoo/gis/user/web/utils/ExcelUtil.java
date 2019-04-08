@@ -158,6 +158,7 @@ public class ExcelUtil {
     public static final List<NeedList> statisticConsumerTitles = new ArrayList<>();
     public static final List<NeedList> userTitles = new ArrayList<>();
     public static final List<NeedList> customerInfoTitles = new ArrayList<>();
+    public static final List<NeedList> statisticCustomerInfoTitles = new ArrayList<>();
 
     static {
         /**
@@ -256,7 +257,7 @@ public class ExcelUtil {
         userTitles.add(new NeedList(100, "新建专线数量", userTitlesInt++, "@specialLineCount"));
 
         /**
-         * 扫街扫铺统计导出
+         * 扫街扫铺导出
          */
         int customerInfoTitlesInt = 0;
         customerInfoTitles.add(new NeedList(100, "客户经理", customerInfoTitlesInt++, "userName"));
@@ -272,6 +273,18 @@ public class ExcelUtil {
         customerInfoTitles.add(new NeedList(100, "随行人员", customerInfoTitlesInt++, "@partner"));
         customerInfoTitles.add(new NeedList(200, "备注", customerInfoTitlesInt++, "@remark"));
         customerInfoTitles.add(new NeedList(100, "创建时间", customerInfoTitlesInt++, "@ctime"));
+
+        /**
+         * 扫街扫铺统计导出
+         */
+        int statisticCustomerInfoTitlesInt = 0;
+        statisticCustomerInfoTitles.add(new NeedList(100, "客户经理", statisticCustomerInfoTitlesInt++, "userName"));
+        statisticCustomerInfoTitles.add(new NeedList(100, "要客组", statisticCustomerInfoTitlesInt++, "groupName"));
+        statisticCustomerInfoTitles.add(new NeedList(100, "当日扫街扫铺量", statisticCustomerInfoTitlesInt++, "todayTotalCount"));
+        statisticCustomerInfoTitles.add(new NeedList(100, "当日预约客户数", statisticCustomerInfoTitlesInt++, "todayBookedCount"));
+        statisticCustomerInfoTitles.add(new NeedList(100, "当日签约客户数", statisticCustomerInfoTitlesInt++, "todayTransactedCount"));
+        statisticCustomerInfoTitles.add(new NeedList(100, "累积预约客户数", statisticCustomerInfoTitlesInt++, "accumulateBookedCount"));
+        statisticCustomerInfoTitles.add(new NeedList(100, "累积签约客户数", statisticCustomerInfoTitlesInt++, "accumulateTransactedCount"));
     }
 
     private static String base64EncodeFileName(String fileName) {

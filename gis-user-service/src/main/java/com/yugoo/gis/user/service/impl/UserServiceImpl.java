@@ -128,6 +128,11 @@ public class UserServiceImpl implements IUserService {
         userSta.setPath("statisticUser.html");
         userSta.setIndex(83);
         userSta.setIcon("fa-bar-chart");
+        MenuVO consumerInfoStatistic = new MenuVO();
+        consumerInfoStatistic.setName("扫街扫铺统计");
+        consumerInfoStatistic.setPath("statisticCustomerInfo.html");
+        consumerInfoStatistic.setIndex(84);
+        consumerInfoStatistic.setIcon("fa-bar-chart");
 
         MenuVO statisticA = new MenuVO();
         statisticA.setName("统计报表");
@@ -137,6 +142,7 @@ public class UserServiceImpl implements IUserService {
         statisticListA.add(centerSta);
         statisticListA.add(consumerSta);
         statisticListA.add(userSta);
+        statisticListA.add(consumerInfoStatistic);
         statisticA.setMenus(statisticListA);
         adminMenus.add(statisticA);
         headmanMenus.add(statisticA);

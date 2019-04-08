@@ -3,6 +3,7 @@ package com.yugoo.gis.common.utils;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -105,5 +106,15 @@ public class SimpleDateUtil {
 
     public static String cnFormat(Date date){
         return getCNDateFormat().format(date);
+    }
+
+    public static Date initDateByMonth(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.set(Calendar.DAY_OF_MONTH, 1);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        return calendar.getTime();
     }
 }

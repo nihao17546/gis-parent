@@ -20,8 +20,9 @@
 <body>
 <div id="app" v-loading="loading">
     <div style="padding-left: 5px;">
-        <el-button type="primary" size="small" v-if="auth.indexOf('/consumerInfo/export') != -1" @click="exportExcel" style="float: left;margin-left: 6px;">导出</el-button>
-        <el-date-picker
+        <el-button type="primary" size="small" v-if="auth.indexOf('/consumerInfo/export') != -1" @click="exportExcel" style="float: left;">导出</el-button>
+        <el-button type="primary" size="small" v-if="auth.indexOf('/consumerInfo/download') != -1" @click="downloadPhoto" style="float: left;margin-left: 6px;">下载本页图片</el-button>
+        <el-date-picker style="float: left;margin-left: 6px;"
                 size="small"
                 clearable
                 v-if="auth.indexOf('/consumerInfo/list') != -1"
@@ -34,7 +35,7 @@
                 end-placeholder="结束日期"
                 value-format="timestamp">
         </el-date-picker>
-        <el-button :loading="loading" icon="el-icon-search" @click="search" size="small">搜索</el-button>
+        <el-button :loading="loading" icon="el-icon-search" @click="search" size="small" style="float: left;margin-left: 3px;">搜索</el-button>
     </div>
     <el-table
             :data="list"
@@ -144,6 +145,32 @@
             }
         },
         methods: {
+            downloadPhoto() {
+                let ids = [];
+                let ifHashPhoto = false;
+                this.list.forEach(li => {
+                    ids.push(li.id)
+                    if (li.picBase64) {
+                        ifHashPhoto = true
+                    }
+                })
+                if (ids.length == 0 || ifHashPhoto == false) {
+                    this.$message.error('当前页面数据没有可下载的图片');
+                    return;
+                }
+                this.loading = true;
+                let $form=$("<form action='${contextPath}/consumerInfo/download' method='post' style='display: none'></form>");
+                let input = $("<input>");
+                input.attr("name", "param");
+                input.attr("value", ids.join(','));
+                $form.append(input);
+                $('body').append($form);
+                $form.submit();
+                setTimeout(() => {
+                    this.loading = false;
+                    $form.remove();
+                }, 5000)
+            },
             exportExcel() {
                 this.loading = true;
                 let $form=$("<form action='${contextPath}/consumerInfo/export' method='post' style='display: none'></form>");

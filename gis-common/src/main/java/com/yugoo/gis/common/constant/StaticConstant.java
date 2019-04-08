@@ -59,7 +59,8 @@ public class StaticConstant {
             "/statisticConsumer.html",
             "/consumerInfo.html",
             "/consumerInfo/list",
-            "/consumerInfo/export"
+            "/consumerInfo/export",
+            "/consumerInfo/download"
     );
     public static final List<String> HEADMAN_PATH = Arrays.asList(
             "/group.html",
@@ -76,7 +77,10 @@ public class StaticConstant {
             "/statisticCenter.html",
             "/statistic/user",
             "/statistic/export/user",
-            "/statisticUser.html"
+            "/statisticUser.html",
+            "/statistic/customerInfo",
+            "/statistic/export/customerInfo",
+            "/statisticCustomerInfo.html"
     );
     public static final List<String> ADMIN_PATH = Arrays.asList(
             "/user/edit",

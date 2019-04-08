@@ -24,4 +24,26 @@
     <delete id="deleteById">
         delete from tb_customer_info where id=#{id}
     </delete>
+    <select id="selectByCtime" resultType="com.yugoo.gis.pojo.po.StatisticCustomerPO">
+        select userId,count(userId) con from tb_customer_info
+        where ctime between #{start} and #{end}
+        group by userId
+    </select>
+    <select id="selectByBookedTime" resultType="com.yugoo.gis.pojo.po.StatisticCustomerPO">
+        select userId,count(userId) con from tb_customer_info
+        where bookedTime between #{start} and #{end}
+        group by userId
+    </select>
+    <select id="selectByTransactedTime" resultType="com.yugoo.gis.pojo.po.StatisticCustomerPO">
+        select userId,count(userId) con from tb_customer_info
+        where transactedTime between #{start} and #{end}
+        group by userId
+    </select>
+    <select id="selectByIds" resultType="com.yugoo.gis.pojo.po.ConsumerInfoPO">
+        select id,userId,photo,ctime from tb_customer_info
+        where id in
+        <foreach collection="ids" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
 </mapper>
