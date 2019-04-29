@@ -44,8 +44,18 @@
     <select id="selectById" resultType="com.yugoo.gis.pojo.po.BuildingPO">
         select * from tb_building where id=#{id}
     </select>
+    <select id="selectAllByLoAndLa" resultType="com.yugoo.gis.pojo.po.BuildingPO">
+        select * from tb_building where
+        longitude between #{loMin} and #{loMax}
+        and latitude between #{laMin} and #{laMax}
+    </select>
     <select id="selectByLoAndLa" resultType="com.yugoo.gis.pojo.po.BuildingPO">
         select * from tb_building where
+        longitude between #{loMin} and #{loMax}
+        and latitude between #{laMin} and #{laMax}
+    </select>
+    <select id="selectCountByLoAndLa" resultType="java.lang.Long">
+        select count(1) from tb_building where
         longitude between #{loMin} and #{loMax}
         and latitude between #{laMin} and #{laMax}
     </select>

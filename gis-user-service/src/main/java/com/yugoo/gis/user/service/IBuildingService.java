@@ -13,7 +13,7 @@ public interface IBuildingService {
     ListVO<BuildingVO> list(Integer curPage, Integer pageSize, String name, Integer streetId);
     Integer create(String name, Integer streetId, Double longitude, Double latitude);
     void update(Integer id, String name, Integer streetId, Double longitude, Double latitude);
-    ListVO<BuildingVO> listByCenterId(Integer centerId);
+    ListVO<BuildingVO> listByCenterId(Integer centerId, Integer curPage, Integer pageSize);
     List<BuildingVO> listOwn(Integer userId, String name);
     void delete(Integer id);
     List<BuildingVO> searchByName(String name);

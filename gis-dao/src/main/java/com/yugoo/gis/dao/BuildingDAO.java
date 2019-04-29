@@ -20,8 +20,12 @@ public interface BuildingDAO {
     int update(BuildingPO buildingPO);
     BuildingPO selectAvgByStreetId(@Param("streetId") Integer streetId);
     BuildingPO selectById(@Param("id") Integer id);
+    List<BuildingPO> selectAllByLoAndLa(@Param("loMin") Double loMin, @Param("loMax") Double loMax,
+                                        @Param("laMin") Double laMin, @Param("laMax") Double laMax);
     List<BuildingPO> selectByLoAndLa(@Param("loMin") Double loMin, @Param("loMax") Double loMax,
-                                     @Param("laMin") Double laMin, @Param("laMax") Double laMax);
+                                     @Param("laMin") Double laMin, @Param("laMax") Double laMax, RowBounds rowBounds);
+    Long selectCountByLoAndLa(@Param("loMin") Double loMin, @Param("loMax") Double loMax,
+                              @Param("laMin") Double laMin, @Param("laMax") Double laMax);
     @MapKey("id")
     Map<Integer,BuildingPO> selectByIds(@Param("ids") List<Integer> ids);
     List<BuildingPO> selectByStreetIds(@Param("streetIds") List<Integer> streetIds);

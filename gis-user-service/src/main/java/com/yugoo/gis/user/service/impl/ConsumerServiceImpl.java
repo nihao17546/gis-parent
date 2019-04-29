@@ -154,7 +154,7 @@ public class ConsumerServiceImpl implements IConsumerService {
                 List<CenterPO> centerPOList = centerDAO.selectByGroupId(currentUser.getGroupId());
                 for (CenterPO centerPO : centerPOList) {
                     List<List<Double>> lists = JSON.parseObject(centerPO.getRegion(), new TypeReference<List<List<Double>>>(){});
-                    List<BuildingPO> buildingPOList = buildingDAO.selectByLoAndLa(
+                    List<BuildingPO> buildingPOList = buildingDAO.selectAllByLoAndLa(
                             centerPO.getLoMin(), centerPO.getLoMax(), centerPO.getLaMin(), centerPO.getLaMax());
                     for (BuildingPO buildingPO : buildingPOList) {
                         if (MapUtil.isPtInPoly(buildingPO.getLongitude(), buildingPO.getLatitude(), lists)
@@ -169,7 +169,7 @@ public class ConsumerServiceImpl implements IConsumerService {
                 userIdsParam.add(currentUser.getId());
                 CenterPO centerPO = centerDAO.selectById(currentUser.getCenterId());
                 List<List<Double>> lists = JSON.parseObject(centerPO.getRegion(), new TypeReference<List<List<Double>>>(){});
-                List<BuildingPO> buildingPOList = buildingDAO.selectByLoAndLa(
+                List<BuildingPO> buildingPOList = buildingDAO.selectAllByLoAndLa(
                         centerPO.getLoMin(), centerPO.getLoMax(), centerPO.getLaMin(), centerPO.getLaMax());
                 for (BuildingPO buildingPO : buildingPOList) {
                     if (MapUtil.isPtInPoly(buildingPO.getLongitude(), buildingPO.getLatitude(), lists)

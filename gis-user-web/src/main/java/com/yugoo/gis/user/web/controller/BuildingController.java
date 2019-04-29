@@ -39,7 +39,7 @@ public class BuildingController extends BaseController {
                 listVO = buildingService.list(curPage, pageSize, name, streetId);
             }
             else {
-                listVO = buildingService.listByCenterId(centerId);
+                listVO = buildingService.listByCenterId(centerId, curPage, pageSize);
             }
         }
         else {
