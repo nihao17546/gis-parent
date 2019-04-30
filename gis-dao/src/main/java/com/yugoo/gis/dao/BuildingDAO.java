@@ -37,5 +37,5 @@ public interface BuildingDAO {
     List<BuildingPO> selectLikeName(@Param("name") String name);
     List<BuildingPO> selectFromMap(@Param("name") String name,
                                    @Param("loMin") Double loMin, @Param("loMax") Double loMax,
-                                   @Param("laMin") Double laMin, @Param("laMax") Double laMax);
+                                   @Param("laMin") Double laMin, @Param("laMax") Double laMax, @Param("limit") Integer limit);
 }

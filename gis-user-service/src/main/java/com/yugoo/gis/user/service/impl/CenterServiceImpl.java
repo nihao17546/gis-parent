@@ -185,7 +185,7 @@ public class CenterServiceImpl implements ICenterService {
 
     @Override
     public List<CenterVO> searchFromMap(String name, Double loMin, Double loMax, Double laMin, Double laMax, Integer groupId) {
-        List<CenterPO> centerPOList = centerDAO.selectFromMap(name, loMin, loMax, laMin, laMax, groupId);
+        List<CenterPO> centerPOList = centerDAO.selectFromMap(name, loMin, loMax, laMin, laMax, groupId, 50);
         List<CenterVO> centerVOList = centerPOList.stream().map(po -> {
             CenterVO vo = new CenterVO();
             BeanUtils.copyProperties(po, vo);

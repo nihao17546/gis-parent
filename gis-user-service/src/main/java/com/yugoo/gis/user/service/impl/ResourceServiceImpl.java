@@ -346,7 +346,7 @@ public class ResourceServiceImpl implements IResourceService {
                 streetNameMap.put(buildingPO.getId(), sName);
             }
         }
-        List<ResourcePO> resourcePOList = resourceDAO.selectByBuildingIds(buildingIds);
+        List<ResourcePO> resourcePOList = resourceDAO.selectByBuildingIds(buildingIds, 50);
         if (resourcePOList.isEmpty()) {
             return new ArrayList<>();
         }

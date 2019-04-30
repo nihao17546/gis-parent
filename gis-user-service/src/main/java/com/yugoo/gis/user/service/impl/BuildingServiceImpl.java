@@ -253,7 +253,7 @@ public class BuildingServiceImpl implements IBuildingService {
 
     @Override
     public List<BuildingVO> searchFromMap(String name, Double loMin, Double loMax, Double laMin, Double laMax) {
-        List<BuildingPO> buildingPOList = buildingDAO.selectFromMap(name, loMin, loMax, laMin, laMax);
+        List<BuildingPO> buildingPOList = buildingDAO.selectFromMap(name, loMin, loMax, laMin, laMax, 50);
         List<BuildingVO> buildingVOList = buildingPOList.stream().map(po -> {
             BuildingVO vo = new BuildingVO();
             BeanUtils.copyProperties(po, vo);

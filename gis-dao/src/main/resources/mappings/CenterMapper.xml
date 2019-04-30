@@ -77,6 +77,9 @@
             and groupId in (#{groupId},0)
         </if>
         and `name` like concat('%',#{name},'%')
+        <if test="limit != null">
+            limit #{limit}
+        </if>
     </select>
     <select id="selectIdByGroupIdAndLikeName" resultType="java.lang.Integer">
         select id from tb_center where 1=1

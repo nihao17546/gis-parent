@@ -136,6 +136,9 @@
         and longitude between #{loMin} and #{loMax}
         and latitude between #{laMin} and #{laMax}
         and `name` like concat('%',#{name},'%')
+        <if test="limit != null">
+            limit #{limit}
+        </if>
     </select>
     <select id="selectByCenter" resultType="com.yugoo.gis.pojo.po.ConsumerPO">
         select id,`name`,`type`,serviceType,longitude,latitude from tb_consumer

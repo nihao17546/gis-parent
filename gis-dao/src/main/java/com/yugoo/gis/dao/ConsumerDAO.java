@@ -31,7 +31,7 @@ public interface ConsumerDAO {
                                    @Param("userIds") List<Integer> userIds,
                                    @Param("loMin") Double loMin, @Param("loMax") Double loMax,
                                    @Param("laMin") Double laMin, @Param("laMax") Double laMax,
-                                   @Param("buildingIds") List<Integer> buildingIds);
+                                   @Param("buildingIds") List<Integer> buildingIds, @Param("limit") Integer limit);
     List<ConsumerPO> selectByCenter(@Param("loMin") Double loMin, @Param("loMax") Double loMax,
                                     @Param("laMin") Double laMin, @Param("laMax") Double laMax);
     int batchInsert(@Param("list") List<ConsumerPO> list);

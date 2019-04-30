@@ -27,7 +27,7 @@ public interface CenterDAO {
     List<CenterPO> selectFromMap(@Param("name") String name,
                                  @Param("loMin") Double loMin, @Param("loMax") Double loMax,
                                  @Param("laMin") Double laMin, @Param("laMax") Double laMax,
-                                 @Param("groupId") Integer groupId);
+                                 @Param("groupId") Integer groupId, @Param("limit") Integer limit);
     List<Integer> selectIdByGroupIdAndLikeName(@Param("id") Integer id,
                                                @Param("groupId") Integer groupId,
                                                      @Param("name") String name);

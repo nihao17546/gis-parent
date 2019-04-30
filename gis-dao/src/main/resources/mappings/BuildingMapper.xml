@@ -95,5 +95,8 @@
         where longitude between #{loMin} and #{loMax}
         and latitude between #{laMin} and #{laMax}
         and `name` like concat('%',#{name},'%')
+        <if test="limit != null">
+            limit #{limit}
+        </if>
     </select>
 </mapper>

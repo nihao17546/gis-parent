@@ -101,6 +101,9 @@
         <foreach collection="buildingIds" item="item" open="(" separator="," close=")">
             #{item}
         </foreach>
+        <if test="limit != null">
+            limit #{limit}
+        </if>
     </select>
     <select id="selectById" resultType="com.yugoo.gis.pojo.po.ResourcePO">
         select * from tb_resource where id=#{id}

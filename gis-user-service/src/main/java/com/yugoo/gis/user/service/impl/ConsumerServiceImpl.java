@@ -390,7 +390,7 @@ public class ConsumerServiceImpl implements IConsumerService {
         List<Integer> buildingIdsParam = building == null ? null : (List<Integer>) building;
         List<Integer> userIdsParam = user == null ? null : (List<Integer>) user;
 
-        List<ConsumerPO> consumerPOList = consumerDAO.selectFromMap(name, userIdsParam, loMin, loMax, laMin, laMax, buildingIdsParam);
+        List<ConsumerPO> consumerPOList = consumerDAO.selectFromMap(name, userIdsParam, loMin, loMax, laMin, laMax, buildingIdsParam, 50);
         List<ConsumerVO> consumerVOList = consumerPOList.stream().map(po -> {
             ConsumerVO vo = new ConsumerVO();
             BeanUtils.copyProperties(po, vo);
