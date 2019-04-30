@@ -57,7 +57,7 @@ public class BuildingServiceImpl implements IBuildingService {
         long count = buildingDAO.selectCount(name, streetId);
         ListVO<BuildingVO> listVO = new ListVO<>(curPage, pageSize);
         if (count > 0) {
-            List<BuildingPO> poList = buildingDAO.select(name, streetId, new RowBounds((curPage - 1) * pageSize, pageSize));
+            List<BuildingPO> poList = buildingDAO.select(name, streetId, (curPage - 1) * pageSize, pageSize);
             List<Integer> streetIds = new ArrayList<>();
             List<BuildingVO> voList = poList.stream().map(po -> {
                 BuildingVO vo = new BuildingVO();

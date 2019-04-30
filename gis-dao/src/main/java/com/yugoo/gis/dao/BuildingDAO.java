@@ -15,7 +15,9 @@ import java.util.Map;
 public interface BuildingDAO {
     int insert(BuildingPO buildingPO);
     BuildingPO selectByName(@Param("name") String name);
-    List<BuildingPO> select(@Param("name") String name, @Param("streetId") Integer streetId, RowBounds rowBounds);
+    List<BuildingPO> select(@Param("name") String name, @Param("streetId") Integer streetId,
+                            @Param("offset") Integer offset,
+                            @Param("rows") Integer rows);
     Long selectCount(@Param("name") String name, @Param("streetId") Integer streetId);
     int update(BuildingPO buildingPO);
     BuildingPO selectAvgByStreetId(@Param("streetId") Integer streetId);

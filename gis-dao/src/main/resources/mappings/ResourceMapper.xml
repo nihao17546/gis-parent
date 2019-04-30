@@ -43,7 +43,7 @@
         order by id desc limit ${offset},${rows}
     </select>
     <select id="selectCount" resultType="java.lang.Long">
-        select count(*) from tb_resource where 1=1
+        select count(1) from tb_resource where 1=1
         <if test="buildingId != null and buildingId != 0">
             and buildingId=#{buildingId}
         </if>
