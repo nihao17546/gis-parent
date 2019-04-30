@@ -3,14 +3,19 @@ import com.alibaba.fastjson.TypeReference;
 import com.yugoo.gis.pojo.po.UserPO;
 import com.yugoo.gis.pojo.vo.PointVO;
 import com.yugoo.gis.pojo.vo.ResourceVO;
+import com.yugoo.gis.user.service.cache.CacheManager;
+import com.yugoo.gis.user.service.cache.ReferenceCache;
 import com.yugoo.gis.user.service.util.MapUtil;
 import com.yugoo.gis.user.web.result.JsonResult;
 import org.junit.Test;
 
 import java.io.*;
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by nihao on 18/3/17.
@@ -75,5 +80,17 @@ public class SimpleTest {
         List<List<Double>> lists = JSON.parseObject(ss, new TypeReference<List<List<Double>>>(){});
         boolean b = MapUtil.isPtInPoly(103.808659,30.682742, lists);
         System.out.println(b);
+    }
+
+    @Test
+    public void sadfewvuyew() {
+        SoftReference<byte[]> ss = new SoftReference<>(new byte[1024 * 1024 * 8]);
+        byte[] bb = new byte[1024 * 1024 * 5];
+        byte[] bb2 = new byte[1024 * 1024 * 5];
+        System.out.println("--");
+    }
+
+    @Test
+    public void ascasvasvvasvav() {
     }
 }

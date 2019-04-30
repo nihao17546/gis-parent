@@ -3,7 +3,6 @@ package com.yugoo.gis.dao;
 import com.yugoo.gis.pojo.po.BuildingPO;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +24,8 @@ public interface BuildingDAO {
     List<BuildingPO> selectAllByLoAndLa(@Param("loMin") Double loMin, @Param("loMax") Double loMax,
                                         @Param("laMin") Double laMin, @Param("laMax") Double laMax);
     List<BuildingPO> selectByLoAndLa(@Param("loMin") Double loMin, @Param("loMax") Double loMax,
-                                     @Param("laMin") Double laMin, @Param("laMax") Double laMax, RowBounds rowBounds);
+                                     @Param("laMin") Double laMin, @Param("laMax") Double laMax,
+                                     @Param("offset") Integer offset, @Param("rows") Integer rows);
     Long selectCountByLoAndLa(@Param("loMin") Double loMin, @Param("loMax") Double loMax,
                               @Param("laMin") Double laMin, @Param("laMax") Double laMax);
     @MapKey("id")

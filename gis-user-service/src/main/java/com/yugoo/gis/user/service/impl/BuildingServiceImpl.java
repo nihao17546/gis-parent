@@ -17,8 +17,8 @@ import com.yugoo.gis.pojo.po.UserPO;
 import com.yugoo.gis.pojo.vo.BuildingVO;
 import com.yugoo.gis.pojo.vo.ListVO;
 import com.yugoo.gis.user.service.IBuildingService;
+import com.yugoo.gis.user.service.cache.ReferenceCache;
 import com.yugoo.gis.user.service.util.MapUtil;
-import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -51,6 +51,8 @@ public class BuildingServiceImpl implements IBuildingService {
     private ConsumerDAO consumerDAO;
     @Autowired
     private ResourceDAO resourceDAO;
+    @Autowired
+    private ReferenceCache referenceCache;
 
     @Override
     public ListVO<BuildingVO> list(Integer curPage, Integer pageSize, String name, Integer streetId) {
@@ -143,36 +145,7 @@ public class BuildingServiceImpl implements IBuildingService {
         CenterPO centerPO = centerDAO.selectById(centerId);
         if (centerPO == null)
             throw new GisRuntimeException("营销中心[" + centerId + "]不存在");
-        List<List<Double>> lists = JSON.parseObject(centerPO.getRegion(), new TypeReference<List<List<Double>>>(){});
-        long count = buildingDAO.selectCountByLoAndLa(centerPO.getLoMin(), centerPO.getLoMax(), centerPO.getLaMin(), centerPO.getLaMax());
-        ListVO<BuildingVO> listVO = new ListVO<>(curPage, pageSize);
-        if (count > 0) {
-            List<BuildingPO> buildingPOList = buildingDAO.selectByLoAndLa(centerPO.getLoMin(), centerPO.getLoMax(),
-                    centerPO.getLaMin(), centerPO.getLaMax(), new RowBounds((curPage - 1) * pageSize, pageSize));
-            List<BuildingVO> voList = new ArrayList<>();
-            List<Integer> streetIds = new ArrayList<>();
-            for (BuildingPO buildingPO : buildingPOList) {
-                if (MapUtil.isPtInPoly(buildingPO.getLongitude(), buildingPO.getLatitude(), lists)) {
-                    BuildingVO vo = new BuildingVO();
-                    BeanUtils.copyProperties(buildingPO, vo);
-                    if (buildingPO.getStreetId() != null && !streetIds.contains(buildingPO.getStreetId())) {
-                        streetIds.add(buildingPO.getStreetId());
-                    }
-                    voList.add(vo);
-                }
-            }
-            if (!streetIds.isEmpty()) {
-                Map<Integer,StreetPO> streetPOMap = streetDAO.selectByIds(streetIds);
-                for (BuildingVO vo : voList) {
-                    if (streetPOMap.containsKey(vo.getStreetId())) {
-                        vo.setStreetName(streetPOMap.get(vo.getStreetId()).getName());
-                    }
-                }
-            }
-            listVO.setList(voList);
-            listVO.setTotalCount(count);
-        }
-        return listVO;
+        return referenceCache.getBuildingByCenter(centerPO, curPage, pageSize);
     }
 
     @Override
