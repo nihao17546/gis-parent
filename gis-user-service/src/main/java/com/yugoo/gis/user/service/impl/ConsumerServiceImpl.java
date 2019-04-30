@@ -21,7 +21,6 @@ import com.yugoo.gis.pojo.vo.ConsumerVO;
 import com.yugoo.gis.pojo.vo.ListVO;
 import com.yugoo.gis.user.service.IConsumerService;
 import com.yugoo.gis.user.service.util.MapUtil;
-import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -212,7 +211,7 @@ public class ConsumerServiceImpl implements IConsumerService {
         ListVO<ConsumerListVO> listVO = new ListVO<>(curPage, pageSize);
         if (count > 0) {
             List<ConsumerPO> poList = consumerDAO.select(name, userIdsParam, buildingIdsParam,
-                    new RowBounds((curPage - 1) * pageSize, pageSize));
+                    (curPage - 1) * pageSize, pageSize);
             List<Integer> buildingIds = new ArrayList<>();
             List<Integer> userIds = new ArrayList<>();
             List<ConsumerListVO> voList = poList.stream().map(po -> {

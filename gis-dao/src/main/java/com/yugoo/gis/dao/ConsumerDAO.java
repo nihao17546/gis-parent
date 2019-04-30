@@ -2,7 +2,6 @@ package com.yugoo.gis.dao;
 
 import com.yugoo.gis.pojo.po.ConsumerPO;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
 
@@ -15,7 +14,7 @@ public interface ConsumerDAO {
     List<ConsumerPO> select(@Param("name") String name,
                             @Param("userIds") List<Integer> userIds,
                             @Param("buildingIds") List<Integer> buildingIds,
-                            RowBounds rowBounds);
+                            @Param("offset") Integer offset, @Param("rows") Integer rows);
     Long selectCount(@Param("name") String name,
                      @Param("userIds") List<Integer> userIds,
                      @Param("buildingIds") List<Integer> buildingIds);
