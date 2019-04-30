@@ -84,9 +84,7 @@
         <if test="name != null">
             and `name` like concat('%',#{name},'%')
         </if>
-        <if test="limit != null">
-            limit ${limit}
-        </if>
+        order by id desc limit ${offset},${rows}
     </select>
     <delete id="deleteById">
         delete from tb_building where id=#{id}

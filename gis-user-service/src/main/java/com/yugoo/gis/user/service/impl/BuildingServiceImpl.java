@@ -25,6 +25,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -153,33 +154,23 @@ public class BuildingServiceImpl implements IBuildingService {
         UserPO userPO = userDAO.selectById(userId);
         List<BuildingPO> buildingPOList = null;
         if (userPO.getRole() == Role.admin.getValue()) {
-            buildingPOList = buildingDAO.selectByLoAndLaAndName(null, null, null, null, name, limit);
+            buildingPOList = buildingDAO.selectByLoAndLaAndName(null, null, null, null, name, 0, limit);
         }
         else if (userPO.getRole() == Role.headman.getValue()) {
             List<CenterPO> centerPOList = centerDAO.selectByGroupId(userPO.getGroupId());
             buildingPOList = new ArrayList<>();
             for (CenterPO centerPO : centerPOList) {
                 List<List<Double>> lists = JSON.parseObject(centerPO.getRegion(), new TypeReference<List<List<Double>>>(){});
-                List<BuildingPO> buildingPOS = buildingDAO.selectByLoAndLaAndName(centerPO.getLoMin(), centerPO.getLoMax(),
-                        centerPO.getLaMin(), centerPO.getLaMax(), name, limit);
-                for (BuildingPO buildingPO : buildingPOS) {
-                    if (MapUtil.isPtInPoly(buildingPO.getLongitude(), buildingPO.getLatitude(), lists)) {
-                        buildingPOList.add(buildingPO);
-                    }
-                }
+                List<BuildingPO> buildingPOS = getListOwn(buildingPOList, centerPO, name, 0, limit, lists);
+                buildingPOList.addAll(buildingPOS);
             }
         }
         else {
             buildingPOList = new ArrayList<>();
             CenterPO centerPO = centerDAO.selectById(userPO.getCenterId());
             List<List<Double>> lists = JSON.parseObject(centerPO.getRegion(), new TypeReference<List<List<Double>>>(){});
-            List<BuildingPO> buildingPOS = buildingDAO.selectByLoAndLaAndName(centerPO.getLoMin(), centerPO.getLoMax(),
-                    centerPO.getLaMin(), centerPO.getLaMax(), name, limit);
-            for (BuildingPO buildingPO : buildingPOS) {
-                if (MapUtil.isPtInPoly(buildingPO.getLongitude(), buildingPO.getLatitude(), lists)) {
-                    buildingPOList.add(buildingPO);
-                }
-            }
+            List<BuildingPO> buildingPOS = getListOwn(buildingPOList, centerPO, name, 0, limit, lists);
+            buildingPOList.addAll(buildingPOS);
         }
         List<BuildingVO> buildingVOList = buildingPOList.stream().map(po -> {
             BuildingVO vo = new BuildingVO();
@@ -187,6 +178,27 @@ public class BuildingServiceImpl implements IBuildingService {
             return vo;
         }).collect(Collectors.toList());
         return buildingVOList;
+    }
+
+    private List<BuildingPO> getListOwn(List<BuildingPO> result, CenterPO centerPO, String name, Integer offset, Integer rows, List<List<Double>> lists) {
+        List<BuildingPO> buildingPOS = buildingDAO.selectByLoAndLaAndName(centerPO.getLoMin(), centerPO.getLoMax(),
+                centerPO.getLaMin(), centerPO.getLaMax(), name, offset, rows);
+        if (CollectionUtils.isEmpty(buildingPOS)) {
+            return result;
+        }
+        boolean hasNextPage = rows == buildingPOS.size();
+        boolean hasRemoved = false;
+        for (int i = buildingPOS.size() - 1; i >= 0; i --) {
+            if (!MapUtil.isPtInPoly(buildingPOS.get(i).getLongitude(), buildingPOS.get(i).getLatitude(), lists)) {
+                buildingPOS.remove(i);
+                hasRemoved = true;
+            }
+        }
+        result.addAll(buildingPOS);
+        if (hasNextPage && hasRemoved) {
+            return getListOwn(result, centerPO, name, (offset + rows), rows, lists);
+        }
+        return result;
     }
 
     @Transactional
