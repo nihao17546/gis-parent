@@ -199,7 +199,7 @@
                         reserve-keyword
                         placeholder="请输入关键词"
                         :remote-method="searchBuilding"
-                        :loading="loading" style="width: 100%">
+                        :loading="selectLoading" style="width: 100%">
                     <el-option
                             v-for="item in buildings"
                             :key="item.id"
@@ -413,7 +413,6 @@
                     expenses: [{required : false, validator: validateExpenses, trigger: 'blur'}],
                 },
                 serviceTypes: [],
-                allBuildings: [],
                 buildings: [],
                 picBase64: '',
                 fileList: [],
@@ -421,7 +420,8 @@
                 ifFromIndex: true,
                 searchBuildingId: 0,
                 searchId: 0,
-                fileList: []
+                fileList: [],
+                selectLoading: false
             }
         },
         methods: {
@@ -559,7 +559,7 @@
             cancelAdd() {
                 this.addForm = {}
                 this.$refs.addForm.resetFields();
-                this.buildings = this.allBuildings;
+                this.buildings = [];
                 this.addVisible = false
                 this.fileList = []
                 this.picBase64 = ''
@@ -695,17 +695,26 @@
                 });
             },
             searchBuilding(selectKey) {
-                if (selectKey == '') {
-                    this.buildings = this.allBuildings;
-                }
-                else {
-                    let cuBuildings = []
-                    this.allBuildings.forEach(building => {
-                        if (building.name.indexOf(selectKey) != -1) {
-                            cuBuildings.push(building)
+                if (selectKey != '') {
+                    this.selectLoading = true
+                    axios.get('${contextPath}/building/listOwn',{
+                        params: {
+                            name: selectKey
                         }
+                    }).then(res => {
+                        if (res.data.code == 1) {
+                            this.$message.error(res.data.message);
+                        }
+                        else {
+                            this.buildings = res.data.list
+                        }
+                        this.selectLoading = false
+                    }).catch(res => {
+                        this.selectLoading = false
+                        console.error(res)
                     })
-                    this.buildings = cuBuildings;
+                } else {
+                    this.buildings = []
                 }
             },
             handleChange(file, fileList) {
@@ -768,6 +777,10 @@
                         this.tt = '编辑';
                         this.loading = false;
                         this.addVisible = true
+                        this.buildings.push({
+                            id: res.data.info.buildingId,
+                            name: res.data.info.buildingName
+                        })
                     }
                 }).catch(res => {
                     console.error(res)
@@ -828,21 +841,6 @@
                 }
                 else {
                     this.serviceTypes = res.data.list
-                }
-            }).catch(res => {
-                console.error(res)
-            })
-            axios.get('${contextPath}/building/listOwn',{
-                params: {
-
-                }
-            }).then(res => {
-                if (res.data.code == 1) {
-                    this.$message.error(res.data.message);
-                }
-                else {
-                    this.allBuildings = res.data.list
-                    this.buildings = this.allBuildings
                 }
             }).catch(res => {
                 console.error(res)
