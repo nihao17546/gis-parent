@@ -149,11 +149,11 @@ public class BuildingServiceImpl implements IBuildingService {
     }
 
     @Override
-    public List<BuildingVO> listOwn(Integer userId, String name) {
+    public List<BuildingVO> listOwn(Integer userId, String name, Integer limit) {
         UserPO userPO = userDAO.selectById(userId);
         List<BuildingPO> buildingPOList = null;
         if (userPO.getRole() == Role.admin.getValue()) {
-            buildingPOList = buildingDAO.selectByLoAndLaAndName(null, null, null, null, name);
+            buildingPOList = buildingDAO.selectByLoAndLaAndName(null, null, null, null, name, limit);
         }
         else if (userPO.getRole() == Role.headman.getValue()) {
             List<CenterPO> centerPOList = centerDAO.selectByGroupId(userPO.getGroupId());
@@ -161,7 +161,7 @@ public class BuildingServiceImpl implements IBuildingService {
             for (CenterPO centerPO : centerPOList) {
                 List<List<Double>> lists = JSON.parseObject(centerPO.getRegion(), new TypeReference<List<List<Double>>>(){});
                 List<BuildingPO> buildingPOS = buildingDAO.selectByLoAndLaAndName(centerPO.getLoMin(), centerPO.getLoMax(),
-                        centerPO.getLaMin(), centerPO.getLaMax(), name);
+                        centerPO.getLaMin(), centerPO.getLaMax(), name, limit);
                 for (BuildingPO buildingPO : buildingPOS) {
                     if (MapUtil.isPtInPoly(buildingPO.getLongitude(), buildingPO.getLatitude(), lists)) {
                         buildingPOList.add(buildingPO);
@@ -174,7 +174,7 @@ public class BuildingServiceImpl implements IBuildingService {
             CenterPO centerPO = centerDAO.selectById(userPO.getCenterId());
             List<List<Double>> lists = JSON.parseObject(centerPO.getRegion(), new TypeReference<List<List<Double>>>(){});
             List<BuildingPO> buildingPOS = buildingDAO.selectByLoAndLaAndName(centerPO.getLoMin(), centerPO.getLoMax(),
-                    centerPO.getLaMin(), centerPO.getLaMax(), name);
+                    centerPO.getLaMin(), centerPO.getLaMax(), name, limit);
             for (BuildingPO buildingPO : buildingPOS) {
                 if (MapUtil.isPtInPoly(buildingPO.getLongitude(), buildingPO.getLatitude(), lists)) {
                     buildingPOList.add(buildingPO);

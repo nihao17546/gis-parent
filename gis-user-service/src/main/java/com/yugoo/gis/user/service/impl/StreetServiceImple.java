@@ -16,7 +16,6 @@ import com.yugoo.gis.pojo.vo.PointVO;
 import com.yugoo.gis.pojo.vo.StreetVO;
 import com.yugoo.gis.user.service.IStreetService;
 import com.yugoo.gis.user.service.util.MapUtil;
-import org.apache.ibatis.session.RowBounds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;

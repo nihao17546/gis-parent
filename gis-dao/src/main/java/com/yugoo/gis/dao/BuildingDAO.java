@@ -34,7 +34,7 @@ public interface BuildingDAO {
     List<BuildingPO> selectByStreetId(@Param("streetId") Integer streetId);
     List<BuildingPO> selectByLoAndLaAndName(@Param("loMin") Double loMin, @Param("loMax") Double loMax,
                                             @Param("laMin") Double laMin, @Param("laMax") Double laMax,
-                                            @Param("name") String name);
+                                            @Param("name") String name, @Param("limit") Integer limit);
     int deleteById(@Param("id") Integer id);
     List<BuildingPO> selectLikeName(@Param("name") String name);
     List<BuildingPO> selectFromMap(@Param("name") String name,

@@ -82,7 +82,7 @@ public class BuildingController extends BaseController {
     @RequestMapping("/listOwn")
     public String listOwn(@Value("#{request.getAttribute('uid')}") Integer uid,
                           @RequestParam(required = false) String name) {
-        return ok().pull("list", buildingService.listOwn(uid, name)).json();
+        return ok().pull("list", buildingService.listOwn(uid, name, 20)).json();
     }
 
     @RequestMapping("/delete")
