@@ -46,7 +46,7 @@ public class StreetServiceImple implements IStreetService {
         long count = streetDAO.selectCount(name);
         ListVO<StreetVO> listVO = new ListVO<>(curPage, pageSize);
         if (count > 0) {
-            List<StreetPO> streetPOList = streetDAO.select(name, new RowBounds((curPage - 1) * pageSize, pageSize));
+            List<StreetPO> streetPOList = streetDAO.select(name, (curPage - 1) * pageSize, pageSize);
             List<Integer> streetIds = new ArrayList<>();
             List<StreetVO> streetVOList = streetPOList.stream().map(po -> {
                 StreetVO vo = new StreetVO();

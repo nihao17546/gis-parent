@@ -8,7 +8,6 @@ import com.yugoo.gis.pojo.vo.ListVO;
 import com.yugoo.gis.pojo.vo.StreetTypeVO;
 import com.yugoo.gis.pojo.vo.StreetVO;
 import com.yugoo.gis.user.service.IStreetService;
-import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -96,8 +95,7 @@ public class StreetController extends BaseController {
 
     @RequestMapping("/all")
     public String all(@RequestParam(required = false) String name) {
-        RowBounds rowBounds = new RowBounds(0, Integer.MAX_VALUE);
-        List<StreetPO> list = streetDAO.select(name, rowBounds);
+        List<StreetPO> list = streetDAO.select(name, 0, 20);
         return ok().pull("list", list).json();
     }
 

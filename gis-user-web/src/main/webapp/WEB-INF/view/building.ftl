@@ -103,7 +103,7 @@
                         reserve-keyword
                         placeholder="请输入关键词"
                         :remote-method="searchStreet"
-                        :loading="loading" style="width: 100%">
+                        :loading="selectLoading" style="width: 100%">
                     <el-option
                             v-for="item in streets"
                             :key="item.id"
@@ -163,7 +163,8 @@
                 searchStreetId: 0,
                 searchId: 0,
                 ifFromIndex: true,
-                auth: ${auth}
+                auth: ${auth},
+                selectLoading: false
             }
         },
         methods: {
@@ -198,6 +199,7 @@
             },
             searchStreet(selectKey) {
                 if (selectKey != '') {
+                    this.selectLoading = true
                     axios.get('${contextPath}/street/all',{
                         params: {
                             name: selectKey
@@ -209,7 +211,9 @@
                         else {
                             this.streets = res.data.list
                         }
+                        this.selectLoading = false
                     }).catch(res => {
+                        this.selectLoading = false
                         console.error(res)
                     })
                 } else {

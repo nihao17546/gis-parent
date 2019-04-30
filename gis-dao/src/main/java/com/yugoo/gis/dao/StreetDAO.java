@@ -3,7 +3,6 @@ package com.yugoo.gis.dao;
 import com.yugoo.gis.pojo.po.StreetPO;
 import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.session.RowBounds;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +13,7 @@ import java.util.Map;
 public interface StreetDAO {
     int insert(StreetPO streetPO);
     StreetPO selectByName(@Param("name") String name);
-    List<StreetPO> select(@Param("name") String name, RowBounds rowBounds);
+    List<StreetPO> select(@Param("name") String name, @Param("offset") Integer offset, @Param("rows") Integer rows);
     Long selectCount(@Param("name") String name);
     int update(StreetPO streetPO);
     StreetPO selectById(@Param("id") Integer id);
