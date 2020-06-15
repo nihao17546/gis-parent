@@ -44,7 +44,7 @@
         <spring.redis.version>1.6.2.RELEASE</spring.redis.version>
         <jedis.version>2.4.2</jedis.version>
         <version.commons-lang>3.3.2</version.commons-lang>
-        <version.commons-collections>4.0</version.commons-collections>
+        <version.commons-collections>4.1</version.commons-collections>
         <!--<JAVA8_HOME>/Library/Java/JavaVirtualMachines/jdk1.8.0_101.jdk/Contents/Home</JAVA8_HOME>-->
     </properties>
 
